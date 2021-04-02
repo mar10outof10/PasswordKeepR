@@ -49,6 +49,7 @@ Jared, Martin, Mitchell
 - erd
 
 # routes
+- https://docs.google.com/document/d/1DM6JdF9v1z4PozwgexngP36LnB6fOOmjalKioknsERA/edit?usp=sharing
 - themes
 - divide into GET and POST
 - method override - mega stretch
