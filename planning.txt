@@ -85,3 +85,30 @@ Jared, Martin, Mitchell
 - define all features
 
 
+## User Stories
+role, goal, benefit
+1. As a user, I want to be able to create and store passwords
+- I want to be able to generate random, secure passwords based on - entered criteria
+- I want to be able to create an account
+- I want to categorize my passwords
+- I want to be able to delete passwords
+- I want to be able to add password to local clipboard on click
+2. As a business owner,
+- I want to be able to create an organization to store my org passwords
+- I want to be able to add/remove members from my org
+- I want to categorize my passwords
+3. As an employee I want to be able to access my orgs passwords
+
+## MVP FEATURES
+
+Requirements:
+user can register/login and be assigned to an organization
+an organization has many users
+user can add a new username and password for a specific website
+app can generate passwords based on the criteria specified (password length, contains lowercase, contairs uppercase, contains numbers, etc)
+user can edit and change their password any time
+user has a convinient copy to clipboard button so they dont have to select the password
+sites can be categoried, to, social (fb, linkedin), work related (bamboo, harvest), entertainment (snapchat, reddit), etc, etc
+
+# homepage/register screen (if user is not logged in)
+#
