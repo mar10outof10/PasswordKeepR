@@ -94,10 +94,12 @@ role, goal, benefit
 - I want to categorize my passwords
 - I want to be able to delete passwords
 - I want to be able to add password to local clipboard on click
+- (stretch) I want to be able to delete my account
 2. As a business owner,
 - I want to be able to create an organization to store my org passwords
 - I want to be able to add/remove members from my org
 - I want to categorize my passwords
+- (stretch) I want to be able to delete my org
 3. As an employee I want to be able to access my orgs passwords
 
 ## MVP FEATURES
@@ -110,6 +112,28 @@ app can generate passwords based on the criteria specified (password length, con
 user can edit and change their password any time
 user has a convinient copy to clipboard button so they dont have to select the password
 sites can be categoried, to, social (fb, linkedin), work related (bamboo, harvest), entertainment (snapchat, reddit), etc, etc
+
+- Register as user
+  - Create cookie on login
+  - Store user info in Db
+    - username and password
+- User can create org 
+  - Org creator can invite/remove members from org
+  - 
+- User can create password
+  - password belongs to user or org 
+  - user can enter random string as password
+  - user can use form to generate custom password with specified
+  params
+  - user can update their password 
+  - user can delete their password 
+  - user can view own and org passwords 
+  - user can copy password by clicking clipboard field
+<!-- - Dbs
+  - user table
+  - org table
+  - password table -->
+
 
 # homepage/register screen (if user is not logged in)
 #
