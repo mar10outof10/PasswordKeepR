@@ -1,34 +1,34 @@
-### Planning for midterm 
-Jared, Martin, Mitchell 
+### Planning for midterm
+Jared, Martin, Mitchell
 
 ## Project option
 - PasswordKeepR
 
-## Overall goals 
+## Overall goals
 - Finish MVP
 - Use remaining time for nice-to-have
-- Have fun! 
+- Have fun!
 
-## Communication norms 
+## Communication norms
 - Treating every day as a bootcamp day
-- Reserve 10 - 12 
-- Start with standup, quickly cover days plans 
+- Reserve 10 - 12
+- Start with standup, quickly cover days plans
 
-## Code norms 
+## Code norms
 - Comment code
-- Small commits 
-- DONT CODE ON THE MASTER 
-- Update README often and whenever it feels right 
+- Small commits
+- DONT CODE ON THE MASTER
+- Update README often and whenever it feels right
 - install dependencies (update dependencies in README)
 
-## Tools 
-- Trello 
+## Tools
+- Trello -> https://trello.com/b/qXb3mgTr/passwordkeepr
 - Figma
 - Draw.io
 
-## App planning 
+## App planning
 
-# divison of labour/roles and responsibilities 
+# divison of labour/roles and responsibilities
 - horizontal, vertical?
 - Build MVP horizontally
 - switch into vertical for nice-to-have features
@@ -36,7 +36,7 @@ Jared, Martin, Mitchell
 # user stories
 - role, goal, benefit
 
-# features 
+# features
 - need to have (mvp)
 - nice to have
 - determine priority of both groups
@@ -46,42 +46,42 @@ Jared, Martin, Mitchell
 - compile all wireframes?
 
 # data
-- erd 
+- erd
 
 # routes
 - themes
 - divide into GET and POST
-- method override - mega stretch 
+- method override - mega stretch
 - create, agree, specify on routes ( use table | method | URL | desc )
 
-# timeline 
+# timeline
 - Friday - plan
 - Saturday off limits
 - Discuss collabertive task timing daily
 - Planning done by Sat night
 - Have MVP ready for Wed morning standup
 - Bugs and extra features worked out on Wednesday-Thurday
-- Thursday evening, work on presentation 
+- Thursday evening, work on presentation
 
 ## Presentation
 
 - Go down features list, display one by one
-- Share screen 
+- Share screen
 - Get website hosted so audience can follow along with presentation
 
 ## Actions For Today
-- Get access to skeleton 
+- Get access to skeleton
   - Yesterday's git exercise
   - set up Git project
-- get Trello board going 
-- define all tasks and add to board 
+- get Trello board going
+- define all tasks and add to board
   - define routes
-  - draw basic erd 
-  - get website hosted 
-- delgate tasks for horizontal phase 
-- user stories 
+  - draw basic erd
+  - get website hosted
+- delgate tasks for horizontal phase
+- user stories
 - define routes
-- wireframing through figma 
-- define all features 
+- wireframing through figma
+- define all features
 
 
