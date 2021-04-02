@@ -93,12 +93,14 @@ role, goal, benefit
 - I want to categorize my passwords
 - I want to be able to delete passwords
 - I want to be able to add password to local clipboard on click
+- (stretch) I want to be able to see a user org 
 - (stretch) I want to be able to delete my account
 2. As a business owner,
 - I want to be able to create an organization to store my org passwords
 - I want to be able to add/remove members from my org
 - I want to categorize my passwords
 - (stretch) I want to be able to delete my org
+- (stretch) I want to be able to see an org dashboard
 3. As an employee I want to be able to access my orgs passwords
 
 ## MVP FEATURES
@@ -133,6 +135,3 @@ sites can be categoried, to, social (fb, linkedin), work related (bamboo, harves
   - org table
   - password table -->
 
-
-# homepage/register screen (if user is not logged in)
-#
