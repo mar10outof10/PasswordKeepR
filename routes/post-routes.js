@@ -19,7 +19,7 @@ router.post('/login', (req, res) => {
   res.redirect('/passwords');
 })
 
-// /register
+// Register user
 
 router.post('/register', (req, res) => {
   const email = req.params.email;
@@ -63,7 +63,7 @@ router.post('/passwords/:id', (req, res) => {
   .then()
 });
 
-// /passwords/:id/delete
+// Delete passwords
 
 router.post('//passwords/:id/delete', (req, res) => {
   passwordId = req.params.id
@@ -71,7 +71,7 @@ router.post('//passwords/:id/delete', (req, res) => {
   .then();
 });
 
-// /orgs
+// Add new Org
 
 router.post('/orgs', (req, res) => {
   orgName = req.body.orgName
