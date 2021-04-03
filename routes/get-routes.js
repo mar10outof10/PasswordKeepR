@@ -37,12 +37,21 @@ router.get('/passwords', (res, req) => {
       res.render('passwords', templateVars);
     })
   }
-})
-// /passwords/:id
+});
+
+// Show individual password
 
 router.get('/passwords/:id', (res, req) => {
+  // confirm identinty
   const userIdCookie = req.session.user_id;
-  res.render('/password/:id', templateVars)
+  if (userIdCookie) {
+    getPasswordById()
+    .then(password => {
+      const passwordObj = password;
+      const templateVars = { password: passwordObj }
+      res.render('/password/:id', templateVars)
+    })
+  }
 });
 
 // /passwords/new
