@@ -37,6 +37,7 @@ router.get('/passwords', (res, req) => {
       res.render('passwords', templateVars);
     })
   }
+  res.redirect('/login');
 });
 
 // Show individual password
@@ -51,6 +52,7 @@ router.get('/passwords/:id', (res, req) => {
       res.render('/password/:id', templateVars)
     })
   }
+  res.redirect('/login');
 });
 
 // Show new password form
