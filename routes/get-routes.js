@@ -42,23 +42,26 @@ router.get('/passwords', (res, req) => {
 // Show individual password
 
 router.get('/passwords/:id', (res, req) => {
-  // confirm identinty
   const userIdCookie = req.session.user_id;
   if (userIdCookie) {
     getPasswordById()
     .then(password => {
       const passwordObj = password;
-      const templateVars = { password: passwordObj }
+      const templateVars = { password: passwordObj, user: userIdCookie }
       res.render('/password/:id', templateVars)
     })
   }
 });
 
-// /passwords/new
+// Show new password form
 
 router.get('/passwords/new', (res, req) => {
   const userIdCookie = req.session.user_id;
-  res.render('password/new', templateVars)
+  if (userIdCookie) {
+    const templateVars = { user: userIdCookie }
+    res.render('password/new', templateVars);
+  }
+  res.redirect('/login');
 });
 
 // /orgs
