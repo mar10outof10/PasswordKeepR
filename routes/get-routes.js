@@ -25,17 +25,19 @@ router.get('/register', (res, req) => {
   res.render('register');
 });
 
-// /passwords
+// Show user password dashboard
 
 router.get('/passwords', (res, req) => {
   const userIdCookie = req.session.user_id;
-  getAllPasswords(userId)
-  .then(passwords => {}
-    const templateVars;
-    res.render('passwords', templateVars);
-  })
+  if (userIdCookie) {
+    getAllPasswords(userIdCookie)
+    .then(passwords => {
+      const passwordArray = passwords;
+      const templateVars = { passwords: passwordArray }
+      res.render('passwords', templateVars);
+    })
+  }
 })
-
 // /passwords/:id
 
 router.get('/passwords/:id', (res, req) => {
