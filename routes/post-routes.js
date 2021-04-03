@@ -194,14 +194,17 @@ router.post('/orgs/:id', (req, res) => {
 });
 
 
-// /orgs/:id/userid
+// Add/delete user from org
 
 router.post('/orgs/:id/:userid', (req, res) => {
   const orgId = req.params.id
   const userId = req.cookies.user_id
-  const isAdmin = false;
   userIsInOrg(userId, orgId)
   .then(bool => {
+    // are they deleting themselves
+      // if yes delete and redirect to orgs page
+    // get user object
+    // compare the param orgID with
     updateUserInOrg(orgId, userID, isAdmin);
   })
   // TODO: how do we authenticate admin privs?
@@ -226,4 +229,5 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
 // TODO -
 // add cookies
 // encrypt password
+// figure out error handling with
 
