@@ -56,4 +56,19 @@ function deleteUserFromOrg(userId, orgId) {
   .then(res => res.rowCount === 1);
 }
 
-module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg };
+function isOrgAdmin(userId, orgId) {
+  return db.query(`
+    SELECT *
+    FROM org_users
+    WHERE user_id = $1
+    AND org_id = $2;
+  `, [userId, orgId])
+  .then(res => {
+    if (res.rows[0] === undefined) {
+      return false
+    }
+    return res.rows[0].is_admin;
+  })
+}
+
+module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, isOrgAdmin };
