@@ -47,28 +47,50 @@ router.post('/:id/delete', (req, res) => {
 // Add password
 
 router.post('/passwords', (req, res) => {
-  const userId = req.session.user_id;
   const label = req.body.label;
   const username = req.body.usernamew;
+  const password = req.body.password
   const category = req.body.category;
-    addPassword(userObject)
-    // figure out how to pass the password properly
-    .then(userObject => {
-      res.json(userObject);
-    })
+  const orgId = req.body.orgId
+  const userId = req.session.user_id;
+  const newPassObj = {
+    label,
+    username,
+    password,
+    category,
+    orgId,
+    userId
+  }
+  addPassword(newPassObj)
+  .then(newPassObj => {
+    res.json(newPassObj);
   })
-});
+})
+
 
 // Edit individual password
 
 router.post('/passwords/:id', (req, res) => {
-  const userId = req.session.user_id;
   const label = req.body.label;
   const username = req.body.usernamew;
+  const password = req.body.password
   const category = req.body.category;
-  const org_id = getUserById(userId);
-  editPassword(userId, label, username, password, category, org_id)
-  .then()
+  const orgId = req.body.orgId
+  const userId = req.session.user_id;
+  let passwordId = req.params.id;
+  const newPassObj = {
+    label,
+    username,
+    password,
+    category,
+    userId,
+    orgId,
+    passwordId
+  }
+  editPassword(editPassObj)
+  .then(editedPassObj => {
+    res.json(editedPassObj);
+  })
 });
 
 // Delete passwords
