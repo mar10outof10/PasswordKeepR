@@ -1,5 +1,11 @@
 const db = require('../db');
 
+/**
+ * Gets all passwords belonging to a user, or any organization they're a part of.
+ *
+ * @param {String} userId        Id of the user.
+ * @return {[object]}            Array containing password objects.
+ */
 function getAllPasswords(userId) {
   return db.query(`
     SELECT *
@@ -10,7 +16,18 @@ function getAllPasswords(userId) {
   .then(res => res.rows);
 }
 
-function addPassword(label, username, password, category, user_id, org_id) {
+/**
+ * Add a password to the passwords table.
+ *
+ * @param {String} label         The label for the password entry.
+ * @param {String} username      The username for the password entry.
+ * @param {String} password      The password.
+ * @param {String} category      The category for the password entry.
+ * @param {Number} userId       The user_id the password belongs to.
+ * @param {Number} [orgId]      (Optional) The org_id the password belongs to.
+ * @return {object}              The password object that was inserted.
+ */
+function addPassword(label, username, password, category, userId, orgId) {
 
   if (arguments.length < 6) {
     return Promise.reject(`addPassword requires 6 arguments, only received ${arguments.length}`);
@@ -23,7 +40,19 @@ function addPassword(label, username, password, category, user_id, org_id) {
   .then(res => res.rows[0]);
 }
 
-function editPassword(label, username, password, category, user_id, org_id, passwordId) {
+/**
+ * Edits a password in the passwords table.
+ *
+ * @param {String} label         The label for the password entry.
+ * @param {String} username      The username for the password entry.
+ * @param {String} password      The password.
+ * @param {String} category      The category for the password entry.
+ * @param {Number} userId        The user_id the password belongs to.
+ * @param {Number} [orgId]       (Optional) The org_id the password belongs to.
+ * @param {Number} passwordId    The id of the password to update.
+ * @return {object}              The password object that was inserted.
+ */
+function editPassword(label, username, password, category, userId, orgId, passwordId) {
 
   if (arguments.length < 7) {
     return Promise.reject(`editPassword requires 7 arguments, only received ${arguments.length}`);
@@ -38,6 +67,12 @@ function editPassword(label, username, password, category, user_id, org_id, pass
   .then(res => res.rows[0]);
 }
 
+/**
+ * Deletes a password from the passwords table.
+ *
+ * @param {Number} passwordId    The id of the password to delete.
+ * @return {boolean}             True if deletion was successful, else false.
+ */
 function deletePassword(passwordId) {
   return db.query(`
     DELETE FROM passwords
