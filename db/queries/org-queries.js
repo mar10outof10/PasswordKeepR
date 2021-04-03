@@ -46,4 +46,14 @@ function updateUserInOrg(userId, orgId, isAdmin) {
   .then(res => res.rows[0]);
 }
 
-module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg };
+function deleteUserFromOrg(userId, orgId) {
+  return db.query(`
+    DELETE FROM org_users
+    WHERE user_id = $1
+    AND org_id = $2
+    RETURNING *;
+  `, [userId, orgId])
+  .then(res => res.rowCount === 1);
+}
+
+module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg };
