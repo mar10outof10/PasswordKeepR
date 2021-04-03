@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="../styles/nav.css" type="text/css" />
+
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="/scripts/app.js"></script>
+
+    <title>PasswordKeepR - Login</title>
+  </head>
+
 <!--Navbar-->
 <nav class="navbar navbar-light light-blue lighten-4">
 
@@ -5,21 +19,14 @@
   <img class="navbar-brand" src="https://image.flaticon.com/icons/png/512/61/61457.png">
 
   <div id="logged-in">
-  <% if (user) { %>
+
     <span class="align-middle">Logged in as user: <%= user.email %> </span>
     <div class="col-auto">
       <form class="logout" method="POST" action="/logout">
         <button type="submit" class="btn btn-danger">LOGOUT</button>
       </form>
     </div>
-  <% } else{ %>
-    <form class="login" method="GET" action="/login">
-      <button type="submit" class="btn btn-primary">LOG IN</button>
-    </form>
-    <form class="register" method="GET" action="/register">
-      <button type="submit" class="btn btn-primary">REGISTER</button>
-    </form>
-  <% } %>
+
   <!-- Collapse button -->
   <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"
     aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i
@@ -31,7 +38,7 @@
     <!-- Links -->
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/passwords">My Passwords</a>
+        <a class="nav-link" href="/passwords">My Passwords <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/passwords/new">New Password</a>

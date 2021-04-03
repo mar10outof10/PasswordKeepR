@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Home Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
     <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
@@ -9,6 +10,8 @@
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
+
+    <title>PasswordKeepR - Login</title>
   </head>
 
   <body>
@@ -16,7 +19,28 @@
     <%- include('partials/_header') %>
     <main>
       <h3>REGISTER</h3>
-    </main>
 
+      <form action="/register" method="POST">
+
+        <div class ="form-group row">
+          <label for="email" class="col-sm-12">Email:</label>
+          <div class="col-sm-12">
+            <input type="email" name="email" id="email" class="form-control" placeholder="email@Email.com">
+          </div>
+        </div>
+        <div class ="form-group row">
+          <label for="password" class="col-sm-12 col-form-label">Password:</label>
+          <div class="col-sm-12">
+            <input type="password" name="password" id="password" class="form-control" placeholder="password">
+          </div>
+        </div>
+        <div class ="form-group row">
+          <div class="col-sm-12">
+            <button type="submit" class="btn btn-primary">SUBMIT</button>
+          </div>
+        </div>
+
+      </form>
+  </main>
   </body>
 </html>
