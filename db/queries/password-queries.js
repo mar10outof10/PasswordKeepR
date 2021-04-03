@@ -17,6 +17,21 @@ const getAllPasswords = function(userId) {
 };
 
 /**
+ * Gets the password with the given id.
+ *
+ * @param {String} passwordId    Id of the password.
+ * @return {Promise<object>}   A promise that resolves to a password object.
+ */
+const getPasswordById = function(passwordId) {
+  return db.query(`
+    SELECT *
+    FROM passwords
+    WHERE id = $1;
+  `, [passwordId])
+  .then(res => res.rows[0]);
+};
+
+/**
  * Add a password to the passwords table.
  *
  * @param {String} label         The label for the password entry.
@@ -81,4 +96,4 @@ const deletePassword = function(passwordId) {
     .then(res => res.rowCount === 1);
 };
 
-module.exports = { getAllPasswords, addPassword, editPassword, deletePassword };
+module.exports = { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword };
