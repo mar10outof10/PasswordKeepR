@@ -158,30 +158,41 @@ router.post('/orgs/:id', (req, res) => {
   }
   // check if user is admin of org
   const orgId = req.params.id
-  const userId = req.session.user_
+  const userId = req.session.user_id;
   userIsOrgAdmin(userId, orgId)
   .then(bool => {
     if (bool) {
       const orgName = req.body.org_name;
-      addOrg(orgName)
-      .then()
+      editOrg(orgId, orgName)
+      .then(orgObject => {
+        return res.json(orgObject);
+      })
     }
+    // error: insufficient privledges
   })
 });
 
 // Delete Org
 
-router.post('/orgs/:id/delete', (req, res) => {
-  const userId = req.session.user_id;
+router.post('/orgs/:id', (req, res) => {
+  if (isUserLoggedIn(req)) {
+    res.end;
+  }
+  // check if user is admin of org
   const orgId = req.params.id
-  userIsOrgAdmin(userId, orgID)
+  const userId = req.session.user_id;
+  userIsOrgAdmin(userId, orgId)
   .then(bool => {
     if (bool) {
-      deleteOrg(orgName)
+      deleteOrg(orgId)
+      .then(rowCount => {
+        return res.send(rowCount);
+      })
     }
+    // error: insufficient privledges
   })
-  // Error - insufficient priledges
 });
+
 
 // /orgs/:id/userid
 
