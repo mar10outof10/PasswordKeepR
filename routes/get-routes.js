@@ -19,8 +19,7 @@ router.get('/login', (res, req) => {
 router.get('/register', (res, req) => {
   const userIdCookie = req.session.user_id;
   if (userIdCookie) {
-    res.redirect('/passwords');
-    return;
+    return res.redirect('/passwords');
   }
   res.render('register');
 });
@@ -34,7 +33,7 @@ router.get('/passwords', (res, req) => {
     .then(passwords => {
       const passwordArray = passwords;
       const templateVars = { passwords: passwordArray }
-      res.render('passwords', templateVars);
+      return res.render('passwords', templateVars);
     })
   }
   res.redirect('/login');
@@ -49,7 +48,7 @@ router.get('/passwords/:id', (res, req) => {
     .then(password => {
       const passwordObj = password;
       const templateVars = { password: passwordObj, user: userIdCookie }
-      res.render('/password/:id', templateVars)
+      return res.render('/password/:id', templateVars)
     })
   }
   res.redirect('/login');
@@ -61,21 +60,44 @@ router.get('/passwords/new', (res, req) => {
   const userIdCookie = req.session.user_id;
   if (userIdCookie) {
     const templateVars = { user: userIdCookie }
-    res.render('password/new', templateVars);
+    return res.render('password/new', templateVars);
   }
   res.redirect('/login');
 });
 
-// /orgs
+// Show all user organizations
 
 router.get('/orgs', (res, req) => {
   const userIdCookie = req.session.user_id;
-  res.render('/orgs', templateVars)
+  if (userIdCookie) {
+    getUserById(userIdCookie)
+    .then(userObject => {
+    getUserOrgs(userObject.userId)
+    .then(orgsObject => {
+      const orgs = orgsObject;
+      const templateVars = { user: userIdCookie, orgs: orgsObject }
+      return res.render('orgs', templateVars);
+    })
+    })
+  }
+  res.redirect('/login');
 });
 
-// /orgs/:id
+// Show individual org
 
 router.get('/orgs/:id', (res, req) => {
   const userIdCookie = req.session.user_id;
-  res.render('/orgs/:id', templateVars)
+  const org = req.params.id
+  if (userIdCookie) {
+    getUserById(userIdCookie)
+    .then(org => {
+    getOrg(org)
+    .then(returnOrg => {
+      const orgObject = returnOrg;
+      const templateVars = { user: userIdCookie, org: orgObject }
+      return res.render('orgs', templateVars);
+    })
+    })
+    res.redirect('/login');
+  }
 });
