@@ -4,7 +4,7 @@ const db = require('../db');
  * Gets all passwords belonging to a user, or any organization they're a part of.
  *
  * @param {String} userId        Id of the user.
- * @return {[object]}            Array containing password objects.
+ * @return {Promise<[object]>}   A promise that resolves to an array containing password objects.
  */
 const getAllPasswords = function(userId) {
   return db.query(`
@@ -23,9 +23,9 @@ const getAllPasswords = function(userId) {
  * @param {String} username      The username for the password entry.
  * @param {String} password      The password.
  * @param {String} category      The category for the password entry.
- * @param {Number} userId       The user_id the password belongs to.
- * @param {Number} [orgId]      (Optional) The org_id the password belongs to.
- * @return {object}              The password object that was inserted.
+ * @param {Number} userId        The user_id the password belongs to.
+ * @param {Number} [orgId]       (Optional) The org_id the password belongs to.
+ * @return {Promise<object>}     A promise that resolves to the password object that was inserted.
  */
 const addPassword = function(label, username, password, category, userId, orgId) {
 
@@ -50,7 +50,7 @@ const addPassword = function(label, username, password, category, userId, orgId)
  * @param {Number} userId        The user_id the password belongs to.
  * @param {Number} [orgId]       (Optional) The org_id the password belongs to.
  * @param {Number} passwordId    The id of the password to update.
- * @return {object}              The password object that was inserted.
+ * @return {Promise<object>}     A promise that resolves to the password object that was inserted.
  */
 const editPassword = function(label, username, password, category, userId, orgId, passwordId) {
 
@@ -71,7 +71,7 @@ const editPassword = function(label, username, password, category, userId, orgId
  * Deletes a password from the passwords table.
  *
  * @param {Number} passwordId    The id of the password to delete.
- * @return {boolean}             True if deletion was successful, else false.
+ * @return {Promise<boolean>}    A promise that returns to true if deletion was successful, else false.
  */
 const deletePassword = function(passwordId) {
   return db.query(`

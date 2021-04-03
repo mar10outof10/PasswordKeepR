@@ -5,7 +5,7 @@ const db = require('../db');
  * Grab the user object for the given user id.
  *
  * @param {Number} userId        Id of the user.
- * @return {object}              The user object representing the user with that id, or undefined.
+ * @return {Promise<object>}     A promise that resolves to the user object representing the user with that id, or undefined.
  */
 const getUserById = function(userId) {
   return db.query(`
@@ -20,7 +20,7 @@ const getUserById = function(userId) {
  * Grab the user object for the given email.
  *
  * @param {String} email         Email of the user.
- * @return {object}              The user object representing the user with that id, or undefined.
+ * @return {Promise<object>}     A promise that resolves to the user object representing the user with that id, or undefined.
  */
 const getUserByEmail = function(email) {
   return db.query(`
@@ -36,7 +36,7 @@ const getUserByEmail = function(email) {
  *
  * @param {String} email         Email of the user.
  * @param {String} password      Hashed password of the user.
- * @return {object}              The user object representing the new user.
+ * @return {Promise<object>}     A promise that resolves to the user object representing the new user.
  */
 const addUser = function(email, password) {
   return db.query(`
@@ -51,7 +51,7 @@ const addUser = function(email, password) {
  * Deletes a user from the users table.
  *
  * @param {String} userId        Id of the user to be deleted.
- * @return {boolean}             True if deletion was successful, else false.
+ * @return {Promise<boolean>}    A promise that resolves to true if deletion was successful, else false.
  */
 const deleteUser = function(userId) {
   return db.query(`
