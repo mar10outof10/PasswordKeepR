@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { getAllPasswords, getPasswordById,  } = require('../db/queries/password-queries')
-const { getUserOrgs, getOrg } = require('../db/queries/org-queries')
+const { getAllOrgs, getOrg } = require('../db/queries/org-queries')
 const { getUserById } = require('../db/queries/user-queries')
 
 // Render login page
@@ -74,7 +74,7 @@ router.get('/orgs', (res, req) => {
   if (userIdCookie) {
     getUserById(userIdCookie)
     .then(userObject => {
-    getUserOrgs(userObject.userId)
+    getAllOrgs(userObject.userId)
     .then(orgsObject => {
       const orgs = orgsObject;
       const templateVars = { user: userIdCookie, orgs: orgsObject }

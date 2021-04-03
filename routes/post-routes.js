@@ -13,14 +13,14 @@ const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/quer
 router.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  getUserByEmail()
+  getUserByEmail(email)
   .then(userObject => {
     if (password === userObject.password) {
-      res.redirect('/passwords');
+      // add usercookie
+      return res.redirect('/passwords');
     }
   })
-  // add cookie
-  res.redirect('/passwords');
+  return res.redirect('/login');
 })
 
 // Register user
@@ -29,7 +29,9 @@ router.post('/register', (req, res) => {
   const email = req.params.email;
   const password = req.params.password;;
   addUser(email, password)
-  .then()
+  .then(user => {
+    res.json(user);
+  })
 });
 
 // Delete user
@@ -37,7 +39,9 @@ router.post('/register', (req, res) => {
 router.post('/:id/delete', (req, res) => {
   const userId = req.id;
   deleteUser(userID)
-  .then();
+  .then(rowCount => {
+    res.json(rowCount);
+  });
 });
 
 // Add password
@@ -47,11 +51,11 @@ router.post('/passwords', (req, res) => {
   const label = req.body.label;
   const username = req.body.usernamew;
   const category = req.body.category;
-  getUserById(userId)
-  .then(userObject => {
     addPassword(userObject)
     // figure out how to pass the password properly
-    .then()
+    .then(userObject => {
+      res.json(userObject);
+    })
   })
 });
 
@@ -134,4 +138,8 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
   // return error if user is not admin
 });
 
+
+// TODO -
+// add cookies
+// encrypt password
 
