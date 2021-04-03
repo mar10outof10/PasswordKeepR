@@ -68,6 +68,10 @@ router.post('/:id/delete', (req, res) => {
 // Add password
 
 router.post('/passwords', (req, res) => {
+  const userIdCookie = req.session.user_id;
+  if (!userIdCookie) {
+    return;
+  }
   const label = req.body.label;
   const username = req.body.usernamew;
   const password = req.body.password
