@@ -6,15 +6,15 @@ const db = require('../db');
  * @param {String} userId        Id of the user.
  * @return {[object]}            Array containing password objects.
  */
-function getAllPasswords(userId) {
+const getAllPasswords = function(userId) {
   return db.query(`
     SELECT *
     FROM passwords
     WHERE user_id = $1
     OR org_id IN (SELECT org_id FROM org_users WHERE user_id = $1);
   `, [userId])
-  .then(res => res.rows);
-}
+    .then(res => res.rows);
+};
 
 /**
  * Add a password to the passwords table.
@@ -27,7 +27,7 @@ function getAllPasswords(userId) {
  * @param {Number} [orgId]      (Optional) The org_id the password belongs to.
  * @return {object}              The password object that was inserted.
  */
-function addPassword(label, username, password, category, userId, orgId) {
+const addPassword = function(label, username, password, category, userId, orgId) {
 
   if (arguments.length < 6) {
     return Promise.reject(`addPassword requires 6 arguments, only received ${arguments.length}`);
@@ -36,9 +36,9 @@ function addPassword(label, username, password, category, userId, orgId) {
     INSERT INTO passwords (label, username, password, category, user_id, org_id)
     VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING *;
-  `, Array.from(arguments))
-  .then(res => res.rows[0]);
-}
+  `, [label, username, password, category, userId, orgId])
+    .then(res => res.rows[0]);
+};
 
 /**
  * Edits a password in the passwords table.
@@ -52,7 +52,7 @@ function addPassword(label, username, password, category, userId, orgId) {
  * @param {Number} passwordId    The id of the password to update.
  * @return {object}              The password object that was inserted.
  */
-function editPassword(label, username, password, category, userId, orgId, passwordId) {
+const editPassword = function(label, username, password, category, userId, orgId, passwordId) {
 
   if (arguments.length < 7) {
     return Promise.reject(`editPassword requires 7 arguments, only received ${arguments.length}`);
@@ -63,9 +63,9 @@ function editPassword(label, username, password, category, userId, orgId, passwo
     SET (label, username, password, category, user_id, org_id) = ($1, $2, $3, $4, $5, $6)
     WHERE id = $7
     RETURNING *;
-  `, Array.from(arguments))
-  .then(res => res.rows[0]);
-}
+  `, [label, username, password, category, userId, orgId, passwordId])
+    .then(res => res.rows[0]);
+};
 
 /**
  * Deletes a password from the passwords table.
@@ -73,12 +73,12 @@ function editPassword(label, username, password, category, userId, orgId, passwo
  * @param {Number} passwordId    The id of the password to delete.
  * @return {boolean}             True if deletion was successful, else false.
  */
-function deletePassword(passwordId) {
+const deletePassword = function(passwordId) {
   return db.query(`
     DELETE FROM passwords
     WHERE id = $1;
   `, [passwordId])
-  .then(res => res.rowCount === 1);
-}
+    .then(res => res.rowCount === 1);
+};
 
 module.exports = { getAllPasswords, addPassword, editPassword, deletePassword };
