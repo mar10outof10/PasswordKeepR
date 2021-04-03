@@ -23,4 +23,19 @@ function addPassword(label, username, password, category, user_id, org_id) {
   .then(res => res.rows[0]);
 }
 
-module.exports = { getAllPasswords, addPassword };
+function editPassword(label, username, password, category, user_id, org_id, passwordId) {
+
+  if (arguments.length < 7) {
+    return Promise.reject(`editPassword requires 7 arguments, only received ${arguments.length}`);
+  }
+
+  return db.query(`
+    UPDATE passwords
+    SET (label, username, password, category, user_id, org_id) = ($1, $2, $3, $4, $5, $6)
+    WHERE id = $7
+    RETURNING *;
+  `, Array.from(arguments))
+  .then(res => res.rows[0]);
+}
+
+module.exports = { getAllPasswords, addPassword, editPassword };
