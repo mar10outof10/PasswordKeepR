@@ -1,20 +1,18 @@
 const express = require('express');
 const router  = express.Router();
 
-const {} = require('')
 const cookieSession = require('cookie-session');
 
 const { addPassword, editPassword, deletePassword, getPasswordById } = require('../db/queries/password-queries')
-const { addOrg, userIsOrgAdmin, userIsInOrg } = require('../db/queries/org-queries')
+const { addOrg, userIsOrgAdmin, userIsInOrg, addUserToOrg } = require('../db/queries/org-queries')
 const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/queries/user-queries');
 const { json } = require('body-parser');
-
+const { isUserLoggedIn } = require('./helpers')
 // User login
 
 router.post('/login', (req, res) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
-    return;
+  if (isUserLoggedIn(req)) {
+    res.end;
   }
   const email = req.body.email;
   const password = req.body.password;
@@ -31,9 +29,8 @@ router.post('/login', (req, res) => {
 // Register user
 
 router.post('/register', (req, res) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
-    return;
+  if (isUserLoggedIn(req)) {
+    res.end;
   }
   const email = req.params.email;
   const password = req.params.password;;
@@ -46,10 +43,8 @@ router.post('/register', (req, res) => {
 // Delete user
 
 router.post('/:id/delete', (req, res) => {
-  // if user is not logged in, deny request
-  const userIdCookie = req.session.user_id;
-  if (!userIdCookie) {
-    return;
+  if (isUserLoggedIn(req)) {
+    res.end;
   }
   const userId = req.params.id;
   getUserById(userIdCookie)
@@ -70,8 +65,8 @@ router.post('/:id/delete', (req, res) => {
 
 router.post('/passwords', (req, res) => {
   const userIdCookie = req.session.user_id;
-  if (!userIdCookie) {
-    return;
+  if (isUserLoggedIn(req)) {
+    res.end;
   }
   const label = req.body.label;
   const username = req.body.usernamew;
@@ -122,11 +117,9 @@ router.post('/passwords/:id', (req, res) => {
 
 // Delete password
 
-router.post('//passwords/:id/delete', (req, res) => {
-  // is user logged in
-  const userIdCookie = req.session.user_id;
-  if (!userIdCookie) {
-    return;
+router.post('/passwords/:id/delete', (req, res) => {
+  if (isUserLoggedIn(req)) {
+    res.end;
   }
   const passwordId = req.params.id;
   getPasswordById(passwordId)
@@ -144,16 +137,26 @@ router.post('//passwords/:id/delete', (req, res) => {
 // Add new Org
 
 router.post('/orgs', (req, res) => {
-  orgName = req.body.orgName
+  if (isUserLoggedIn(req)) {
+    res.end;
+  }
+  const userId = req.session.user_id;
+  const orgName = req.body.orgName
   addOrg(orgName)
-  .then();
-  // TODO: how do we add users to org?
+  .then(orgObject => {
+    const orgId = orgObject.id;
+    addUserToOrg(userId, orgId, true);
+    return res.json(orgObject);
+  });
 });
 
-// Add Org
+// Edit org
 
 router.post('/orgs/:id', (req, res) => {
-  const orgName = req.params.org_name;
+  if (isUserLoggedIn(req)) {
+    res.end;
+  }
+  const orgName = req.body.org_name;
   addOrg(orgName)
   .then()
 });
