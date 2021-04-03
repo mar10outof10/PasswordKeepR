@@ -44,6 +44,7 @@ Jared, Martin, Mitchell
 # wireframing
 - build path
 - compile all wireframes?
+- /orgs wireframe: https://www.figma.com/file/tVmKOB2hDx93rLdRvl58Oi/orgs?node-id=0%3A1
 
 # data
 - erd
