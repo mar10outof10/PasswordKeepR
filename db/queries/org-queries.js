@@ -19,4 +19,12 @@ function editOrg(orgId, newOrgName) {
   .then(res => res.rows[0]);
 }
 
-module.exports = { addOrg, editOrg };
+function deleteOrg(orgId) {
+  return db.query(`
+    DELETE FROM orgs
+    WHERE id = $1;
+  `, [orgId])
+  .then(res => res.rowCount === 1);
+}
+
+module.exports = { addOrg, editOrg, deleteOrg };
