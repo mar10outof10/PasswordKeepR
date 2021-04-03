@@ -33,8 +33,7 @@ router.get('/passwords', (res, req) => {
   if (userIdCookie) {
     getAllPasswords(userIdCookie)
     .then(passwords => {
-      const passwordArray = passwords;
-      const templateVars = { passwords: passwordArray }
+      const templateVars = { passwords }
       return res.render('passwords', templateVars);
     })
   }
@@ -45,11 +44,11 @@ router.get('/passwords', (res, req) => {
 
 router.get('/passwords/:id', (res, req) => {
   const userIdCookie = req.session.user_id;
+  const passwordId = req.params.id;
   if (userIdCookie) {
-    getPasswordById()
+    getPasswordById(passwordId)
     .then(password => {
-      const passwordObj = password;
-      const templateVars = { password: passwordObj, user: userIdCookie }
+      const templateVars = { password , user: userIdCookie }
       return res.render('/password/:id', templateVars)
     })
   }
@@ -75,9 +74,8 @@ router.get('/orgs', (res, req) => {
     getUserById(userIdCookie)
     .then(userObject => {
     getAllOrgs(userObject.userId)
-    .then(orgsObject => {
-      const orgs = orgsObject;
-      const templateVars = { user: userIdCookie, orgs: orgsObject }
+    .then(orgs => {
+      const templateVars = { user: userIdCookie, orgs }
       return res.render('orgs', templateVars);
     })
     })
@@ -89,17 +87,14 @@ router.get('/orgs', (res, req) => {
 
 router.get('/orgs/:id', (res, req) => {
   const userIdCookie = req.session.user_id;
-  const org = req.params.id
+  const orgId = req.params.id;
   if (userIdCookie) {
     getUserById(userIdCookie)
+    .then(getOrg)
     .then(org => {
-    getOrg(org)
-    .then(returnOrg => {
-      const orgObject = returnOrg;
-      const templateVars = { user: userIdCookie, org: orgObject }
+      const templateVars = { user: userIdCookie, org }
       return res.render('orgs', templateVars);
-    })
-    })
+    });
     res.redirect('/login');
   }
 });
