@@ -3,46 +3,63 @@ const router  = express.Router();
 
 const {} = require
 
-// /login
+// Render login page
 
 router.get('/login', (res, req) => {
-  res.render('/login')
-});
+  const userIdCookie = req.session.user_id;
+  if (userIdCookie) {
+    res.redirect('/passwords');
+    return;
+  }
+  res.render('login');
+})
 
-// /register
+// Render register page
 
 router.get('/register', (res, req) => {
-  res.render('/register')
+  const userIdCookie = req.session.user_id;
+  if (userIdCookie) {
+    res.redirect('/passwords');
+    return;
+  }
+  res.render('register');
 });
 
 // /passwords
 
 router.get('/passwords', (res, req) => {
-  const userId = cookies.userId
+  const userIdCookie = req.session.user_id;
   getAllPasswords(userId)
-  res.render('passwords', templateVars)
-});
+  .then(passwords => {}
+    const templateVars;
+    res.render('passwords', templateVars);
+  })
+})
 
 // /passwords/:id
 
 router.get('/passwords/:id', (res, req) => {
-  res.render('individual password', templateVars)
+  const userIdCookie = req.session.user_id;
+  res.render('/password/:id', templateVars)
 });
 
 // /passwords/new
 
 router.get('/passwords/new', (res, req) => {
-  res.render('new password page', templateVars)
+  const userIdCookie = req.session.user_id;
+  res.render('password/new', templateVars)
 });
 
 // /orgs
 
 router.get('/orgs', (res, req) => {
+  const userIdCookie = req.session.user_id;
   res.render('/orgs', templateVars)
 });
 
 // /orgs/:id
 
 router.get('/orgs/:id', (res, req) => {
+  const userIdCookie = req.session.user_id;
   res.render('/orgs/:id', templateVars)
 });
