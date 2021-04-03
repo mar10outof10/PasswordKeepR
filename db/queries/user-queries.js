@@ -9,4 +9,13 @@ function getUserById(userId) {
   .then(res => res.rows[0]);
 }
 
-module.exports = { getUserById };
+function getUserByEmail(email) {
+  return db.query(`
+    SELECT *
+    FROM users
+    WHERE email = $1;
+  `, [email])
+  .then(res => res.rows[0]);
+}
+
+module.exports = { getUserById, getUserByEmail };
