@@ -1,7 +1,8 @@
 DROP TABLE IF EXISTS orgs CASCADE;
 CREATE TABLE orgs (
   id SERIAL PRIMARY KEY NOT NULL,
-  name VARCHAR(100) NOT NULL
+  name VARCHAR(100) NOT NULL,
+  UNIQUE (name)
 );
 
 DROP TABLE IF EXISTS org_users CASCADE;
@@ -9,5 +10,6 @@ CREATE TABLE org_users (
   id SERIAL PRIMARY KEY NOT NULL,
   user_id INT REFERENCES users(id) NOT NULL,
   org_id INT REFERENCES orgs(id) NOT NULL,
-  is_admin BOOLEAN DEFAULT false
+  is_admin BOOLEAN DEFAULT false,
+  UNIQUE (user_id, org_id)
 );
