@@ -11,6 +11,10 @@ const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/quer
 // User login
 
 router.post('/login', (req, res) => {
+  const userIdCookie = req.session.user_id;
+  if (userIdCookie) {
+    return;
+  }
   const email = req.body.email;
   const password = req.body.password;
   getUserByEmail(email)
@@ -26,6 +30,10 @@ router.post('/login', (req, res) => {
 // Register user
 
 router.post('/register', (req, res) => {
+  const userIdCookie = req.session.user_id;
+  if (userIdCookie) {
+    return;
+  }
   const email = req.params.email;
   const password = req.params.password;;
   addUser(email, password)
@@ -75,9 +83,10 @@ router.post('/passwords/:id', (req, res) => {
   const username = req.body.usernamew;
   const password = req.body.password
   const category = req.body.category;
+  // how do we determine org?
   const orgId = req.body.orgId
   const userId = req.session.user_id;
-  let passwordId = req.params.id;
+  const passwordId = req.params.id;
   const newPassObj = {
     label,
     username,
