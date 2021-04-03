@@ -1,5 +1,12 @@
 const db = require('../db');
 
+
+/**
+ * Grab the user object for the given user id.
+ *
+ * @param {Number} userId        Id of the user.
+ * @return {object}              The user object representing the user with that id, or undefined.
+ */
 function getUserById(userId) {
   return db.query(`
     SELECT *
@@ -9,6 +16,12 @@ function getUserById(userId) {
   .then(res => res.rows[0]);
 }
 
+/**
+ * Grab the user object for the given email.
+ *
+ * @param {String} email         Email of the user.
+ * @return {object}              The user object representing the user with that id, or undefined.
+ */
 function getUserByEmail(email) {
   return db.query(`
     SELECT *
@@ -18,6 +31,13 @@ function getUserByEmail(email) {
   .then(res => res.rows[0]);
 }
 
+/**
+ * Add a user to the users table.
+ *
+ * @param {String} email         Email of the user.
+ * @param {String} password      Hashed password of the user.
+ * @return {object}              The user object representing the new user.
+ */
 function addUser(email, password) {
   return db.query(`
     INSERT INTO users (email, password)
@@ -27,6 +47,12 @@ function addUser(email, password) {
   .then(res => res.rows[0]);
 }
 
+/**
+ * Deletes a user from the users table.
+ *
+ * @param {String} userId        Id of the user to be deleted.
+ * @return {boolean}             True if deletion was successful, else false.
+ */
 function deleteUser(userId) {
   return db.query(`
     DELETE FROM users
