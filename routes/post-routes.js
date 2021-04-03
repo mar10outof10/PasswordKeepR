@@ -42,15 +42,15 @@ router.post('/passwords/:id', (req, res) => {
 // /passwords/:id/delete
 
 router.post('//passwords/:id/delete', (req, res) => {
-  // passwordId = req.params.id
-  // deletePassword(passwordId)
+  passwordId = req.params.id
+  deletePassword(passwordId)
 });e
 
 // /orgs
 
 router.post('/orgs', (req, res) => {
-  // orgName = req.body.orgName
-  // addOrg(orgName)
+  orgName = req.body.orgName
+  addOrg(orgName)
   // TODO: how do we add users to org?
 });
 
@@ -63,26 +63,33 @@ router.post('/orgs/:id', (req, res) => {
 // /orgs/:id/delete
 
 router.post('/orgs/:id/delete', (req, res) => {
-  // orgName = req.params.id
-  // delete(Org)
+  const orgName = req.params.id
+  deleteOrg(orgName)
 });
 
 // /orgs/:id/userid
 
 router.post('/orgs/:id/:userid', (req, res) => {
-  // if (isUserInOrg(user_id))
-  // updateUserInOrg(org)
-  // orgId = req.params.id
-  // userId = req.cookies.user_id
-  // isAdmin = false;
+  const orgId = req.params.id
+  const userId = req.cookies.user_id
+  const isAdmin = false;
+  if (isInOrg(userId, orgId)) {
+    updateUserInOrg(orgId, userID, isAdmin)
+  }
   // TODO: how do we authenticate admin privs?
-  // addUserToOrg(orgId, userID, isAdmin)
+  addUserToOrg(orgId, userID, isAdmin)
 });
 
 // /orgs/:id/:userid/delete
 
 router.post('/orgs/:id/:userid/delete', (req, res) => {
-
+  const orgId = req.params.id
+  const AdminId = req.cookies.user_id
+  const userId = req.params.user_id
+  if (isOrgAdmin(adminId, orgId)) {
+    deleteUserFromOrg((orgNAme, userId))
+  }
+  // return error if user is not admin
 });
 
 

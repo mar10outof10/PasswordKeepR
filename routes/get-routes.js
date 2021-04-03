@@ -6,45 +6,43 @@ const {} = require
 // /login
 
 router.get('/login', (res, req) => {
-  // const email = res.body.email
-  // getUserByEmail(email)
+  res.render('/login')
 });
 
 // /register
 
 router.get('/register', (res, req) => {
-  // const email = res.body.email
-  // const password = res.body.password
-  // addUser(email, password)
+  res.render('/register')
 });
 
 // /passwords
 
 router.get('/passwords', (res, req) => {
-  // const userId = cookies.userId
-  // getAllPasswords(userId)
+  const userId = cookies.userId
+  getAllPasswords(userId)
+  res.render('passwords', templateVars)
 });
 
 // /passwords/:id
 
 router.get('/passwords/:id', (res, req) => {
-
+  res.render('individual password', templateVars)
 });
 
 // /passwords/new
 
 router.get('/passwords/new', (res, req) => {
-
+  res.render('new password page', templateVars)
 });
 
 // /orgs
 
 router.get('/orgs', (res, req) => {
-
+  res.render('/orgs', templateVars)
 });
 
 // /orgs/:id
 
 router.get('/orgs/:id', (res, req) => {
-
+  res.render('/orgs/:id', templateVars)
 });
