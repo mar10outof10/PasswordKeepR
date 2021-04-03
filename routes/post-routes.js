@@ -4,9 +4,10 @@ const router  = express.Router();
 const {} = require('')
 const cookieSession = require('cookie-session');
 
-const { addPassword, editPassword, deletePassword } = require('../db/queries/password-queries')
+const { addPassword, editPassword, deletePassword, getPasswordById } = require('../db/queries/password-queries')
 const { addOrg, userIsOrgAdmin, userIsInOrg } = require('../db/queries/org-queries')
-const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/queries/user-queries')
+const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/queries/user-queries');
+const { json } = require('body-parser');
 
 // User login
 
@@ -56,7 +57,7 @@ router.post('/:id/delete', (req, res) => {
     if (userObject.userId === userId) {
       deleteUser(userId)
       .then(rowcount => {
-        res.send(rowcount);
+        // res.send(rowcount);
         return res.redirect('/login');
       })
     }
@@ -119,12 +120,25 @@ router.post('/passwords/:id', (req, res) => {
   })
 });
 
-// Delete passwords
+// Delete password
 
 router.post('//passwords/:id/delete', (req, res) => {
-  passwordId = req.params.id
-  deletePassword(passwordId)
-  .then();
+  // is user logged in
+  const userIdCookie = req.session.user_id;
+  if (!userIdCookie) {
+    return;
+  }
+  const passwordId = req.params.id;
+  getPasswordById(passwordId)
+  .then(passwordObj => {
+    if (passwordObj.userId === userIdCookie) {
+      deletePassword(passwordId)
+      .then(rowCount => {
+        // res.json(rowCount);
+        res.redirect('/passwords')
+      })
+    }
+  })
 });
 
 // Add new Org
