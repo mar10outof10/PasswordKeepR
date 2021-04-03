@@ -36,3 +36,15 @@ router.get('/passwords/:id', (res, req) => {
 router.get('/passwords/new', (res, req) => {
 
 });
+
+// /orgs
+
+router.get('/orgs', (res, req) => {
+
+});
+
+// /orgs/:id
+
+router.get('/orgs/:id', (res, req) => {
+
+});
