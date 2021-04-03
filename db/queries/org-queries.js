@@ -1,5 +1,11 @@
 const db = require('../db');
 
+/**
+ * Adds an organization to the orgs table.
+ *
+ * @param {String} orgName       The name of the organization.
+ * @return {Promise<object>}     A promise that resolves with the new organization object.
+ */
 function addOrg(orgName) {
   return db.query(`
     INSERT INTO orgs (name)
@@ -9,6 +15,13 @@ function addOrg(orgName) {
   .then(res => res.rows[0]);
 }
 
+/**
+ * Edits an organization in the orgs table.
+ *
+ * @param {Number} orgId         The id of the organization.
+ * @param {String} newOrgName    The new name of the organization.
+ * @return {Promise<object>}     A promise that resolves with the updated organization object.
+ */
 function editOrg(orgId, newOrgName) {
   return db.query(`
     UPDATE orgs
@@ -19,6 +32,12 @@ function editOrg(orgId, newOrgName) {
   .then(res => res.rows[0]);
 }
 
+/**
+ * Deletes an organization from the orgs table.
+ *
+ * @param {Number} orgId         The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the deletion was successful.
+ */
 function deleteOrg(orgId) {
   return db.query(`
     DELETE FROM orgs
@@ -27,6 +46,14 @@ function deleteOrg(orgId) {
   .then(res => res.rowCount === 1);
 }
 
+/**
+ * Adds a user to an organization.
+ *
+ * @param {Number} userId         The id of the user to add.
+ * @param {Number} orgId          The id of the organization.
+ * @param {boolean} isAdmin       If the user should be an org admin.
+ * @return {Promise<object>}      A promise that resolves to the new org_user object.
+ */
 function addUserToOrg(userId, orgId, isAdmin) {
   return db.query(`
     INSERT INTO org_users (user_id, org_id, is_admin)
@@ -36,6 +63,14 @@ function addUserToOrg(userId, orgId, isAdmin) {
   .then(res => res.rows[0]);
 }
 
+/**
+ * Updates a users status in an organization.
+ *
+ * @param {Number} userId         The id of the user to update.
+ * @param {Number} orgId          The id of the organization.
+ * @param {boolean} isAdmin       If the user should be an org admin.
+ * @return {Promise<object>}      A promise that resolves to the updated org_user object.
+ */
 function updateUserInOrg(userId, orgId, isAdmin) {
   return db.query(`
     UPDATE org_users
@@ -46,6 +81,13 @@ function updateUserInOrg(userId, orgId, isAdmin) {
   .then(res => res.rows[0]);
 }
 
+/**
+ * Deletes a user from an organization.
+ *
+ * @param {Number} userId         The id of the user to remove.
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user was removed successfully.
+ */
 function deleteUserFromOrg(userId, orgId) {
   return db.query(`
     DELETE FROM org_users
@@ -56,6 +98,13 @@ function deleteUserFromOrg(userId, orgId) {
   .then(res => res.rowCount === 1);
 }
 
+/**
+ * Checks if the user is an admin of the given org.
+ *
+ * @param {Number} userId         The id of the user to check.
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is an admin of the org.
+ */
 function userIsOrgAdmin(userId, orgId) {
   return db.query(`
     SELECT *
@@ -71,6 +120,13 @@ function userIsOrgAdmin(userId, orgId) {
   })
 }
 
+/**
+ * Checks if the user is a member of an org.
+ *
+ * @param {Number} userId         The id of the user to check.
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
+ */
 function userIsInOrg(userId, orgId) {
   return db.query(`
     SELECT *
