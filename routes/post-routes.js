@@ -104,7 +104,7 @@ router.post('/passwords/:id', (req, res) => {
   const orgId = req.body.orgId
   const userId = req.session.user_id;
   const passwordId = req.params.id;
-  const newPassObj = {
+  const editPassObj = {
     label,
     username,
     password,
