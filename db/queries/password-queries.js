@@ -38,4 +38,12 @@ function editPassword(label, username, password, category, user_id, org_id, pass
   .then(res => res.rows[0]);
 }
 
-module.exports = { getAllPasswords, addPassword, editPassword };
+function deletePassword(passwordId) {
+  return db.query(`
+    DELETE FROM passwords
+    WHERE id = $1;
+  `, [passwordId])
+  .then(res => res.rowCount === 1);
+}
+
+module.exports = { getAllPasswords, addPassword, editPassword, deletePassword };
