@@ -1,35 +1,6 @@
--- Drop and recreate Users table (Example)
-
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   id SERIAL PRIMARY KEY NOT NULL,
   email VARCHAR(100) NOT NULL,
   joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-DROP TABLE IF EXISTS orgs CASCADE;
-CREATE TABLE orgs (
-  id SERIAL PRIMARY KEY NOT NULL,
-  name VARCHAR(100) NOT NULL
-);
-
-DROP TABLE IF EXISTS passwords CASCADE;
-CREATE TABLE passwords (
-  id SERIAL PRIMARY KEY NOT NULL,
-  label VARCHAR(100) NOT NULL,
-  username VARCHAR(100) NOT NULL,
-  password VARCHAR(100) NOT NULL,
-  category VARCHAR(100) NOT NULL,
-  user_id INT REFERENCES users(id) NOT NULL,
-  org_id INT REFERENCES orgs(id)
-);
-
-
-
-DROP TABLE IF EXISTS org_users CASCADE;
-CREATE TABLE org_users (
-  id SERIAL PRIMARY KEY NOT NULL,
-  user_id INT REFERENCES users(id) NOT NULL,
-  org_id INT REFERENCES orgs(id) NOT NULL,
-  is_admin BOOLEAN DEFAULT false
 );
