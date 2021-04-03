@@ -36,4 +36,14 @@ function addUserToOrg(userId, orgId, isAdmin) {
   .then(res => res.rows[0]);
 }
 
-module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg };
+function updateUserInOrg(userId, orgId, isAdmin) {
+  return db.query(`
+    UPDATE org_users
+    SET is_admin = $1
+    WHERE user_id = $2 AND org_id = $3
+    RETURNING *;
+  `, [isAdmin, userId, orgId])
+  .then(res => res.rows[0]);
+}
+
+module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg };
