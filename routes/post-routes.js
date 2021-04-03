@@ -45,12 +45,25 @@ router.post('/register', (req, res) => {
 // Delete user
 
 router.post('/:id/delete', (req, res) => {
-  const userId = req.id;
-  deleteUser(userID)
-  .then(rowCount => {
-    res.json(rowCount);
-  });
+  // if user is not logged in, deny request
+  const userIdCookie = req.session.user_id;
+  if (!userIdCookie) {
+    return;
+  }
+  const userId = req.params.id;
+  getUserById(userIdCookie)
+  .then(userObject => {
+    if (userObject.userId === userId) {
+      deleteUser(userId)
+      .then(rowcount => {
+        res.send(rowcount);
+        return res.redirect('/login');
+      })
+    }
+    return;
+  })
 });
+
 
 // Add password
 
