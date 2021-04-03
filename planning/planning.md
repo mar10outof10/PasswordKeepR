@@ -6,7 +6,7 @@ Jared, Martin, Mitchell
 
 ## Overall goals
 - Finish MVP
-- Use remaining time for nice-to-have
+- Use remaining time for nice-to-haves
 - Have fun!
 
 ## Communication norms
@@ -29,7 +29,6 @@ Jared, Martin, Mitchell
 ## App planning
 
 # divison of labour/roles and responsibilities
-- horizontal, vertical?
 - Build MVP horizontally
 - switch into vertical for nice-to-have features
 
@@ -44,7 +43,6 @@ Jared, Martin, Mitchell
 # wireframing
 - build path
 - compile all wireframes?
-- /orgs wireframe: https://www.figma.com/file/tVmKOB2hDx93rLdRvl58Oi/orgs?node-id=0%3A1
 
 # data
 - erd
@@ -58,7 +56,6 @@ Jared, Martin, Mitchell
 
 # timeline
 - Friday - plan
-- Saturday off limits
 - Discuss collabertive task timing daily
 - Planning done by Sat night
 - Have MVP ready for Wed morning standup
