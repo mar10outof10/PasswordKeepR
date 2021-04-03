@@ -156,9 +156,17 @@ router.post('/orgs/:id', (req, res) => {
   if (isUserLoggedIn(req)) {
     res.end;
   }
-  const orgName = req.body.org_name;
-  addOrg(orgName)
-  .then()
+  // check if user is admin of org
+  const orgId = req.params.id
+  const userId = req.session.user_
+  userIsOrgAdmin(userId, orgId)
+  .then(bool => {
+    if (bool) {
+      const orgName = req.body.org_name;
+      addOrg(orgName)
+      .then()
+    }
+  })
 });
 
 // Delete Org
