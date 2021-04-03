@@ -1,52 +1,36 @@
-<!--Navbar-->
-<nav class="navbar navbar-light light-blue lighten-4">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <img class="navbar-brand" src="https://image.flaticon.com/icons/png/512/61/61457.png" width="40" height="50">
 
-  <!-- Navbar brand -->
-  <img class="navbar-brand" src="https://image.flaticon.com/icons/png/512/61/61457.png">
-
-  <div id="logged-in">
   <% if (user) { %>
-    <span class="align-middle">Logged in as user: <%= user.email %> </span>
-    <div class="col-auto">
-      <form class="logout" method="POST" action="/logout">
-        <button type="submit" class="btn btn-danger">LOGOUT</button>
-      </form>
-    </div>
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item active">
+      <span>Logged in as: <%= user.email %></span>
+    </li>
+    <form class="logout" method="POST" action="/logout">
+      <button type="submit" class="btn btn-danger">LOGOUT</button>
+    </form>
+
+  </ul>
   <% } else{ %>
-    <form class="login" method="GET" action="/login">
-      <button type="submit" class="btn btn-primary">LOG IN</button>
-    </form>
-    <form class="register" method="GET" action="/register">
-      <button type="submit" class="btn btn-primary">REGISTER</button>
-    </form>
-  <% } %>
-  <!-- Collapse button -->
-  <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"
-    aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i
-        class="fas fa-bars fa-1x"></i></span></button>
-
-  <!-- Collapsible content -->
-  <div class="collapse navbar-collapse" id="navbarSupportedContent1">
-
-    <!-- Links -->
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/passwords">My Passwords</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/passwords/new">New Password</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/orgs">My Organizations</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/orgs/new">New Organization</a>
-      </li>
+      <form class="login" method="GET" action="/login">
+        <button type="submit" class="btn btn-primary">LOGIN</button>
+      </form>
+      <form class="register" method="GET" action="/register">
+        <button type="submit" class="btn btn-info">REGISTER</button>
+      </form>
     </ul>
-    <!-- Links -->
-
+  <% } %>
+  <div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      &#127828;&#127828;&#127828;
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a class="dropdown-item" href="/passwords">My Passwords</a>
+      <a class="dropdown-item" href="/passwords/new">New Password</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="/orgs">My Organizations</a>
+      <a class="dropdown-item" href="/orgs/new">New Organization</a>
+    </div>
   </div>
-  <!-- Collapsible content -->
-
 </nav>
-<!--/.Navbar-->
