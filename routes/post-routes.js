@@ -4,7 +4,7 @@ const router  = express.Router();
 const {} = require('')
 const cookieSession = require('cookie-session');
 
-// /login
+// User login
 
 router.post('/login', (req, res) => {
   const email = req.body.email;
@@ -13,13 +13,11 @@ router.post('/login', (req, res) => {
   .then(userObject => {
     if (password === userObject.password) {
       res.redirect('/passwords');
-
     }
-    res.redirect('/passwords');
   })
   // add cookie
-  // TODO - write helper function cookie
-});
+  res.redirect('/passwords');
+})
 
 // /register
 
@@ -30,7 +28,7 @@ router.post('/register', (req, res) => {
   .then()
 });
 
-// /:id/delete
+// Delete user
 
 router.post('/:id/delete', (req, res) => {
   const userId = req.id;
@@ -38,18 +36,21 @@ router.post('/:id/delete', (req, res) => {
   .then();
 });
 
-// /passwords
+// Add password
 
 router.post('/passwords', (req, res) => {
   const userId = req.session.user_id;
   const label = req.body.label;
   const username = req.body.usernamew;
   const category = req.body.category;
-  getUserById(userId).then(userObject => {
-    addPassword()
+  getUserById(userId)
+  .then(userObject => {
+    addPassword(userObject)
+    // figure out how to pass the password properly
     .then()
-  });
-}
+  })
+});
+
 // Edit individual password
 
 router.post('/passwords/:id', (req, res) => {
@@ -58,7 +59,8 @@ router.post('/passwords/:id', (req, res) => {
   const username = req.body.usernamew;
   const category = req.body.category;
   const org_id = getUserById(userId);
-  editPassword(userId, label, username, password, category, org_id);
+  editPassword(userId, label, username, password, category, org_id)
+  .then()
 });
 
 // /passwords/:id/delete
@@ -67,7 +69,7 @@ router.post('//passwords/:id/delete', (req, res) => {
   passwordId = req.params.id
   deletePassword(passwordId)
   .then();
-});e
+});
 
 // /orgs
 
