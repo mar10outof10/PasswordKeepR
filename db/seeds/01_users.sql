@@ -8,4 +8,5 @@ INSERT INTO users (email, password) VALUES
 ('random4@gmail.com', '$2a$04$UGWfa5ts6prqYMR.JL1F2OkrXXXo5FPrP3DkZMySq.tNlFSJ65r8q'),
 ('random5@gmail.com', '$2a$04$UGWfa5ts6prqYMR.JL1F2OkrXXXo5FPrP3DkZMySq.tNlFSJ65r8q'),
 ('netflix_employee1@gmail.com', '$2a$04$UGWfa5ts6prqYMR.JL1F2OkrXXXo5FPrP3DkZMySq.tNlFSJ65r8q'),
-('LHL_employee3@gmail.com', '$2a$04$UGWfa5ts6prqYMR.JL1F2OkrXXXo5FPrP3DkZMySq.tNlFSJ65r8q');
+('LHL_employee3@gmail.com', '$2a$04$UGWfa5ts6prqYMR.JL1F2OkrXXXo5FPrP3DkZMySq.tNlFSJ65r8q'),
+('amazon_netflix_employee@gmail.com', '$2a$04$UGWfa5ts6prqYMR.JL1F2OkrXXXo5FPrP3DkZMySq.tNlFSJ65r8q');
