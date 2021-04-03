@@ -76,7 +76,7 @@ const editPassword = function(passwordId, passwordObj) {
   const { label, username, password, category, userId, orgId } = passwordObj;
 
   if (!passwordId) {
-    return Promise.reject('editPassword: passwordId must be provided');
+    return Promise.reject('editPassword: passwordId is required');
   }
   if (Object.keys(passwordObj).length < 5) {
     return Promise.reject(`editPassword: passwordObj requires 6 keys, only received ${Object.keys(passwordObj).length}`);
