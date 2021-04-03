@@ -27,4 +27,13 @@ function deleteOrg(orgId) {
   .then(res => res.rowCount === 1);
 }
 
-module.exports = { addOrg, editOrg, deleteOrg };
+function addUserToOrg(userId, orgId, isAdmin) {
+  return db.query(`
+    INSERT INTO org_users (user_id, org_id, is_admin)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+  `, [userId, orgId, isAdmin])
+  .then(res => res.rows[0]);
+}
+
+module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg };
