@@ -4,6 +4,10 @@ const router  = express.Router();
 const {} = require('')
 const cookieSession = require('cookie-session');
 
+const { addPassword, editPassword, deletePassword } = require('../db/queries/password-queries')
+const { addOrg, userIsOrgAdmin, userIsInOrg } = require('../db/queries/org-queries')
+const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/queries/user-queries')
+
 // User login
 
 router.post('/login', (req, res) => {
@@ -108,7 +112,7 @@ router.post('/orgs/:id/:userid', (req, res) => {
   const orgId = req.params.id
   const userId = req.cookies.user_id
   const isAdmin = false;
-  isInOrg(userId, orgId)
+  userIsInOrg(userId, orgId)
   .then(bool => {
     updateUserInOrg(orgId, userID, isAdmin);
   })
@@ -121,7 +125,7 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
   const orgId = req.params.id
   const AdminId = req.cookies.user_id
   const userId = req.params.user_id
-  isOrgAdmin(adminId, orgId)
+  userIsOrgAdmin(adminId, orgId)
   .then(bool => {
     if (bool) {
       deleteUserFromOrg(orgNAme, userId)

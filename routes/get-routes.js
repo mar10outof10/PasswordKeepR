@@ -1,7 +1,9 @@
 const express = require('express');
 const router  = express.Router();
 
-const {} = require
+const { getAllPasswords, getPasswordById,  } = require('../db/queries/password-queries')
+const { getUserOrgs, getOrg } = require('../db/queries/org-queries')
+const { getUserById } = require('../db/queries/user-queries')
 
 // Render login page
 
