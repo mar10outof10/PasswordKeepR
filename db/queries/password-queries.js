@@ -34,18 +34,21 @@ const getPasswordById = function(passwordId) {
 /**
  * Add a password to the passwords table.
  *
- * @param {String} label         The label for the password entry.
- * @param {String} username      The username for the password entry.
- * @param {String} password      The password.
- * @param {String} category      The category for the password entry.
- * @param {Number} userId        The user_id the password belongs to.
- * @param {Number} [orgId]       (Optional) The org_id the password belongs to.
- * @return {Promise<object>}     A promise that resolves to the password object that was inserted.
+ * @param {object} passwordObj               The password object to save.
+ * @param {String} passwordObj.label         The label for the password entry.
+ * @param {String} passwordObj.username      The username for the password entry.
+ * @param {String} passwordObj.password      The password.
+ * @param {String} passwordObj.category      The category for the password entry.
+ * @param {Number} passwordObj.userId        The user_id the password belongs to.
+ * @param {Number} [passwordObj.orgId]       (Optional) The org_id the password belongs to.
+ * @return {Promise<object>}                 A promise that resolves to the password object that was inserted.
  */
-const addPassword = function(label, username, password, category, userId, orgId) {
+const addPassword = function(passwordObj) {
 
-  if (arguments.length < 6) {
-    return Promise.reject(`addPassword requires 6 arguments, only received ${arguments.length}`);
+  const { label, username, password, category, userId, orgId } = passwordObj;
+
+  if (Object.keys(passwordObj).length < 5) {
+    return Promise.reject(`addPassword: passwordObj requires 6 keys, only received ${Object.keys(passwordObj).length}`);
   }
   return db.query(`
     INSERT INTO passwords (label, username, password, category, user_id, org_id)
@@ -58,19 +61,25 @@ const addPassword = function(label, username, password, category, userId, orgId)
 /**
  * Edits a password in the passwords table.
  *
- * @param {String} label         The label for the password entry.
- * @param {String} username      The username for the password entry.
- * @param {String} password      The password.
- * @param {String} category      The category for the password entry.
- * @param {Number} userId        The user_id the password belongs to.
- * @param {Number} [orgId]       (Optional) The org_id the password belongs to.
- * @param {Number} passwordId    The id of the password to update.
- * @return {Promise<object>}     A promise that resolves to the password object that was inserted.
+ * @param {Number} passwordId                The id of the password to update.
+ * @param {object} passwordObj               The password object to save.
+ * @param {String} passwordObj.label         The label for the password entry.
+ * @param {String} passwordObj.username      The username for the password entry.
+ * @param {String} passwordObj.password      The password.
+ * @param {String} passwordObj.category      The category for the password entry.
+ * @param {Number} passwordObj.userId        The user_id the password belongs to.
+ * @param {Number} [passwordObj.orgId]       (Optional) The org_id the password belongs to.
+ * @return {Promise<object>}                 A promise that resolves to the password object that was inserted.
  */
-const editPassword = function(label, username, password, category, userId, orgId, passwordId) {
+const editPassword = function(passwordId, passwordObj) {
 
-  if (arguments.length < 7) {
-    return Promise.reject(`editPassword requires 7 arguments, only received ${arguments.length}`);
+  const { label, username, password, category, userId, orgId } = passwordObj;
+
+  if (!passwordId) {
+    return Promise.reject('editPassword: passwordId must be provided');
+  }
+  if (Object.keys(passwordObj).length < 5) {
+    return Promise.reject(`editPassword: passwordObj requires 6 keys, only received ${Object.keys(passwordObj).length}`);
   }
 
   return db.query(`
