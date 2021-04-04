@@ -1,0 +1,20 @@
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-row {
+  display: flex;
+  width: 15em;
+  justify-content: space-around;
+}
+
+.generate-button {
+  width: 100%;
+}
+
+.pw-button {
+  width: 40%;
+}
