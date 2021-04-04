@@ -31,7 +31,7 @@ router.get('/new', (req, res) => {
     // const templateVars = { user: userIdCookie }
     // return res.render('password/new', templateVars);
   } else {
-    res.redirect('/login');
+    res.redirect('/login', { errorMsg: 'You must be logged in to add a new password' });
   }
 });
 
@@ -47,10 +47,10 @@ router.get('/:id', (req, res) => {
       // return res.render('/password/:id', templateVars)
     })
     .catch(err => {
-      console.log(err);
+      res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
     })
   } else {
-    res.redirect('/login');
+    res.redirect('/login', { errorMsg: 'You must be logged in to view this password' });
   }
 });
 
@@ -76,6 +76,9 @@ router.post('/', (req, res) => {
     addPassword(newPassObj)
     .then(newPassObj => {
       res.json(newPassObj);
+    })
+    .catch(err => {
+      res.json(err);
     })
   } else {
     res.end;
@@ -107,6 +110,9 @@ router.post('/:id', (req, res) => {
     .then(editedPassObj => {
       res.json(editedPassObj);
     })
+    .catch(err => {
+      res.json(err);
+    })
   } else {
     res.end;
   }
@@ -125,6 +131,9 @@ router.post('/:id/delete', (req, res) => {
         .then(rowCount => {
           res.json(rowCount);
           // res.redirect('/passwords');
+        })
+        .catch(err => {
+          res.json(err);
         })
       }
     })
