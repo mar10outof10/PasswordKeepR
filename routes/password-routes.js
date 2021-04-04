@@ -9,6 +9,7 @@ const { isAuthenticated } = require('./helpers')
 * else            -> go to /login
 */
 router.get('/', isAuthenticated, (req, res) => {
+  userIdCookie = req.session.user_id;
   getAllPasswords(userIdCookie)
   .then(passwords => {
     return res.send(passwords);
