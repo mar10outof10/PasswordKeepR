@@ -137,4 +137,5 @@ const userIsInOrg = function(userId, orgId) {
     .then(res => res.rows[0] ? true : false);
 };
 
+
 module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
