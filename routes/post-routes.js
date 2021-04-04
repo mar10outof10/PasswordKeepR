@@ -10,7 +10,6 @@ const { isUserLoggedIn } = require('./helpers')
 
 
 // User login
-
 router.post('/login', (req, res) => {
   if (isUserLoggedIn(req)) {
     return res.end();
@@ -23,7 +22,6 @@ router.post('/login', (req, res) => {
     return res.redirect('/login', { errorMsg: 'Email and password are required' });
   }
 
-  // try
   getUserByEmail(email)
   .then(userObject => {
     // check password matches
