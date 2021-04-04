@@ -1,23 +1,6 @@
 const db = require('../db');
 
 /**
- * Gets all organizations a user is a member of.
- *
- * @param {String} userId          The id of the user.
- * @return {Promise<[object]>}     A promise that resolves to an array of organization objects.
- */
-const getAllOrgs = function(userId) {
-  return db.query(`
-    SELECT orgs.*
-    FROM orgs
-    JOIN org_users ON org_id = orgs.id
-    JOIN users ON user_id = users.id
-    WHERE user_id = $1;
-  `, [userId])
-  .then(res => res.rows);
-};
-
-/**
  * Adds an organization to the orgs table.
  *
  * @param {String} orgName       The name of the organization.
@@ -154,4 +137,4 @@ const userIsInOrg = function(userId, orgId) {
     .then(res => res.rows[0] ? true : false);
 };
 
-module.exports = { getAllOrgs, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
+module.exports = { addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };

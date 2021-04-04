@@ -8,6 +8,8 @@ const { addOrg, userIsOrgAdmin, userIsInOrg, addUserToOrg } = require('../db/que
 const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/queries/user-queries');
 const { json } = require('body-parser');
 const { isUserLoggedIn } = require('./helpers')
+
+
 // User login
 
 router.post('/login', (req, res) => {
@@ -56,7 +58,7 @@ router.post('/:id/delete', (req, res) => {
         return res.redirect('/login');
       })
     }
-    return;
+    res.end;
   })
 });
 
@@ -81,6 +83,7 @@ router.post('/passwords', (req, res) => {
     category,
     orgId,
     userId
+    // cleaner way to write this or helper function?
   }
   addPassword(newPassObj)
   .then(newPassObj => {
@@ -96,7 +99,6 @@ router.post('/passwords/:id', (req, res) => {
   const username = req.body.usernamew;
   const password = req.body.password
   const category = req.body.category;
-  // how do we determine org?
   const orgId = req.body.orgId
   const userId = req.session.user_id;
   const passwordId = req.params.id;
@@ -194,23 +196,22 @@ router.post('/orgs/:id', (req, res) => {
 });
 
 
-// Add/delete user from org
+// Add user to org
 
 router.post('/orgs/:id/:userid', (req, res) => {
   const orgId = req.params.id
   const userId = req.cookies.user_id
-  userIsInOrg(userId, orgId)
+  // we need feature on page to ask for admin privledges
+  userIsOrgAdmin(userId, orgId)
   .then(bool => {
-    // are they deleting themselves
-      // if yes delete and redirect to orgs page
-    // get user object
-    // compare the param orgID with
-    updateUserInOrg(orgId, userID, isAdmin);
+    // how can admin search for users to add?
+    // check if user is already in org before adding
+    addUserToOrg(userId, orgId, isAdmin);
   })
   // TODO: how do we authenticate admin privs?
 });
 
-// /orgs/:id/:userid/delete
+// Remove user from org
 
 router.post('/orgs/:id/:userid/delete', (req, res) => {
   const orgId = req.params.id
@@ -219,6 +220,10 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
   userIsOrgAdmin(adminId, orgId)
   .then(bool => {
     if (bool) {
+       // are they deleting themselves
+      // if yes delete and redirect to /orgs/:userid page
+      // if no, check if user is in org
+    // get user object with getUserById
       deleteUserFromOrg(orgNAme, userId)
     }
   })
@@ -226,8 +231,6 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
 });
 
 
-// TODO -
-// add cookies
-// encrypt password
-// figure out error handling with
+
+
 
