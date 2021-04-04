@@ -4,8 +4,10 @@ const router  = express.Router();
 const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
 const { isAuthenticated } = require('./helpers')
 
-// Show user password dashboard
-
+/* Password dashboard
+* logged in user  -> go to /passwords
+* else            -> go to /login
+*/
 router.get('/', isAuthenticated, (req, res) => {
   getAllPasswords(userIdCookie)
   .then(passwords => {
@@ -16,19 +18,22 @@ router.get('/', isAuthenticated, (req, res) => {
   .catch(err => {
     return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
   })
-  return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
 })
 
-// Show new password form
-
+/* New password form
+* logged in user  -> go to /passwords/new
+* else            -> go to /login
+*/
 router.get('/new', isAuthenticated, (req, res) => {
     return res.send('password form')
     // const templateVars = { user: userIdCookie }
     // return res.render('password/new', templateVars);
 });
 
-// Show individual password
-
+/* Show individual password
+* logged in user  -> go to /passwords/:id
+* else            -> go to /login
+*/
 router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
   getPasswordById(passwordId)
@@ -43,18 +48,13 @@ router.get('/:id', isAuthenticated,  (req, res) => {
 });
 
 
-// Add password
-
+/* Add new password
+* logged in user  -> add new password to Db
+* else            -> go to /login
+*/
 router.post('/', isAuthenticated, (req, res) => {
   const { label, username, password, category, orgId } = req.body;
-  const newPassObj = {
-    label,
-    username,
-    password,
-    category,
-    orgId,
-    userId
-  }
+  const newPassObj = { label, username, password, category, orgId, userId }
   addPassword(newPassObj)
   .then(newPassObj => {
     res.json(newPassObj);
@@ -65,19 +65,13 @@ router.post('/', isAuthenticated, (req, res) => {
 })
 
 
-// Edit individual password
-
+/* Show individual password
+* logged in user  -> edit inidivual password in Db
+* else            -> go to /login
+*/
 router.post('/:id', isAuthenticated, (req, res) => {
   const { label, username, password, category, orgId } = req.body;
-  const editPassObj = {
-    label,
-    username,
-    password,
-    category,
-    userId,
-    orgId,
-    passwordId
-  }
+  const editPassObj = { label, username, password, category, userId, orgId, passwordId}
   editPassword(editPassObj)
   .then(editedPassObj => {
     res.json(editedPassObj);
@@ -87,8 +81,10 @@ router.post('/:id', isAuthenticated, (req, res) => {
   })
 });
 
-// Delete password
-
+/* Delete individual password
+* logged in user  -> Delete password from Db
+* else            -> go to /login
+*/
 router.post('/:id/delete', isAuthenticated, (req, res) => {
   const passwordId = req.params.id;
   getPasswordById(passwordId)
