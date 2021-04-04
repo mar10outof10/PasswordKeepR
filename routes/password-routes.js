@@ -116,19 +116,21 @@ router.post('/:id', (req, res) => {
 
 router.post('/:id/delete', (req, res) => {
   if (isUserLoggedIn(req)) {
+    const passwordId = req.params.id;
+    getPasswordById(passwordId)
+    .then(passwordObj => {
+      userIdCookie = req.params.user_id;
+      if (passwordObj.userId === userIdCookie) {
+        deletePassword(passwordId)
+        .then(rowCount => {
+          res.json(rowCount);
+          // res.redirect('/passwords');
+        })
+      }
+    })
+  } else {
     res.end;
   }
-  const passwordId = req.params.id;
-  getPasswordById(passwordId)
-  .then(passwordObj => {
-    if (passwordObj.userId === userIdCookie) {
-      deletePassword(passwordId)
-      .then(rowCount => {
-        // res.json(rowCount);
-        res.redirect('/passwords');
-      })
-    }
-  })
 });
 
 module.exports = router;
