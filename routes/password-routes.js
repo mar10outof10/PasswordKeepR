@@ -6,27 +6,25 @@ const { isUserLoggedIn } = require('./helpers')
 
 // Show user password dashboard
 
-router.get('/', (res, req) => {
-  console.log("getting all passwords...");
+router.get('/', (req, res) => {
   if (isUserLoggedIn(req)) {
     const userIdCookie = req.session.user_id;
     getAllPasswords(userIdCookie)
     .then(passwords => {
-      return res.send(passwords);
-      // const templateVars = { passwords }
-      // return res.render('passwords', templateVars);
+      const templateVars = { passwords }
+      return res.render('passwords', templateVars);
     })
     .catch(err => {
-      // return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
-      console.log(err);
+      return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
     })
+  } else {
+    return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
   }
-  return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
 });
 
 // Show individual password
 
-router.get('/:id', (res, req) => {
+router.get('/:id', (req, res) => {
   const passwordId = req.params.id;
   if (isUserLoggedIn(req)) {
     getPasswordById(passwordId)
@@ -43,7 +41,7 @@ router.get('/:id', (res, req) => {
 
 // Show new password form
 
-router.get('/new', (res, req) => {
+router.get('/new', (req, res) => {
   if (isUserLoggedIn(req)) {
     const templateVars = { user: userIdCookie }
     return res.render('password/new', templateVars);
