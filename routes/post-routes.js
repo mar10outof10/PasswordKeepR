@@ -202,8 +202,10 @@ router.post('/orgs/:id/:userid', (req, res) => {
   const userId = req.cookies.user_id
   userIsOrgAdmin(userId, orgId)
   .then(bool => {
-    const userId = rew.params.userid
-    addUserToOrg(userId, orgId, false);
+    if (bool) {
+      const userId = rew.params.userid
+      addUserToOrg(userId, orgId, false);
+    }
   })
   res.send('error');
 });
