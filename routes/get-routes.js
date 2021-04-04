@@ -13,7 +13,7 @@ router.get('/login', (res, req) => {
     res.redirect('/passwords');
     return;
   }
-  res.render('login');
+  res.send('login');
 })
 
 // Render register page
@@ -98,3 +98,5 @@ router.get('/orgs/:id', (res, req) => {
     res.redirect('/login');
   }
 });
+
+module.exports = router;

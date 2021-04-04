@@ -130,7 +130,7 @@ router.post('/passwords/:id/delete', (req, res) => {
       deletePassword(passwordId)
       .then(rowCount => {
         // res.json(rowCount);
-        res.redirect('/passwords')
+        res.redirect('/passwords');
       })
     }
   })
@@ -143,7 +143,7 @@ router.post('/orgs', (req, res) => {
     res.end;
   }
   const userId = req.session.user_id;
-  const orgName = req.body.orgName
+  const orgName = req.body.orgName;
   addOrg(orgName)
   .then(orgObject => {
     const orgId = orgObject.id;
@@ -158,7 +158,6 @@ router.post('/orgs/:id', (req, res) => {
   if (isUserLoggedIn(req)) {
     res.end;
   }
-  // check if user is admin of org
   const orgId = req.params.id
   const userId = req.session.user_id;
   userIsOrgAdmin(userId, orgId)
@@ -191,7 +190,7 @@ router.post('/orgs/:id', (req, res) => {
         return res.send(rowCount);
       })
     }
-    // error: insufficient privledges
+    res.send('error');
   })
 });
 
@@ -201,36 +200,34 @@ router.post('/orgs/:id', (req, res) => {
 router.post('/orgs/:id/:userid', (req, res) => {
   const orgId = req.params.id
   const userId = req.cookies.user_id
-  // we need feature on page to ask for admin privledges
   userIsOrgAdmin(userId, orgId)
   .then(bool => {
-    // how can admin search for users to add?
-    // check if user is already in org before adding
-    addUserToOrg(userId, orgId, isAdmin);
+    const userId = rew.params.userid
+    addUserToOrg(userId, orgId, false);
   })
-  // TODO: how do we authenticate admin privs?
+  res.send('error');
 });
 
 // Remove user from org
 
 router.post('/orgs/:id/:userid/delete', (req, res) => {
   const orgId = req.params.id
-  const AdminId = req.cookies.user_id
   const userId = req.params.user_id
-  userIsOrgAdmin(adminId, orgId)
+  const adminId = req.cookies.user_id
+  userIsOrgAdmin(userId, orgId)
   .then(bool => {
     if (bool) {
-       // are they deleting themselves
-      // if yes delete and redirect to /orgs/:userid page
-      // if no, check if user is in org
-    // get user object with getUserById
-      deleteUserFromOrg(orgNAme, userId)
+      if (adminId !== userId) {
+        deleteUserFromOrg(userId, orgId);
+        return res.redirect('/orgs/:id');
+      }
+      deleteUserFromOrg(userId, orgId);
+      res.redirect('/orgs');
     }
   })
-  // return error if user is not admin
+  res.send('error');
 });
 
-
-
+module.exports = router;
 
 
