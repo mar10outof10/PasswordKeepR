@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const express = require('express');
 const router  = express.Router();
 
@@ -12,10 +13,11 @@ const { isUserLoggedIn } = require('./helpers')
 
 router.post('/login', (req, res) => {
   if (isUserLoggedIn(req)) {
-    res.end;
+    return res.end;
   }
-  const email = req.body.email;
-  const password = req.body.password;
+
+  const { email, password } = req.body;
+
   getUserByEmail(email)
   .then(userObject => {
     if (password === userObject.password) {
@@ -27,20 +29,26 @@ router.post('/login', (req, res) => {
 })
 
 // Register user
-
 router.post('/register', (req, res) => {
+  // check user is not logged in already
   if (isUserLoggedIn(req)) {
-    res.end;
+    return res.end();
   }
-  const email = req.body.email;
-  const password = req.body.password;
 
+  const { email, password } = req.body;
+
+  // check email & password were provided
   if (!email || !password) {
     return res.send('Must provide username and password');
   }
 
-  addUser(email, password)
+  // hash the password
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
+  // add the user to the db & store the new user_id in the cookie
+  addUser(email, hashedPassword)
   .then(user => {
+    req.session.user_id = user.id;
     return res.json(user);
   })
   .catch(err => {
@@ -49,7 +57,6 @@ router.post('/register', (req, res) => {
 });
 
 // Delete user
-
 router.post('/:id/delete', (req, res) => {
   if (isUserLoggedIn(req)) {
     res.end;
