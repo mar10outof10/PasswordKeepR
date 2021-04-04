@@ -3,17 +3,22 @@ const router  = express.Router();
 
 const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
 const { isUserLoggedIn } = require('./helpers')
+
 // Show user password dashboard
 
 router.get('/', (res, req) => {
   if (isUserLoggedIn(req)) {
+    const userIdCookie = req.session.user_id;
     getAllPasswords(userIdCookie)
     .then(passwords => {
       const templateVars = { passwords }
       return res.render('passwords', templateVars);
     })
+    .catch(err => {
+      return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
+    })
   }
-  res.redirect('/login');
+  return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
 });
 
 // Show individual password
