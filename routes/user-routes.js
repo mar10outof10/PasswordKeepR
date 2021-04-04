@@ -40,18 +40,18 @@ router.post('/login', (req, res) => {
   }
 
   getUserByEmail(email)
-  .then(userObject => {
-    if (!userObject) {
+  .then(user => {
+    if (!user) {
       // user with this email doesn't exist -> render /login with error msg
       return res.render('login', { errorMsg: 'User doesn\'t exist' });
     }
 
     // check password matches
-    bcrypt.compare(password, userObject.password)
+    bcrypt.compare(password, user.password)
     .then(match => {
       if (match) {
         // password matches -> set cookie and redirect to '/'
-        req.session.user_id = userObject.id;
+        req.session.user_id = user.id;
         return res.redirect('/');
       }
       // password did not match -> render /login with error msg
@@ -124,10 +124,9 @@ router.post('/:id/delete', (req, res) => {
       // user was deleted
       req.session = null;
       return res.redirect('/');
-    } else {
-      // something went wrong deleting the user
-      return res.status(500).send();
     }
+    // user wasn't deleted
+    return res.status(500).send();
   });
 });
 
