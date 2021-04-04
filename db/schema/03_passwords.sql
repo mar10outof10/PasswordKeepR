@@ -6,5 +6,5 @@ CREATE TABLE passwords (
   password VARCHAR(100),
   category VARCHAR(100),
   user_id INT REFERENCES users(id) NOT NULL,
-  org_id INT REFERENCES orgs(id)
+  org_id INT REFERENCES orgs(id) ON DELETE SET NULL
 );

@@ -1,129 +1,125 @@
 const express = require('express');
 const router  = express.Router();
 
+const { getUserById } = require('../db/queries/user-queries');
+const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg } = require('../db/queries/org-queries');
+
 // Show all user organizations
-
-router.get('/orgs', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
-    getUserById(userIdCookie)
-    .then(userObject => {
-    getAllOrgs(userObject.userId)
-    .then(orgs => {
-      const templateVars = { user: userIdCookie, orgs }
-      return res.render('orgs', templateVars);
-    })
-    })
-  }
-  res.redirect('/login');
-});
-
-// Show individual org
-
-router.get('/orgs/:id', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  const orgId = req.params.id;
-  if (userIdCookie) {
-    getUserById(userIdCookie)
-    .then(getOrg)
-    .then(org => {
-      const templateVars = { user: userIdCookie, org }
-      return res.render('orgs', templateVars);
-    });
-    res.redirect('/login');
-  }
+router.get('/', (req, res) => {
+  getAllOrgs(req.session.user_id)
+  .then(orgs => {
+    return res.json(orgs);
+    // const templateVars = { user: req.session.user_id, orgs }
+    // return res.render('orgs', templateVars);
+  });
 });
 
 // Add new Org
-
-router.post('/orgs', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    res.end;
-  }
+router.post('/', (req, res) => {
   const userId = req.session.user_id;
-  const orgName = req.body.orgName;
+  const orgName = req.body.org_name;
   addOrg(orgName)
-  .then(orgObject => {
-    const orgId = orgObject.id;
-    addUserToOrg(userId, orgId, true);
-    return res.json(orgObject);
+  .then(org => {
+    console.log('org', org);
+    return addUserToOrg(userId, org.id, true);
+  })
+  .then(orgUser => {
+    return res.json(orgUser);
+  });
+});
+
+// Get individual org by id
+router.get('/:id', (req, res) => {
+  const orgId = req.params.id;
+  getOrgById(orgId)
+  .then(org => {
+    return res.json(org);
+    // const templateVars = { user: userIdCookie, org }
+    // return res.render('orgs', templateVars);
   });
 });
 
 // Edit org
-
-router.post('/orgs/:id', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    res.end;
-  }
-  const orgId = req.params.id
+router.post('/:id', (req, res) => {
+  const orgId = req.params.id;
   const userId = req.session.user_id;
   userIsOrgAdmin(userId, orgId)
-  .then(bool => {
-    if (bool) {
+  .then(isAdmin => {
+    if (isAdmin) {
       const orgName = req.body.org_name;
-      editOrg(orgId, orgName)
-      .then(orgObject => {
-        return res.json(orgObject);
-      })
+      return editOrg(orgId, orgName);
     }
-    // error: insufficient privledges
+    return Promise.reject();
   })
+  .then(org => {
+    return res.json(org);
+  })
+  .catch(() => res.status(401).send());
 });
 
 // Delete Org
-
-router.post('/orgs/:id', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    res.end;
-  }
+router.post('/:id/delete', (req, res) => {
   // check if user is admin of org
   const orgId = req.params.id
   const userId = req.session.user_id;
   userIsOrgAdmin(userId, orgId)
-  .then(bool => {
-    if (bool) {
-      deleteOrg(orgId)
-      .then(rowCount => {
-        return res.send(rowCount);
-      })
+  .then(isAdmin => {
+    if (isAdmin) {
+      return deleteOrg(orgId);
     }
-    res.send('error');
+    return Promise.reject(401);
   })
+  .then(deletedSuccessfully => {
+    if (deletedSuccessfully) {
+      return res.send('org deleted');
+    }
+    return Promise.reject(500);
+  })
+  .catch(status => res.status(status).send());
 });
 
 
 // Add user to org
+router.post('/:id/:userid', (req, res) => {
+  const orgId = req.params.id;
+  const makeAdmin = req.body.admin || false;
+  const userId = req.session.user_id;
+  const userIdToAdd = req.params.userid;
 
-router.post('/orgs/:id/:userid', (req, res) => {
-  const orgId = req.params.id
-  const userId = req.cookies.user_id
+  console.log('userId', userId);
+  console.log('orgId', orgId);
   userIsOrgAdmin(userId, orgId)
-  .then(bool => {
-    const userId = rew.params.userid
-    addUserToOrg(userId, orgId, false);
+  .then(isOrgAdmin => {
+    if (isOrgAdmin) {
+      return addUserToOrg(userIdToAdd, orgId, makeAdmin);
+    }
   })
-  res.send('error');
+  .then(orgUser => res.json(orgUser));
 });
 
 // Remove user from org
+router.post('/:id/:userid/delete', (req, res) => {
+  const userId = req.session.user_id
+  const userIdToDelete = req.params.userid;
+  const orgId = req.params.id;
 
-router.post('/orgs/:id/:userid/delete', (req, res) => {
-  const orgId = req.params.id
-  const userId = req.params.user_id
-  const adminId = req.cookies.user_id
   userIsOrgAdmin(userId, orgId)
-  .then(bool => {
-    if (bool) {
-      if (adminId !== userId) {
-        deleteUserFromOrg(userId, orgId);
-        return res.redirect('/orgs/:id');
-      }
-      deleteUserFromOrg(userId, orgId);
-      res.redirect('/orgs');
+  .then(isAdmin => {
+    if (isAdmin) {
+      return deleteUserFromOrg(userIdToDelete, orgId);
+    } else {
+      return res.status(401).send();
     }
   })
-  res.send('error');
+  .then(deletedSuccessfully => {
+    if (deletedSuccessfully) {
+      // unsure how we are rendering the orgs/:id page
+      return res.render('org', { orgId });
+    } else {
+      return res.status(500).send('Error deleting user from org');
+    }
+  })
+  .catch(err => res.json(err));
 });
 
 module.exports = router;
