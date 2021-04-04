@@ -44,7 +44,8 @@ const addUser = function(email, password) {
     VALUES ($1, $2)
     RETURNING *;
   `, [email, password])
-    .then(res => res.rows[0]);
+    .then(res => res.rows[0]);;
+
 };
 
 /**
