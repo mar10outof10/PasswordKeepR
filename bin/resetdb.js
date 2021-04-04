@@ -5,6 +5,7 @@ require('dotenv').config();
 const fs = require('fs');
 const chalk = require('chalk');
 const Client = require('pg-native');
+console.log('here');
 
 // PG connection setup
 const connectionString = process.env.DATABASE_URL ||

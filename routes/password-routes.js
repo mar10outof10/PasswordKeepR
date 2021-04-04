@@ -7,15 +7,18 @@ const { isUserLoggedIn } = require('./helpers')
 // Show user password dashboard
 
 router.get('/', (res, req) => {
+  console.log("getting all passwords...");
   if (isUserLoggedIn(req)) {
     const userIdCookie = req.session.user_id;
     getAllPasswords(userIdCookie)
     .then(passwords => {
-      const templateVars = { passwords }
-      return res.render('passwords', templateVars);
+      return res.send(passwords);
+      // const templateVars = { passwords }
+      // return res.render('passwords', templateVars);
     })
     .catch(err => {
-      return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
+      // return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
+      console.log(err);
     })
   }
   return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
@@ -30,6 +33,9 @@ router.get('/:id', (res, req) => {
     .then(password => {
       const templateVars = { password , user: userIdCookie }
       return res.render('/password/:id', templateVars)
+    })
+    .catch(err => {
+      console.log(err);
     })
   }
   res.redirect('/login');

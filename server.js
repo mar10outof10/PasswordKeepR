@@ -38,7 +38,7 @@ const orgRoutes = require("./routes/org-routes");
 
 // Mount all resource routes
 app.use(userRoutes);
-app.use('/password', passwordRoutes);
+app.use('/passwords', passwordRoutes);
 app.use('/org', orgRoutes);
 
 
