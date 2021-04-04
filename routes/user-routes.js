@@ -1,5 +1,5 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 const bcrypt = require('bcrypt');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers');
 const { getUserByEmail, addUser, deleteUser } = require('../db/queries/user-queries');
@@ -9,15 +9,15 @@ const { getUserByEmail, addUser, deleteUser } = require('../db/queries/user-quer
 * else            -> go to /login
 */
 router.get('/', isAuthenticated, (req, res) => {
-    return res.redirect('/passwords');
+  return res.redirect('/passwords');
 });
 
 /* Login page
 * logged in user -> go to /passwords
 * else           -> render login page
 */
-router.get('/login', isAuthenticated, (res, req) => {
-    return res.redirect('/passwords');
+router.get('/login', isNotAuthenticated, (req, res) => {
+  return res.render('login');
 });
 
 // Handle user login
@@ -30,35 +30,35 @@ router.post('/login', isNotAuthenticated, (req, res) => {
   }
 
   getUserByEmail(email)
-  .then(user => {
-    if (!user) {
-      // user with this email doesn't exist -> render /login with error msg
-      return res.render('login', { errorMsg: 'User doesn\'t exist' });
-    }
-
-    // check password matches
-    bcrypt.compare(password, user.password)
-    .then(match => {
-      if (match) {
-        // password matches -> set cookie and redirect to '/'
-        req.session.user_id = user.id;
-        return res.redirect('/');
+    .then(user => {
+      if (!user) {
+        // user with this email doesn't exist -> render /login with error msg
+        return res.render('login', { errorMsg: 'User doesn\'t exist' });
       }
-      // password did not match -> render /login with error msg
-      console.log('match', match);
-      return res.render('login', { errorMsg: 'Invalid password' });
+
+      // check password matches
+      bcrypt.compare(password, user.password)
+        .then(match => {
+          if (match) {
+            // password matches -> set cookie and redirect to '/'
+            req.session.user_id = user.id;
+            return res.redirect('/');
+          }
+          // password did not match -> render /login with error msg
+          console.log('match', match);
+          return res.render('login', { errorMsg: 'Invalid password' });
+        })
+        .catch(err => {
+          // some bcrypt error occurred
+          console.log(err);
+          return res.send(err);
+        });
     })
     .catch(err => {
-      // some bcrypt error occurred
+      // some error occurred with psql query
       console.log(err);
       return res.send(err);
     });
-  })
-  .catch(err => {
-    // some error occurred with psql query
-    console.log(err);
-    return res.send(err);
-  });
 });
 
 /* Register page
@@ -84,13 +84,13 @@ router.post('/register', isNotAuthenticated, (req, res) => {
 
   // add the user to the db & store the new user_id in the users' cookie
   addUser(email, hashedPassword)
-  .then(user => {
-    req.session.user_id = user.id;
-    return res.json(user);
-  })
-  .catch(err => {
-    return res.json(err);
-  });
+    .then(user => {
+      req.session.user_id = user.id;
+      return res.json(user);
+    })
+    .catch(err => {
+      return res.json(err);
+    });
 });
 
 // Delete user
@@ -102,15 +102,15 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
 
   // delete the user from users, remove cookie
   deleteUser(userId)
-  .then(success => {
-    if (success) {
-      // user was deleted
-      req.session = null;
-      return res.redirect('/');
-    }
-    // user wasn't deleted
-    return res.status(500).send();
-  });
+    .then(success => {
+      if (success) {
+        // user was deleted
+        req.session = null;
+        return res.redirect('/');
+      }
+      // user wasn't deleted
+      return res.status(500).send();
+    });
 });
 
 module.exports = router;
