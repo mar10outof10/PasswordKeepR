@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const bcrypt = require('bcrypt');
 const { isUserLoggedIn } = require('./helpers');
-const { getUserByEmail, getUserById, addUser } = require('../db/queries/user-queries');
+const { getUserByEmail, addUser, deleteUser } = require('../db/queries/user-queries');
 
 /* Root
 * logged in user  -> go to /passwords
@@ -71,7 +71,18 @@ router.post('/login', (req, res) => {
   });
 });
 
-// Register user
+/* Register page
+* logged in user -> go to /passwords
+* else           -> render register page
+*/
+router.get('/register', (res, req) => {
+  if (isUserLoggedIn(req)) {
+    return res.redirect('/passwords');
+  }
+  return res.render('register');
+});
+
+// Handle user registration
 router.post('/register', (req, res) => {
   // check user is not logged in already
   if (isUserLoggedIn(req)) {
@@ -88,7 +99,7 @@ router.post('/register', (req, res) => {
   // hash the password
   const hashedPassword = bcrypt.hashSync(password, 10);
 
-  // add the user to the db & store the new user_id in the cookie
+  // add the user to the db & store the new user_id in the users' cookie
   addUser(email, hashedPassword)
   .then(user => {
     req.session.user_id = user.id;
@@ -101,33 +112,23 @@ router.post('/register', (req, res) => {
 
 // Delete user
 router.post('/:id/delete', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    res.end;
+  if (req.params.id !== req.session.user_id) {
+    // user is trying to delete an account that isn't theirs
+    return res.status(401).send();
   }
-  const userId = req.params.id;
-  getUserById(userIdCookie)
-  .then(userObject => {
-    if (userObject.userId === userId) {
-      deleteUser(userId)
-      .then(rowcount => {
-        // res.send(rowcount);
-        return res.redirect('/login');
-      })
+
+  // delete the user from users, remove cookie
+  deleteUser(userId)
+  .then(success => {
+    if (success) {
+      // user was deleted
+      req.session = null;
+      return res.redirect('/');
+    } else {
+      // something went wrong deleting the user
+      return res.status(500).send();
     }
-    res.end;
-  })
-});
-
-
-
-// Render register page
-
-router.get('/register', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
-    return res.redirect('/passwords');
-  }
-  res.render('register');
+  });
 });
 
 module.exports = router;
