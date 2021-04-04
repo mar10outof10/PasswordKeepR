@@ -1,59 +1,52 @@
 const express = require('express');
 const router  = express.Router();
 
+const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
+const { isAuthenticated } = require('./helpers')
+
 // Show user password dashboard
 
-router.get('/passwords', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
-    getAllPasswords(userIdCookie)
-    .then(passwords => {
-      const templateVars = { passwords }
-      return res.render('passwords', templateVars);
-    })
-  }
-  res.redirect('/login');
+router.get('/', isAuthenticated, (req, res) => {
+  getAllPasswords(userIdCookie)
+  .then(passwords => {
+    return res.send(passwords);
+      // const templateVars = { passwords }
+      // return res.render('passwords', templateVars);
+  })
+  .catch(err => {
+    return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
+  })
+  return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
+})
+
+// Show new password form
+
+router.get('/new', isAuthenticated, (req, res) => {
+    return res.send('password form')
+    // const templateVars = { user: userIdCookie }
+    // return res.render('password/new', templateVars);
 });
 
 // Show individual password
 
-router.get('/passwords/:id', (res, req) => {
-  const userIdCookie = req.session.user_id;
+router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
-  if (userIdCookie) {
-    getPasswordById(passwordId)
-    .then(password => {
-      const templateVars = { password , user: userIdCookie }
-      return res.render('/password/:id', templateVars)
-    })
-  }
-  res.redirect('/login');
+  getPasswordById(passwordId)
+  .then(password => {
+    return res.send(password)
+  // const templateVars = { password , user: userIdCookie }
+  // return res.render('/password/:id', templateVars)
+  })
+  .catch(err => {
+    res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
+  })
 });
 
-// Show new password form
-
-router.get('/passwords/new', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
-    const templateVars = { user: userIdCookie }
-    return res.render('password/new', templateVars);
-  }
-  res.redirect('/login');
-});
 
 // Add password
 
-router.post('/passwords', (req, res) => {
-  const userIdCookie = req.session.user_id;
-  if (isUserLoggedIn(req)) {
-    res.end;
-  }
-  const label = req.body.label;
-  const username = req.body.usernamew;
-  const password = req.body.password
-  const category = req.body.category;
-  const orgId = req.body.orgId
-  const userId = req.session.user_id;
+router.post('/', isAuthenticated, (req, res) => {
+  const { label, username, password, category, orgId } = req.body;
   const newPassObj = {
     label,
     username,
@@ -61,25 +54,21 @@ router.post('/passwords', (req, res) => {
     category,
     orgId,
     userId
-    // cleaner way to write this or helper function?
   }
   addPassword(newPassObj)
   .then(newPassObj => {
     res.json(newPassObj);
+  })
+  .catch(err => {
+    res.json(err);
   })
 })
 
 
 // Edit individual password
 
-router.post('/passwords/:id', (req, res) => {
-  const label = req.body.label;
-  const username = req.body.usernamew;
-  const password = req.body.password
-  const category = req.body.category;
-  const orgId = req.body.orgId
-  const userId = req.session.user_id;
-  const passwordId = req.params.id;
+router.post('/:id', isAuthenticated, (req, res) => {
+  const { label, username, password, category, orgId } = req.body;
   const editPassObj = {
     label,
     username,
@@ -93,22 +82,26 @@ router.post('/passwords/:id', (req, res) => {
   .then(editedPassObj => {
     res.json(editedPassObj);
   })
+  .catch(err => {
+    res.json(err);
+  })
 });
 
 // Delete password
 
-router.post('/passwords/:id/delete', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    res.end;
-  }
+router.post('/:id/delete', isAuthenticated, (req, res) => {
   const passwordId = req.params.id;
   getPasswordById(passwordId)
   .then(passwordObj => {
+    userIdCookie = req.params.user_id;
     if (passwordObj.userId === userIdCookie) {
       deletePassword(passwordId)
       .then(rowCount => {
-        // res.json(rowCount);
-        res.redirect('/passwords');
+        res.json(rowCount);
+        // res.redirect('/passwords');
+      })
+      .catch(err => {
+        res.json(err);
       })
     }
   })

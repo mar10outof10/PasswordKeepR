@@ -1,9 +1,8 @@
-const isUserLoggedIn = (req) => {
-  return (req.session.user_id);
+const isAuthenticated = (req, res, next) => {
+  if (req.session.user_id) {
+    return next();
+  }
+  res.send('stopped by middleware')
 }
 
-const addUserCookie = (userId) => {
-// add and store user cookie
-}
-
-module.exports = { isUserLoggedIn }
+module.exports = { isAuthenticated }
