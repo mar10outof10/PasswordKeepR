@@ -58,29 +58,28 @@ router.get('/:id', (req, res) => {
 // Add password
 
 router.post('/', (req, res) => {
-  const userIdCookie = req.session.user_id;
   if (isUserLoggedIn(req)) {
+    const label = req.body.label;
+    const username = req.body.usernamew;
+    const password = req.body.password
+    const category = req.body.category;
+    const orgId = req.body.orgId
+    const userId = req.session.user_id;
+    const newPassObj = {
+      label,
+      username,
+      password,
+      category,
+      orgId,
+      userId
+    }
+    addPassword(newPassObj)
+    .then(newPassObj => {
+      res.json(newPassObj);
+    })
+  } else {
     res.end;
   }
-  const label = req.body.label;
-  const username = req.body.usernamew;
-  const password = req.body.password
-  const category = req.body.category;
-  const orgId = req.body.orgId
-  const userId = req.session.user_id;
-  const newPassObj = {
-    label,
-    username,
-    password,
-    category,
-    orgId,
-    userId
-    // cleaner way to write this or helper function?
-  }
-  addPassword(newPassObj)
-  .then(newPassObj => {
-    res.json(newPassObj);
-  })
 })
 
 
