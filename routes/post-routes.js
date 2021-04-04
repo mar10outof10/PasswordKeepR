@@ -13,19 +13,33 @@ const { isUserLoggedIn } = require('./helpers')
 
 router.post('/login', (req, res) => {
   if (isUserLoggedIn(req)) {
-    return res.end;
+    return res.end();
   }
 
   const { email, password } = req.body;
 
+  // check email/password were provided
+  if (!email || !password) {
+    return res.redirect('/login', { errorMsg: 'Email and password are required' });
+  }
+
+  // try
   getUserByEmail(email)
   .then(userObject => {
-    if (password === userObject.password) {
-      // add usercookie
-      return res.redirect('/passwords');
-    }
-  })
-  return res.redirect('/login');
+    // check password matches
+    bcrypt.compare(password, userObject.password)
+    .then(res => {
+      // password matches -> set cookie and redirect to '/'
+      req.session.user_id = userObject.id;
+      return res.redirect('/');
+    })
+    .catch(err => {
+      // password did not match -> render /login with error msg
+      return res.render('login', { errorMsg: 'Invalid password' });
+    });
+  });
+  // user with this email doesn't exist -> render /login with error msg
+  return res.redirect('/login', { errorMsg: 'User doesn\'t exist' });
 })
 
 // Register user
