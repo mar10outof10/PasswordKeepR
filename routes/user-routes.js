@@ -1,5 +1,9 @@
 const express = require('express');
 const router  = express.Router();
+const bcrypt = require('bcrypt');
+const { isUserLoggedIn } = require('./helpers');
+const { getUserByEmail, getUserById, addUser } = require('../db/queries/user-queries');
+
 
 
 // User login
@@ -12,26 +16,40 @@ router.post('/login', (req, res) => {
 
   // check email/password were provided
   if (!email || !password) {
-    return res.redirect('/login', { errorMsg: 'Email and password are required' });
+    return res.render('login', { errorMsg: 'Email and password are required' });
   }
 
   getUserByEmail(email)
   .then(userObject => {
+    if (!userObject) {
+      // user with this email doesn't exist -> render /login with error msg
+      return res.render('login', { errorMsg: 'User doesn\'t exist' });
+    }
+
     // check password matches
     bcrypt.compare(password, userObject.password)
-    .then(res => {
-      // password matches -> set cookie and redirect to '/'
-      req.session.user_id = userObject.id;
-      return res.redirect('/');
+    .then(match => {
+      if (match) {
+        // password matches -> set cookie and redirect to '/'
+        req.session.user_id = userObject.id;
+        return res.redirect('/');
+      }
+      // password did not match -> render /login with error msg
+      console.log('match', match);
+      return res.render('login', { errorMsg: 'Invalid password' });
     })
     .catch(err => {
-      // password did not match -> render /login with error msg
-      return res.render('login', { errorMsg: 'Invalid password' });
+      // some bcrypt error occurred
+      console.log(err);
+      return res.send(err);
     });
+  })
+  .catch(err => {
+    // some error occurred with psql query
+    console.log(err);
+    return res.send(err);
   });
-  // user with this email doesn't exist -> render /login with error msg
-  return res.redirect('/login', { errorMsg: 'User doesn\'t exist' });
-})
+});
 
 // Register user
 router.post('/register', (req, res) => {
