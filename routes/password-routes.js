@@ -4,7 +4,7 @@ const router  = express.Router();
 const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
 // Show user password dashboard
 
-router.get('/passwords', (res, req) => {
+router.get('/', (res, req) => {
   const userIdCookie = req.session.user_id;
   if (userIdCookie) {
     getAllPasswords(userIdCookie)
@@ -18,7 +18,7 @@ router.get('/passwords', (res, req) => {
 
 // Show individual password
 
-router.get('/passwords/:id', (res, req) => {
+router.get('/:id', (res, req) => {
   const userIdCookie = req.session.user_id;
   const passwordId = req.params.id;
   if (userIdCookie) {
@@ -33,7 +33,7 @@ router.get('/passwords/:id', (res, req) => {
 
 // Show new password form
 
-router.get('/passwords/new', (res, req) => {
+router.get('/new', (res, req) => {
   const userIdCookie = req.session.user_id;
   if (userIdCookie) {
     const templateVars = { user: userIdCookie }
@@ -44,7 +44,7 @@ router.get('/passwords/new', (res, req) => {
 
 // Add password
 
-router.post('/passwords', (req, res) => {
+router.post('/', (req, res) => {
   const userIdCookie = req.session.user_id;
   if (isUserLoggedIn(req)) {
     res.end;
@@ -73,7 +73,7 @@ router.post('/passwords', (req, res) => {
 
 // Edit individual password
 
-router.post('/passwords/:id', (req, res) => {
+router.post('/:id', (req, res) => {
   const label = req.body.label;
   const username = req.body.usernamew;
   const password = req.body.password
@@ -98,7 +98,7 @@ router.post('/passwords/:id', (req, res) => {
 
 // Delete password
 
-router.post('/passwords/:id/delete', (req, res) => {
+router.post('/:id/delete', (req, res) => {
   if (isUserLoggedIn(req)) {
     res.end;
   }
