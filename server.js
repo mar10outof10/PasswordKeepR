@@ -10,6 +10,7 @@ const app        = express();
 const morgan     = require('morgan');
 const cookieSession    = require('cookie-session');
 
+
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -36,7 +37,7 @@ const orgRoutes = require("./routes/org-routes");
 
 // Mount all resource routes
 app.use(userRoutes);
-app.use('/password', passwordRoutes);
+app.use('/passwords', passwordRoutes);
 app.use('/org', orgRoutes);
 
 app.listen(PORT, () => {
