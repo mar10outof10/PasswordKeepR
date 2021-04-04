@@ -1,7 +1,6 @@
+const bcrypt = require('bcrypt');
 const express = require('express');
 const router  = express.Router();
-
-const cookieSession = require('cookie-session');
 
 const { addPassword, editPassword, deletePassword, getPasswordById } = require('../db/queries/password-queries')
 const { addOrg, userIsOrgAdmin, userIsInOrg, addUserToOrg } = require('../db/queries/org-queries')
@@ -11,39 +10,65 @@ const { isUserLoggedIn } = require('./helpers')
 
 
 // User login
-
 router.post('/login', (req, res) => {
   if (isUserLoggedIn(req)) {
-    res.end;
+    return res.end();
   }
-  const email = req.body.email;
-  const password = req.body.password;
+
+  const { email, password } = req.body;
+
+  // check email/password were provided
+  if (!email || !password) {
+    return res.redirect('/login', { errorMsg: 'Email and password are required' });
+  }
+
   getUserByEmail(email)
   .then(userObject => {
-    if (password === userObject.password) {
-      // add usercookie
-      return res.redirect('/passwords');
-    }
-  })
-  return res.redirect('/login');
+    // check password matches
+    bcrypt.compare(password, userObject.password)
+    .then(res => {
+      // password matches -> set cookie and redirect to '/'
+      req.session.user_id = userObject.id;
+      return res.redirect('/');
+    })
+    .catch(err => {
+      // password did not match -> render /login with error msg
+      return res.render('login', { errorMsg: 'Invalid password' });
+    });
+  });
+  // user with this email doesn't exist -> render /login with error msg
+  return res.redirect('/login', { errorMsg: 'User doesn\'t exist' });
 })
 
 // Register user
-
 router.post('/register', (req, res) => {
+  // check user is not logged in already
   if (isUserLoggedIn(req)) {
-    res.end;
+    return res.end();
   }
-  const email = req.params.email;
-  const password = req.params.password;;
-  addUser(email, password)
+
+  const { email, password } = req.body;
+
+  // check email & password were provided
+  if (!email || !password) {
+    return res.send('Must provide username and password');
+  }
+
+  // hash the password
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
+  // add the user to the db & store the new user_id in the cookie
+  addUser(email, hashedPassword)
   .then(user => {
-    res.json(user);
+    req.session.user_id = user.id;
+    return res.json(user);
   })
+  .catch(err => {
+    return res.json(err);
+  });
 });
 
 // Delete user
-
 router.post('/:id/delete', (req, res) => {
   if (isUserLoggedIn(req)) {
     res.end;
@@ -229,5 +254,4 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
 });
 
 module.exports = router;
-
 

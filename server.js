@@ -8,16 +8,16 @@ const express    = require("express");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
-const cookieSession = require('cookie-session');
+const cookieSession    = require('cookie-session');
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
 app.use(morgan('dev'));
+
+// setup express-session
 app.use(cookieSession({
-  name: 'session',
-  keys: ['user_id'],
-  maxAge: 24 * 60 * 60 * 1000
+  keys: [process.env.SESSION_SECRET]
 }));
 
 app.set("view engine", "ejs");
@@ -34,6 +34,8 @@ app.use(express.static("public"));
 // Note: Feel free to replace the example routes below with your own
 const getRoutes = require("./routes/get-routes");
 const postRoutes = require("./routes/post-routes");
+
+app.use(postRoutes);
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
