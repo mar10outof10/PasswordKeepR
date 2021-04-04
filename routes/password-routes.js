@@ -59,12 +59,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   if (isUserLoggedIn(req)) {
-    const label = req.body.label;
-    const username = req.body.usernamew;
-    const password = req.body.password
-    const category = req.body.category;
-    const orgId = req.body.orgId
-    const userId = req.session.user_id;
+    const { label, username, password, category, orgId } = req.body;
     const newPassObj = {
       label,
       username,
@@ -90,13 +85,7 @@ router.post('/', (req, res) => {
 
 router.post('/:id', (req, res) => {
     if (isUserLoggedIn(req)) {
-    const label = req.body.label;
-    const username = req.body.usernamew;
-    const password = req.body.password
-    const category = req.body.category;
-    const orgId = req.body.orgId
-    const userId = req.session.user_id;
-    const passwordId = req.params.id;
+    const { label, username, password, category, orgId } = req.body;
     const editPassObj = {
       label,
       username,
