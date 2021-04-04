@@ -11,8 +11,9 @@ router.get('/', (req, res) => {
     const userIdCookie = req.session.user_id;
     getAllPasswords(userIdCookie)
     .then(passwords => {
-      const templateVars = { passwords }
-      return res.render('passwords', templateVars);
+      return res.send(passwords);
+      // const templateVars = { passwords }
+      // return res.render('passwords', templateVars);
     })
     .catch(err => {
       return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
@@ -29,14 +30,16 @@ router.get('/:id', (req, res) => {
   if (isUserLoggedIn(req)) {
     getPasswordById(passwordId)
     .then(password => {
-      const templateVars = { password , user: userIdCookie }
-      return res.render('/password/:id', templateVars)
+      return res.send(password)
+      // const templateVars = { password , user: userIdCookie }
+      // return res.render('/password/:id', templateVars)
     })
     .catch(err => {
       console.log(err);
     })
+  } else {
+    res.redirect('/login');
   }
-  res.redirect('/login');
 });
 
 // Show new password form
