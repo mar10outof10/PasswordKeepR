@@ -4,14 +4,14 @@
   margin: 0 5% 0 5%;
 }
 
-.password-container {
+.articles-container {
   display: flex;
   flex-direction: row;
   border-style: solid;
   width: 95%;
 }
 
-.pw-main {
+.art-main {
   display: flex;
   width: 100%;
   height: 7em;
@@ -20,7 +20,7 @@
   border-style: solid;
 }
 
-.pw-icon {
+.art-icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,12 +28,12 @@
   height: 100%;
 }
 
-.pw-icon > img {
+.art-icon > img {
   max-width: 5em;
   max-height: 5em;
 }
 
-.pw-body {
+.art-body {
   display: flex;
   flex-direction: column;
   width: 70%;
@@ -41,7 +41,7 @@
   border-style: solid;
 }
 
-.pw-body > header {
+.art-body > header {
   display: flex;
   flex-flow: column wrap;
   width: 100%;
@@ -51,7 +51,7 @@
   justify-content: space-around;
 }
 
-.pw-url {
+.art-url {
   display: flex;
   width: 85%;
   margin-left: 5%;
@@ -60,17 +60,8 @@
   justify-content: center;
 }
 
-.pw-view {
-  width: 10%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-  text-decoration: none;
-}
 
-.pw-body > footer {
+.art-body > footer {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -78,21 +69,31 @@
   height: 60%;
 }
 
-.pw-username {
+.art-username {
   display: flex;
   align-items: center;
   height: 50%;
 }
 
-.pw-password {
+.art-password {
   display: flex;
   align-items: center;
   height: 50%;
   width: 100%;
 }
 
-.pw-label {
+.art-label {
   font-weight: bold;
   margin-left: 2%;
   width: 30%;
+}
+
+.art-view {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  text-decoration: none;
 }
