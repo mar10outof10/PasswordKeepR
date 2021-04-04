@@ -6,7 +6,7 @@ const db = require('../db');
  * @param {String} userId          The id of the user.
  * @return {Promise<[object]>}     A promise that resolves to an array of organization objects.
  */
-const getAllOrgs = function(userId) {
+const getAllOrgs = function (userId) {
   return db.query(`
     SELECT orgs.*
     FROM orgs
@@ -14,7 +14,22 @@ const getAllOrgs = function(userId) {
     JOIN users ON user_id = users.id
     WHERE user_id = $1;
   `, [userId])
-  .then(res => res.rows);
+    .then(res => res.rows);
+};
+
+/**
+ * Gets the organization for a given orgId.
+ *
+ * @param {String} userId          The id of the org.
+ * @return {Promise<object>}       A promise that resolves to the organization object.
+ */
+const getOrgById = function(orgId) {
+  return db.query(`
+    SELECT *
+    FROM orgs
+    WHERE id = $1;
+  `, [orgId])
+  .then(res => res.rows[0]);
 };
 
 /**
@@ -23,7 +38,7 @@ const getAllOrgs = function(userId) {
  * @param {String} orgName       The name of the organization.
  * @return {Promise<object>}     A promise that resolves with the new organization object.
  */
-const addOrg = function(orgName) {
+const addOrg = function (orgName) {
   return db.query(`
     INSERT INTO orgs (name)
     VALUES ($1)
@@ -39,7 +54,7 @@ const addOrg = function(orgName) {
  * @param {String} newOrgName    The new name of the organization.
  * @return {Promise<object>}     A promise that resolves with the updated organization object.
  */
-const editOrg = function(orgId, newOrgName) {
+const editOrg = function (orgId, newOrgName) {
   return db.query(`
     UPDATE orgs
     SET name = $1
@@ -55,7 +70,7 @@ const editOrg = function(orgId, newOrgName) {
  * @param {Number} orgId         The id of the organization.
  * @return {Promise<boolean>}     A promise that resolves to true if the deletion was successful.
  */
-const deleteOrg = function(orgId) {
+const deleteOrg = function (orgId) {
   return db.query(`
     DELETE FROM orgs
     WHERE id = $1;
@@ -71,7 +86,7 @@ const deleteOrg = function(orgId) {
  * @param {boolean} isAdmin       If the user should be an org admin.
  * @return {Promise<object>}      A promise that resolves to the new org_user object.
  */
-const addUserToOrg = function(userId, orgId, isAdmin) {
+const addUserToOrg = function (userId, orgId, isAdmin) {
   return db.query(`
     INSERT INTO org_users (user_id, org_id, is_admin)
     VALUES ($1, $2, $3)
@@ -88,7 +103,7 @@ const addUserToOrg = function(userId, orgId, isAdmin) {
  * @param {boolean} isAdmin       If the user should be an org admin.
  * @return {Promise<object>}      A promise that resolves to the updated org_user object.
  */
-const updateUserInOrg = function(userId, orgId, isAdmin) {
+const updateUserInOrg = function (userId, orgId, isAdmin) {
   return db.query(`
     UPDATE org_users
     SET is_admin = $1
@@ -105,7 +120,7 @@ const updateUserInOrg = function(userId, orgId, isAdmin) {
  * @param {Number} orgId          The id of the organization.
  * @return {Promise<boolean>}     A promise that resolves to true if the user was removed successfully.
  */
-const deleteUserFromOrg = function(userId, orgId) {
+const deleteUserFromOrg = function (userId, orgId) {
   return db.query(`
     DELETE FROM org_users
     WHERE user_id = $1
@@ -122,7 +137,7 @@ const deleteUserFromOrg = function(userId, orgId) {
  * @param {Number} orgId          The id of the organization.
  * @return {Promise<boolean>}     A promise that resolves to true if the user is an admin of the org.
  */
-const userIsOrgAdmin = function(userId, orgId) {
+const userIsOrgAdmin = function (userId, orgId) {
   return db.query(`
     SELECT *
     FROM org_users
@@ -144,7 +159,7 @@ const userIsOrgAdmin = function(userId, orgId) {
  * @param {Number} orgId          The id of the organization.
  * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
  */
-const userIsInOrg = function(userId, orgId) {
+const userIsInOrg = function (userId, orgId) {
   return db.query(`
     SELECT *
     FROM org_users
@@ -154,4 +169,4 @@ const userIsInOrg = function(userId, orgId) {
     .then(res => res.rows[0] ? true : false);
 };
 
-module.exports = { getAllOrgs, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
+module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
