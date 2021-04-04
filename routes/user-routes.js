@@ -1,37 +1,27 @@
 const express = require('express');
 const router  = express.Router();
 const bcrypt = require('bcrypt');
-const { isUserLoggedIn } = require('./helpers');
+const { isAuthenticated, isNotAuthenticated } = require('./helpers');
 const { getUserByEmail, addUser, deleteUser } = require('../db/queries/user-queries');
 
 /* Root
 * logged in user  -> go to /passwords
 * else            -> go to /login
 */
-router.get('/', (req, res) => {
-  if (isUserLoggedIn(req)) {
+router.get('/', isAuthenticated, (req, res) => {
     return res.redirect('/passwords');
-  }
-  return res.redirect('/login');
 });
 
 /* Login page
 * logged in user -> go to /passwords
 * else           -> render login page
 */
-router.get('/login', (res, req) => {
-  if (isUserLoggedIn(req)) {
+router.get('/login', isAuthenticated, (res, req) => {
     return res.redirect('/passwords');
-  }
-  return res.render('login');
 });
 
 // Handle user login
-router.post('/login', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    return res.end();
-  }
-
+router.post('/login', isNotAuthenticated, (req, res) => {
   const { email, password } = req.body;
 
   // check email/password were provided
@@ -75,20 +65,13 @@ router.post('/login', (req, res) => {
 * logged in user -> go to /passwords
 * else           -> render register page
 */
-router.get('/register', (res, req) => {
-  if (isUserLoggedIn(req)) {
-    return res.redirect('/passwords');
-  }
+router.get('/register', isNotAuthenticated, (req, res) => {
   return res.render('register');
 });
 
 // Handle user registration
-router.post('/register', (req, res) => {
+router.post('/register', isNotAuthenticated, (req, res) => {
   // check user is not logged in already
-  if (isUserLoggedIn(req)) {
-    return res.end();
-  }
-
   const { email, password } = req.body;
 
   // check email & password were provided
@@ -111,7 +94,7 @@ router.post('/register', (req, res) => {
 });
 
 // Delete user
-router.post('/:id/delete', (req, res) => {
+router.post('/:id/delete', isAuthenticated, (req, res) => {
   if (req.params.id !== req.session.user_id) {
     // user is trying to delete an account that isn't theirs
     return res.status(401).send();
