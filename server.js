@@ -32,10 +32,13 @@ app.use(express.static("public"));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
-const getRoutes = require("./routes/get-routes");
-const postRoutes = require("./routes/post-routes");
+const userRoutes = require("./routes/user-routes");
+const passwordRoutes = require("./routes/password-routes");
+const orgRoutes = require("./routes/org-routes");
 
-app.use(postRoutes);
+app.use(userRoutes);
+app.use('/password', passwordRoutes);
+app.use('/org', orgRoutes);
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
