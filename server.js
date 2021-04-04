@@ -37,6 +37,8 @@ app.use(express.static("public"));
 const getRoutes = require("./routes/get-routes");
 const postRoutes = require("./routes/post-routes");
 
+app.use(postRoutes);
+
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 // app.use("/api/users", usersRoutes(db));

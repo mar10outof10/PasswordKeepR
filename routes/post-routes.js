@@ -1,8 +1,6 @@
 const express = require('express');
 const router  = express.Router();
 
-const cookieSession = require('cookie-session');
-
 const { addPassword, editPassword, deletePassword, getPasswordById } = require('../db/queries/password-queries')
 const { addOrg, userIsOrgAdmin, userIsInOrg, addUserToOrg } = require('../db/queries/org-queries')
 const { getUserByEmail, addUser, deleteUser, getUserById } = require('../db/queries/user-queries');
@@ -34,8 +32,9 @@ router.post('/register', (req, res) => {
   if (isUserLoggedIn(req)) {
     res.end;
   }
-  const email = req.params.email;
-  const password = req.params.password;;
+  const email = req.body.email;
+  const password = req.body.password;
+
   addUser(email, password)
   .then(user => {
     res.json(user);
@@ -230,7 +229,4 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
   // return error if user is not admin
 });
 
-
-
-
-
+module.exports = router;
