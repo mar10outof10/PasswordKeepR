@@ -18,6 +18,21 @@ const getAllOrgs = function (userId) {
 };
 
 /**
+ * Gets the organization for a given orgId.
+ *
+ * @param {String} userId          The id of the org.
+ * @return {Promise<object>}       A promise that resolves to the organization object.
+ */
+const getOrgById = function(orgId) {
+  return db.query(`
+    SELECT *
+    FROM orgs
+    WHERE id = $1;
+  `, [orgId])
+  .then(res => res.rows[0]);
+};
+
+/**
  * Adds an organization to the orgs table.
  *
  * @param {String} orgName       The name of the organization.
@@ -154,4 +169,4 @@ const userIsInOrg = function (userId, orgId) {
     .then(res => res.rows[0] ? true : false);
 };
 
-module.exports = { getAllOrgs, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
+module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
