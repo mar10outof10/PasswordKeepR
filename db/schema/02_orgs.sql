@@ -8,8 +8,8 @@ CREATE TABLE orgs (
 DROP TABLE IF EXISTS org_users CASCADE;
 CREATE TABLE org_users (
   id SERIAL PRIMARY KEY NOT NULL,
-  user_id INT REFERENCES users(id) NOT NULL,
-  org_id INT REFERENCES orgs(id) NOT NULL,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+  org_id INT REFERENCES orgs(id) ON DELETE CASCADE NOT NULL,
   is_admin BOOLEAN DEFAULT false,
   UNIQUE (user_id, org_id)
 );
