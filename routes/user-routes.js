@@ -1,18 +1,15 @@
 const express = require('express');
 const router  = express.Router();
 const bcrypt = require('bcrypt');
-const { isUserLoggedIn } = require('./helpers');
+const { isAuthenticated, isAuthenticated } = require('./helpers');
 const { getUserByEmail, addUser, deleteUser } = require('../db/queries/user-queries');
 
 /* Root
 * logged in user  -> go to /passwords
 * else            -> go to /login
 */
-router.get('/', (req, res) => {
-  if (isUserLoggedIn(req)) {
+router.get('/', isAuthenticated, (req, res) => {
     return res.redirect('/passwords');
-  }
-  return res.redirect('/login');
 });
 
 /* Login page
@@ -20,10 +17,7 @@ router.get('/', (req, res) => {
 * else           -> render login page
 */
 router.get('/login', (res, req) => {
-  if (isUserLoggedIn(req)) {
     return res.redirect('/passwords');
-  }
-  return res.render('login');
 });
 
 // Handle user login
