@@ -2,11 +2,11 @@ const express = require('express');
 const router  = express.Router();
 
 const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
+const { isUserLoggedIn } = require('./helpers')
 // Show user password dashboard
 
 router.get('/', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
+  if (isUserLoggedIn(req)) {
     getAllPasswords(userIdCookie)
     .then(passwords => {
       const templateVars = { passwords }
@@ -19,9 +19,8 @@ router.get('/', (res, req) => {
 // Show individual password
 
 router.get('/:id', (res, req) => {
-  const userIdCookie = req.session.user_id;
   const passwordId = req.params.id;
-  if (userIdCookie) {
+  if (isUserLoggedIn(req)) {
     getPasswordById(passwordId)
     .then(password => {
       const templateVars = { password , user: userIdCookie }
@@ -34,8 +33,7 @@ router.get('/:id', (res, req) => {
 // Show new password form
 
 router.get('/new', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
+  if (isUserLoggedIn(req)) {
     const templateVars = { user: userIdCookie }
     return res.render('password/new', templateVars);
   }

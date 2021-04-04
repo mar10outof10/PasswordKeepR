@@ -1,6 +1,8 @@
 const express = require('express');
 const router  = express.Router();
 
+const { isUserLoggedIn } = require('./helpers')
+const { getUserByEmail, addUser } = require('../db/queries/user-queries')
 
 // User login
 router.post('/login', (req, res) => {
