@@ -158,7 +158,6 @@ router.post('/orgs/:id', (req, res) => {
   if (isUserLoggedIn(req)) {
     res.end;
   }
-  // check if user is admin of org
   const orgId = req.params.id
   const userId = req.session.user_id;
   userIsOrgAdmin(userId, orgId)
@@ -201,14 +200,11 @@ router.post('/orgs/:id', (req, res) => {
 router.post('/orgs/:id/:userid', (req, res) => {
   const orgId = req.params.id
   const userId = req.cookies.user_id
-  // we need feature on page to ask for admin privledges
   userIsOrgAdmin(userId, orgId)
   .then(bool => {
-    // how can admin search for users to add?
-    // check if user is already in org before adding
-    addUserToOrg(userId, orgId, isAdmin);
+    const userId = rew.params.userid
+    addUserToOrg(userId, orgId, false);
   })
-  // TODO: how do we authenticate admin privs?
 });
 
 // Remove user from org
