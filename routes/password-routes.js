@@ -1,6 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 
+const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
 // Show user password dashboard
 
 router.get('/passwords', (res, req) => {
