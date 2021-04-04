@@ -86,26 +86,30 @@ router.post('/', (req, res) => {
 // Edit individual password
 
 router.post('/:id', (req, res) => {
-  const label = req.body.label;
-  const username = req.body.usernamew;
-  const password = req.body.password
-  const category = req.body.category;
-  const orgId = req.body.orgId
-  const userId = req.session.user_id;
-  const passwordId = req.params.id;
-  const editPassObj = {
-    label,
-    username,
-    password,
-    category,
-    userId,
-    orgId,
-    passwordId
+    if (isUserLoggedIn(req)) {
+    const label = req.body.label;
+    const username = req.body.usernamew;
+    const password = req.body.password
+    const category = req.body.category;
+    const orgId = req.body.orgId
+    const userId = req.session.user_id;
+    const passwordId = req.params.id;
+    const editPassObj = {
+      label,
+      username,
+      password,
+      category,
+      userId,
+      orgId,
+      passwordId
+    }
+    editPassword(editPassObj)
+    .then(editedPassObj => {
+      res.json(editedPassObj);
+    })
+  } else {
+    res.end;
   }
-  editPassword(editPassObj)
-  .then(editedPassObj => {
-    res.json(editedPassObj);
-  })
 });
 
 // Delete password
