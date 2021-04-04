@@ -4,9 +4,29 @@ const bcrypt = require('bcrypt');
 const { isUserLoggedIn } = require('./helpers');
 const { getUserByEmail, getUserById, addUser } = require('../db/queries/user-queries');
 
+/* Root
+* logged in user  -> go to /passwords
+* else            -> go to /login
+*/
+router.get('/', (req, res) => {
+  if (isUserLoggedIn(req)) {
+    return res.redirect('/passwords');
+  }
+  return res.redirect('/login');
+});
 
+/* Login page
+* logged in user -> go to /passwords
+* else           -> render login page
+*/
+router.get('/login', (res, req) => {
+  if (isUserLoggedIn(req)) {
+    return res.redirect('/passwords');
+  }
+  return res.render('login');
+});
 
-// User login
+// Handle user login
 router.post('/login', (req, res) => {
   if (isUserLoggedIn(req)) {
     return res.end();
@@ -98,16 +118,7 @@ router.post('/:id/delete', (req, res) => {
   })
 });
 
-// Render login page
 
-router.get('/login', (res, req) => {
-  const userIdCookie = req.session.user_id;
-  if (userIdCookie) {
-    res.redirect('/passwords');
-    return;
-  }
-  res.send('login');
-})
 
 // Render register page
 
