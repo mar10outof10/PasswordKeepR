@@ -38,7 +38,7 @@ const orgRoutes = require("./routes/org-routes");
 // Mount all resource routes
 app.use(userRoutes);
 app.use('/passwords', passwordRoutes);
-app.use('/org', orgRoutes);
+app.use('/orgs', orgRoutes);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
