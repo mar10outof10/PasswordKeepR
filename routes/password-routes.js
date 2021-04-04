@@ -2,13 +2,11 @@ const express = require('express');
 const router  = express.Router();
 
 const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
-const { isUserLoggedIn } = require('./helpers')
+const { isAuthenticated } = require('./helpers')
 
 // Show user password dashboard
 
-router.get('/', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    const userIdCookie = req.session.user_id;
+router.get('/', isAuthenticated, (req, res) => {
     getAllPasswords(userIdCookie)
     .then(passwords => {
       return res.send(passwords);
