@@ -23,6 +23,18 @@ router.get('/', (req, res) => {
   }
 });
 
+// Show new password form
+
+router.get('/new', (req, res) => {
+  if (isUserLoggedIn(req)) {
+    return res.send('password form')
+    // const templateVars = { user: userIdCookie }
+    // return res.render('password/new', templateVars);
+  } else {
+    res.redirect('/login');
+  }
+});
+
 // Show individual password
 
 router.get('/:id', (req, res) => {
@@ -42,15 +54,6 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// Show new password form
-
-router.get('/new', (req, res) => {
-  if (isUserLoggedIn(req)) {
-    const templateVars = { user: userIdCookie }
-    return res.render('password/new', templateVars);
-  }
-  res.redirect('/login');
-});
 
 // Add password
 
