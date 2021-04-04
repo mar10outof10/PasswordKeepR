@@ -35,10 +35,17 @@ router.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  if (!email || !password) {
+    return res.send('Must provide username and password');
+  }
+
   addUser(email, password)
   .then(user => {
-    res.json(user);
+    return res.json(user);
   })
+  .catch(err => {
+    return res.json(err);
+  });
 });
 
 // Delete user

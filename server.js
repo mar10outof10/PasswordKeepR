@@ -8,7 +8,7 @@ const express    = require("express");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
-const session    = require('express-session');
+const cookieSession    = require('cookie-session');
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -16,10 +16,8 @@ const session    = require('express-session');
 app.use(morgan('dev'));
 
 // setup express-session
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
+app.use(cookieSession({
+  keys: [process.env.SESSION_SECRET]
 }));
 
 app.set("view engine", "ejs");
