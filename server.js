@@ -40,7 +40,8 @@ const postRoutes = require("./routes/post-routes");
 // app.use("/api/users", usersRoutes(db));
 // app.use("/api/widgets", widgetsRoutes(db));
 // Note: mount other resources here, using the same pattern above
-
+app.use("/get", getRoutes())
+app.use("/post", postRoutes())
 
 // Home page
 // Warning: avoid creating more routes in this file!

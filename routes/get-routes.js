@@ -98,3 +98,5 @@ router.get('/orgs/:id', (res, req) => {
     res.redirect('/login');
   }
 });
+
+module.exports = router;

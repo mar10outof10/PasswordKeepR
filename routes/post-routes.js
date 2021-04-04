@@ -228,7 +228,6 @@ router.post('/orgs/:id/:userid/delete', (req, res) => {
   res.send('error');
 });
 
-
-
+module.exports = router;
 
 
