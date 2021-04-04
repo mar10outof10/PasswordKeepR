@@ -7,30 +7,24 @@ const { isAuthenticated } = require('./helpers')
 // Show user password dashboard
 
 router.get('/', isAuthenticated, (req, res) => {
-    getAllPasswords(userIdCookie)
-    .then(passwords => {
-      return res.send(passwords);
+  getAllPasswords(userIdCookie)
+  .then(passwords => {
+    return res.send(passwords);
       // const templateVars = { passwords }
       // return res.render('passwords', templateVars);
-    })
-    .catch(err => {
-      return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
-    })
-  } else {
-    return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
-  }
-});
+  })
+  .catch(err => {
+    return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
+  })
+  return res.redirect('/login', { errorMsg: 'You must be logged in to view passwords' });
+})
 
 // Show new password form
 
-router.get('/new', (req, res) => {
-  if (isUserLoggedIn(req)) {
+router.get('/new', isAuthenticated, (req, res) => {
     return res.send('password form')
     // const templateVars = { user: userIdCookie }
     // return res.render('password/new', templateVars);
-  } else {
-    res.redirect('/login', { errorMsg: 'You must be logged in to add a new password' });
-  }
 });
 
 // Show individual password
