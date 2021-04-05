@@ -79,7 +79,7 @@ router.get('/:id', isAuthenticated, (req, res) => {
 
   getOrgById(orgId)
   .then(org => {
-
+    templateVars.orgName = org.name;
     usersInOrg(org.id)
     .then(users => {
       templateVars.members = users; // set of rows from org_users where org_id = org.id
@@ -87,8 +87,7 @@ router.get('/:id', isAuthenticated, (req, res) => {
     .catch(err => res.json(err));
 
   })
-  .then(org => {a
-    templateVars.org = org;
+  .then(() => {
     return res.render('orgs_show', templateVars);
   })
   .catch(err => res.json(err));
