@@ -85,8 +85,8 @@ router.post('/:id', isAuthenticated, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
   const passwordId = req.params.id;
-  const editPassObj = { label, url, username, password, category, userId, orgId, passwordId}
-  editPassword(editPassObj)
+  const editPassObj = { label, url, username, password, category, userId, orgId };
+  editPassword(passwordId, editPassObj)
   .then(editedPassObj => {
     // res.json(editedPassObj);
     res.redirect('passwords_show');
