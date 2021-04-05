@@ -9,18 +9,7 @@
     <form class="logout" method="POST" action="/logout">
       <button type="submit" class="btn btn-danger">LOGOUT</button>
     </form>
-
   </ul>
-  <% } else{ %>
-    <ul class="navbar-nav mr-auto">
-      <form class="login" method="GET" action="/login">
-        <button type="submit" class="btn btn-primary">LOGIN</button>
-      </form>
-      <form class="register" method="GET" action="/register">
-        <button type="submit" class="btn btn-info">REGISTER</button>
-      </form>
-    </ul>
-  <% } %>
   <div class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       &#127828;&#127828;&#127828;
@@ -33,4 +22,15 @@
       <a class="dropdown-item" href="/orgs/new">New Organization</a>
     </div>
   </div>
+  <% } else { %>
+    <ul class="navbar-nav mr-auto">
+      <form class="login" method="GET" action="/login">
+        <button type="submit" class="btn btn-primary">LOGIN</button>
+      </form>
+      <form class="register" method="GET" action="/register">
+        <button type="submit" class="btn btn-info">REGISTER</button>
+      </form>
+    </ul>
+  <% } %>
+
 </nav>
