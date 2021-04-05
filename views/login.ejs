@@ -10,6 +10,11 @@
   <%- include('partials/_header') %>
     <main class="m-4">
       <h1 class="mb-4">Login</h1>
+      <% if (locals.errorMsg) {%>
+      <div class="alert alert-danger" role="alert">
+        <%= errorMsg %>
+      </div>
+      <% }%>
       <form action="/login" method="POST">
         <div class="form-group row">
           <label for="email" class="col-sm-3 col-form-label">Email</label>
