@@ -30,10 +30,7 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-  getUserById(userId)
-  .then(user => {
-    return res.render('passwords_new', { email: user.email });
-  })
+  return res.render('passwords_new', { userId });
 });
 
 /* Show individual password
@@ -42,15 +39,12 @@ router.get('/new', isAuthenticated, (req, res) => {
 */
 router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
-  const userId = req.session.user_id;
-  const getPasswordPromise = getPasswordById(passwordId);
-  const getUserPromise = getUserById(userId);
-
-  Promise.all([getPasswordPromise, getUserPromise])
-  .then(values => {
-    const password = values[0];
-    const email = values[1].email;
-    return res.render('passwords_show', { password , email, passwordId });
+  const userId = req.params.user_id;
+  getPasswordById(passwordId)
+  .then(password => {
+    // // console.log(password);
+    // return res.send(password)
+  return res.render('passwords_show', { password , userId })
   })
   .catch(err => {
     res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
@@ -58,7 +52,7 @@ router.get('/:id', isAuthenticated,  (req, res) => {
 });
 
 
-/* Add new password
+/* Add new passwordf
 * logged in user  -> add new password to Db
 * else            -> go to /login
 */
@@ -85,11 +79,11 @@ router.post('/:id', isAuthenticated, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
   const passwordId = req.params.id;
-  const editPassObj = { label, url, username, password, category, userId, orgId, passwordId}
+  const editPassObj = { label, url, username, password, category, userId, orgId, passwordId }
   editPassword(editPassObj)
   .then(editedPassObj => {
-    // res.json(editedPassObj);
-    res.redirect('passwords_show');
+    res.json(editedPassObj);
+    // res.redirect('passwords_show');
   })
   .catch(err => {
     res.json(err);
