@@ -175,7 +175,7 @@ const userIsInOrg = function (userId, orgId) {
  * @param {Number} orgId          The id of the organization.
  * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
  */
- const usersInOrg = function (userId, orgId) {
+const usersInOrg = function (userId, orgId) {
   return db.query(`
     SELECT *
     FROM org_users
@@ -184,4 +184,20 @@ const userIsInOrg = function (userId, orgId) {
     .then(res => res.rows);
 };
 
-module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg };
+/**
+ * Gets the user's join_date for a specific org
+ *
+ * @param {Number} userId         The id of the user to check.
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
+ */
+const userOrgJoinDate = function (userID, orgID) {
+  return db.query(`
+  SELECT joined_at
+  FROM org_users
+  WHERE user_id = $1
+  AND org_id = $2
+  `, [userId, orgId])
+    .then(res => res.rows);
+};
+module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, userOrgJoinDate };
