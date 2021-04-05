@@ -104,12 +104,12 @@ router.post('/:id', isAuthenticated, (req, res) => {
       const orgName = req.body.org_name;
       return editOrg(orgId, orgName);
     }
-    return Promise.reject(401);
+    return Promise.reject();
   })
   .then(() => {
     return res.redirect(`/orgs/${orgId}`);
   })
-  .catch(status => res.status(status).send());
+  .catch(() => res.status(401).send());
 });
 
 /* Delete individual org
@@ -129,7 +129,7 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
   })
   .then(deletedSuccessfully => {
     if (deletedSuccessfully) {
-      return res.redirect('/orgs');
+      return res.send('org deleted');
     }
     return Promise.reject(500);
   })
@@ -143,9 +143,9 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
 */
 router.post('/:id/:userid', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
-  const userIdToAdd = req.params.userid;
   const makeAdmin = req.body.admin || false;
   const userId = req.session.user_id;
+  const userIdToAdd = req.params.userid;
 
   console.log('userId', userId);
   console.log('orgId', orgId);
@@ -155,9 +155,7 @@ router.post('/:id/:userid', isAuthenticated, (req, res) => {
       return addUserToOrg(userIdToAdd, orgId, makeAdmin);
     }
   })
-  .then(orgUser => res.json(orgUser))
-  .then(() => res.redirect(`/orgs/${orgId}/`))
-  .catch(() => res.status(401).send());
+  .then(orgUser => res.json(orgUser));
 });
 
 // Remove user from org
