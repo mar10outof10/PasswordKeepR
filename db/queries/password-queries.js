@@ -95,7 +95,7 @@ const editPassword = function(passwordId, passwordObj) {
   return db.query(`
     UPDATE passwords
     SET (label, url, username, password, category, user_id, org_id) = ($1, $2, $3, $4, $5, $6, $7)
-    WHERE id = $7
+    WHERE id = $8
     RETURNING *;
   `, [label, url, username, password, category, userId, orgId, passwordId])
     .then(res => res.rows[0]);
