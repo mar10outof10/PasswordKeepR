@@ -45,7 +45,10 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-  return res.render('orgs_new', { userId });
+  getUserById(userId)
+  .then(user => {
+    return res.render('orgs_new', { email: user.email });
+  });
 });
 
 /* Add new org
