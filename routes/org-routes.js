@@ -3,9 +3,13 @@ const router  = express.Router();
 
 const { getUserById } = require('../db/queries/user-queries');
 const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg } = require('../db/queries/org-queries');
+const { isAuthenticated, isNotAuthenticated } = require('./helpers')
 
-// Show all user organizations
-router.get('/', (req, res) => {
+/* Show orgs dashboard
+* logged in user  -> go to /orgs
+* else            -> go to /login
+*/
+router.get('/', isAuthenticated, (req, res) => {
   getAllOrgs(req.session.user_id)
   .then(orgs => {
     return res.json(orgs);
@@ -14,8 +18,11 @@ router.get('/', (req, res) => {
   });
 });
 
-// Add new Org
-router.post('/', (req, res) => {
+/* Add new org
+* logged in user  -> add new org to Db
+* else            -> go to /login
+*/
+router.post('/', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const orgName = req.body.org_name;
   addOrg(orgName)
@@ -28,8 +35,11 @@ router.post('/', (req, res) => {
   });
 });
 
-// Get individual org by id
-router.get('/:id', (req, res) => {
+/* Show individual org
+* logged in user  -> go to /orgs/:id
+* else            -> go to /login
+*/
+router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   getOrgById(orgId)
   .then(org => {
@@ -39,8 +49,11 @@ router.get('/:id', (req, res) => {
   });
 });
 
-// Edit org
-router.post('/:id', (req, res) => {
+/* Edit individual org
+* logged in user  -> edit org in Db
+* else            -> go to /login
+*/
+router.post('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
   userIsOrgAdmin(userId, orgId)
@@ -57,8 +70,11 @@ router.post('/:id', (req, res) => {
   .catch(() => res.status(401).send());
 });
 
-// Delete Org
-router.post('/:id/delete', (req, res) => {
+/* Delete individual org
+* logged in user  -> delete org in Db
+* else            -> go to /login
+*/
+router.post('/:id/delete', isAuthenticated, (req, res) => {
   // check if user is admin of org
   const orgId = req.params.id
   const userId = req.session.user_id;
@@ -79,8 +95,11 @@ router.post('/:id/delete', (req, res) => {
 });
 
 
-// Add user to org
-router.post('/:id/:userid', (req, res) => {
+/* Add user to org
+* logged in user  -> add user to org in Db
+* else            -> go to /login
+*/
+router.post('/:id/:userid', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const makeAdmin = req.body.admin || false;
   const userId = req.session.user_id;
@@ -98,7 +117,7 @@ router.post('/:id/:userid', (req, res) => {
 });
 
 // Remove user from org
-router.post('/:id/:userid/delete', (req, res) => {
+router.post('/:id/:userid/delete', isAuthenticated, (req, res) => {
   const userId = req.session.user_id
   const userIdToDelete = req.params.userid;
   const orgId = req.params.id;
