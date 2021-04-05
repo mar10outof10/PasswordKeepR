@@ -16,7 +16,7 @@ router.get('/', isAuthenticated, (req, res) => {
 
   Promise.all([passwordsPromise, userPromise])
   .then(values => {
-    return res.render('passwords_index', { passwords: values[0], email: values[1].email });
+    return res.render('passwords_index', { passwords: values[0], email: values[1].email, userId });
   })
   .catch(err => {
     return res.json(err);
@@ -29,9 +29,8 @@ router.get('/', isAuthenticated, (req, res) => {
 * else            -> go to /login
 */
 router.get('/new', isAuthenticated, (req, res) => {
-    // return res.send('password form')
-    // const templateVars = { user: userIdCookie }
-    return res.render('password_new', templateVars);
+  const userId = req.session.user_id;
+  return res.render('password_new', { userId });
 });
 
 /* Show individual password
@@ -40,11 +39,11 @@ router.get('/new', isAuthenticated, (req, res) => {
 */
 router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
+  const userId = req.params.user_id;
   getPasswordById(passwordId)
   .then(password => {
     // return res.send(password)
-  const templateVars = { password , user: userIdCookie }
-  return res.render('/passwords_show', templateVars)
+  return res.render('/passwords_show', { password , userId })
   })
   .catch(err => {
     res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
@@ -62,7 +61,8 @@ router.post('/', isAuthenticated, (req, res) => {
   addPassword(newPassObj)
   .then(newPassObj => {
     // res.json(newPassObj);
-    res.redirect('passwords_show');
+    const userId = req.session.user_id;
+    res.redirect('passwords_show', { userId });
   })
   .catch(err => {
     res.json(err);
@@ -80,7 +80,8 @@ router.post('/:id', isAuthenticated, (req, res) => {
   editPassword(editPassObj)
   .then(editedPassObj => {
     // res.json(editedPassObj);
-    res.redirect('passwords_show');
+    const userId = req.session.user_id;
+    res.redirect('passwords_show', { userId });
   })
   .catch(err => {
     res.json(err);
@@ -95,12 +96,12 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
   const passwordId = req.params.id;
   getPasswordById(passwordId)
   .then(passwordObj => {
-    userIdCookie = req.params.user_id;
+    const userIdCookie = req.params.user_id;
     if (passwordObj.userId === userIdCookie) {
       deletePassword(passwordId)
       .then(rowCount => {
         res.json(rowCount);
-        res.redirect('passwords_index');
+        res.redirect('passwords_index', { userIdCookie });
       })
       .catch(err => {
         res.json(err);
