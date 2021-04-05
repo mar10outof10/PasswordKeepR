@@ -61,6 +61,14 @@ router.post('/login', isNotAuthenticated, (req, res) => {
     });
 });
 
+/* Log out
+* delete cookie, redirect to /
+*/
+router.post('/logout', (req, res) => {
+  req.session = null;
+  return res.redirect('/');
+});
+
 /* Register page
 * logged in user -> go to /passwords
 * else           -> render register page
