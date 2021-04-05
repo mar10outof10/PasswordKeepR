@@ -94,7 +94,7 @@ router.post('/register', isNotAuthenticated, (req, res) => {
   addUser(email, hashedPassword)
     .then(user => {
       req.session.user_id = user.id;
-      return res.json(user);
+      return res.redirect('/passwords');
     })
     .catch(err => {
       return res.json(err);
