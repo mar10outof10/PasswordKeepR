@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg } = require('../db/queries/org-queries');
+const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate } = require('../db/queries/org-queries');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers')
 
 /* Show orgs dashboard
@@ -10,17 +10,35 @@ const { isAuthenticated, isNotAuthenticated } = require('./helpers')
 * else            -> go to /login
 */
 router.get('/', isAuthenticated, (req, res) => {
-  getAllOrgs(req.session.user_id)
+  const userId = req.session.user_id;
+  getAllOrgs(userId)
   .then(orgs => {
-    return res.json(orgs);
-  })
-  .then(orgsJSON => {
-    const orgs = JSON.parse(orgsJSON)
+    const orgData = [];
+    for (org of orgs) {
+      const orgObj = {};
+      orgObj.name = org.name;
+      numberUsersInOrg(org.id)
+      .then(length => {
 
-    const templateVars = { user: req.session.user_id, orgs }
+        orgObj.memberCount = length;
+        userOrgJoinDate(userId, org.id)
+        .then(joinDate => {
+          orgObj.joinDate = joinDate;
+        })
+        .catch(err => res.json(err));
+
+      })
+      .catch(err => res.json(err));
+      orgData.push(orgObj);
+    }
+    return orgData
+  })
+  .then(orgsArray => {
+    const templateVars = { user: req.session.user_id, orgsArray }
     return res.render('orgs', templateVars);
   });
 });
+
 /* New organisation form
 * logged in user  -> go to /orgs/new
 * else            -> go to /login
@@ -29,6 +47,7 @@ router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   return res.render('orgs_new', { userId });
 });
+
 /* Add new org
 * logged in user  -> add new org to Db
 * else            -> go to /login
@@ -58,7 +77,7 @@ router.get('/:id', isAuthenticated, (req, res) => {
   })
   .then(org => {
     const templateVars = { user: userIdCookie, org }
-    return res.render('orgs', templateVars);
+    return res.render('orgs_show', templateVars);
   });
 });
 
@@ -145,8 +164,7 @@ router.post('/:id/:userid/delete', isAuthenticated, (req, res) => {
   })
   .then(deletedSuccessfully => {
     if (deletedSuccessfully) {
-      // unsure how we are rendering the orgs/:id page
-      return res.render('org', { orgId });
+      return res.redirect('orgs_index');
     } else {
       return res.status(500).send('Error deleting user from org');
     }
