@@ -57,10 +57,9 @@ router.get('/:id', isAuthenticated,  (req, res) => {
 * else            -> go to /login
 */
 router.post('/', isAuthenticated, (req, res) => {
-  console.log(req.body)
-  const { label, username, password, category, orgId } = req.body;
+  const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
-  const newPassObj = { label, username, password, category, orgId, userId }
+  const newPassObj = { label, url, username, password, category, orgId, userId }
   addPassword(newPassObj)
   .then(password => {
     // res.json(newPassObj);
