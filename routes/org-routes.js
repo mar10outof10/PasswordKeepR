@@ -143,9 +143,9 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
 */
 router.post('/:id/:userid', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
+  const userIdToAdd = req.params.userid;
   const makeAdmin = req.body.admin || false;
   const userId = req.session.user_id;
-  const userIdToAdd = req.params.userid;
 
   console.log('userId', userId);
   console.log('orgId', orgId);
@@ -156,6 +156,7 @@ router.post('/:id/:userid', isAuthenticated, (req, res) => {
     }
   })
   .then(orgUser => res.json(orgUser))
+  .then(() => res.redirect(`/orgs/${orgId}/`))
   .catch(() => res.status(401).send());
 });
 
