@@ -29,9 +29,9 @@ router.get('/', isAuthenticated, (req, res) => {
 * else            -> go to /login
 */
 router.get('/new', isAuthenticated, (req, res) => {
-    return res.send('password form')
+    // return res.send('password form')
     // const templateVars = { user: userIdCookie }
-    // return res.render('password/new', templateVars);
+    return res.render('password_new', templateVars);
 });
 
 /* Show individual password
@@ -42,9 +42,9 @@ router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
   getPasswordById(passwordId)
   .then(password => {
-    return res.send(password)
-  // const templateVars = { password , user: userIdCookie }
-  // return res.render('/password/:id', templateVars)
+    // return res.send(password)
+  const templateVars = { password , user: userIdCookie }
+  return res.render('/passwords_show', templateVars)
   })
   .catch(err => {
     res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
@@ -61,7 +61,8 @@ router.post('/', isAuthenticated, (req, res) => {
   const newPassObj = { label, username, password, category, orgId, userId }
   addPassword(newPassObj)
   .then(newPassObj => {
-    res.json(newPassObj);
+    // res.json(newPassObj);
+    res.redirect('passwords_show');
   })
   .catch(err => {
     res.json(err);
@@ -69,7 +70,7 @@ router.post('/', isAuthenticated, (req, res) => {
 })
 
 
-/* Show individual password
+/* Edit individual password
 * logged in user  -> edit inidivual password in Db
 * else            -> go to /login
 */
@@ -78,7 +79,8 @@ router.post('/:id', isAuthenticated, (req, res) => {
   const editPassObj = { label, username, password, category, userId, orgId, passwordId}
   editPassword(editPassObj)
   .then(editedPassObj => {
-    res.json(editedPassObj);
+    // res.json(editedPassObj);
+    res.redirect('passwords_show');
   })
   .catch(err => {
     res.json(err);
@@ -98,7 +100,7 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
       deletePassword(passwordId)
       .then(rowCount => {
         res.json(rowCount);
-        // res.redirect('/passwords');
+        res.redirect('passwords_index');
       })
       .catch(err => {
         res.json(err);
