@@ -43,7 +43,8 @@ $(() => {
     const lowerCase = $('.pw-lowercase').is(':checked');
     const upperCase = $('.pw-uppercase').is(':checked');
     const containsNumbers = $('.pw-numbers').is(':checked');
-    const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers };
+    const containsSymbols = $('.pw-symbols').is(':checked')
+    const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers, containsSymbols };
     // call generateRandom string
     const newPassword = generateRandomString(stringParams);
     // append password to password field
@@ -65,6 +66,9 @@ const generateRandomString = (stringParams) => {
   }
   if (stringParams.containsNumbers) {
     chars += "1234567890";
+  }
+  if (stringParams.containsSymbols) {
+    chars += "!@#$%^&*()_+<>?:{}[]()|\`~";
   }
   let result = '';
   for (let i = stringParams.passwordLength; i > 0; --i) {
