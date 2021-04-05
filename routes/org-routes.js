@@ -35,7 +35,7 @@ router.get('/', isAuthenticated, (req, res) => {
   })
   .then(orgsArray => {
     const templateVars = { user: req.session.user_id, orgsArray }
-    return res.render('orgs', templateVars);
+    return res.render('orgs_index', templateVars);
   });
 });
 
@@ -61,8 +61,10 @@ router.post('/', isAuthenticated, (req, res) => {
     return addUserToOrg(userId, org.id, true);
   })
   .then(orgUser => {
-    return res.json(orgUser);
-  });
+    const orgId = org.id;
+    return res.redirect(`orgs/${orgId}`);
+  })
+  .catch(() => res.status(401).send());
 });
 
 /* Show individual org
@@ -164,7 +166,7 @@ router.post('/:id/:userid/delete', isAuthenticated, (req, res) => {
   })
   .then(deletedSuccessfully => {
     if (deletedSuccessfully) {
-      return res.redirect('orgs_index');
+      return res.redirect('/orgs');
     } else {
       return res.status(500).send('Error deleting user from org');
     }
