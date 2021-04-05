@@ -46,7 +46,11 @@ const getPasswordById = function(passwordId) {
  */
 const addPassword = function(passwordObj) {
 
-  const { label, url, username, password, category, userId, orgId } = passwordObj;
+  let { label, url, username, password, category, userId, orgId } = passwordObj;
+
+  if (orgId === '') {
+    orgId = null;
+  }
 
   if (Object.keys(passwordObj).length < 6) {
     return Promise.reject(`addPassword: passwordObj requires 7 keys, only received ${Object.keys(passwordObj).length}`);
@@ -75,7 +79,11 @@ const addPassword = function(passwordObj) {
  */
 const editPassword = function(passwordId, passwordObj) {
 
-  const { label, url, username, password, category, userId, orgId } = passwordObj;
+  let { label, url, username, password, category, userId, orgId } = passwordObj;
+
+  if (orgId === '') {
+    orgId = null;
+  }
 
   if (!passwordId) {
     return Promise.reject('editPassword: passwordId is required');
