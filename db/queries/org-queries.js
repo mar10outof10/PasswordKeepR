@@ -175,7 +175,7 @@ const userIsInOrg = function (userId, orgId) {
  * @param {Number} orgId          The id of the organization.
  * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
  */
-const usersInOrg = function (userId, orgId) {
+const usersInOrg = function (orgId) {
   return db.query(`
     SELECT *
     FROM org_users
@@ -191,7 +191,7 @@ const usersInOrg = function (userId, orgId) {
  * @param {Number} orgId          The id of the organization.
  * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
  */
-const userOrgJoinDate = function (userID, orgID) {
+const userOrgJoinDate = function (userId, orgId) {
   return db.query(`
   SELECT joined_at
   FROM org_users
