@@ -57,12 +57,14 @@ router.get('/:id', isAuthenticated,  (req, res) => {
 * else            -> go to /login
 */
 router.post('/', isAuthenticated, (req, res) => {
+  console.log(req.body)
   const { label, username, password, category, orgId } = req.body;
+  const userId = req.session.user_id;
   const newPassObj = { label, username, password, category, orgId, userId }
   addPassword(newPassObj)
   .then(password => {
     // res.json(newPassObj);
-    res.redirect('passwords_show');
+    res.redirect('/passwords');
   })
   .catch(err => {
     res.json(err);
@@ -76,6 +78,7 @@ router.post('/', isAuthenticated, (req, res) => {
 */
 router.post('/:id', isAuthenticated, (req, res) => {
   const { label, username, password, category, orgId } = req.body;
+  const userId = req.session.user_id;
   const editPassObj = { label, username, password, category, userId, orgId, passwordId}
   editPassword(editPassObj)
   .then(editedPassObj => {
