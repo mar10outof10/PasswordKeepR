@@ -79,12 +79,12 @@ router.get('/:id', isAuthenticated, (req, res) => {
 
     usersInOrg(org.id)
     .then(users => {
-      templateVars.members = users; // set of rows from org_uesrs where org_id = org.id
+      templateVars.members = users; // set of rows from org_users where org_id = org.id
     })
     .catch(err => res.json(err));
 
   })
-  .then(org => {
+  .then(org => {a
     templateVars.org = org;
     return res.render('orgs_show', templateVars);
   })
@@ -106,8 +106,8 @@ router.post('/:id', isAuthenticated, (req, res) => {
     }
     return Promise.reject();
   })
-  .then(org => {
-    return res.json(org);
+  .then(() => {
+    return res.redirect(`/orgs/${orgId}`);
   })
   .catch(() => res.status(401).send());
 });
