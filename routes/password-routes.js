@@ -16,7 +16,7 @@ router.get('/', isAuthenticated, (req, res) => {
 
   Promise.all([passwordsPromise, userPromise])
   .then(values => {
-    return res.render('passwords_index', { passwords: values[0], email: values[1].email, userId });
+    return res.render('passwords_index', { passwords: values[0], email: values[1].email, userId: userId });
   })
   .catch(err => {
     return res.json(err);
@@ -30,7 +30,7 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-  return res.render('password_new', { userId });
+  return res.render('passwords_new', { userId });
 });
 
 /* Show individual password
@@ -43,7 +43,7 @@ router.get('/:id', isAuthenticated,  (req, res) => {
   getPasswordById(passwordId)
   .then(password => {
     // return res.send(password)
-  return res.render('/passwords_show', { password , userId })
+  return res.render('passwords_show', { password , userId })
   })
   .catch(err => {
     res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
@@ -57,11 +57,11 @@ router.get('/:id', isAuthenticated,  (req, res) => {
 */
 router.post('/', isAuthenticated, (req, res) => {
   const { label, username, password, category, orgId } = req.body;
+  const userId = req.session.user_id;
   const newPassObj = { label, username, password, category, orgId, userId }
   addPassword(newPassObj)
   .then(newPassObj => {
     // res.json(newPassObj);
-    const userId = req.session.user_id;
     res.redirect('passwords_show', { userId });
   })
   .catch(err => {
