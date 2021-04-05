@@ -13,11 +13,22 @@ router.get('/', isAuthenticated, (req, res) => {
   getAllOrgs(req.session.user_id)
   .then(orgs => {
     return res.json(orgs);
-    // const templateVars = { user: req.session.user_id, orgs }
-    // return res.render('orgs', templateVars);
+  })
+  .then(orgsJSON => {
+    const orgs = JSON.parse(orgsJSON)
+
+    const templateVars = { user: req.session.user_id, orgs }
+    return res.render('orgs', templateVars);
   });
 });
-
+/* New organisation form
+* logged in user  -> go to /orgs/new
+* else            -> go to /login
+*/
+router.get('/new', isAuthenticated, (req, res) => {
+  const userId = req.session.user_id;
+  return res.render('orgs_new', { userId });
+});
 /* Add new org
 * logged in user  -> add new org to Db
 * else            -> go to /login
@@ -44,8 +55,10 @@ router.get('/:id', isAuthenticated, (req, res) => {
   getOrgById(orgId)
   .then(org => {
     return res.json(org);
-    // const templateVars = { user: userIdCookie, org }
-    // return res.render('orgs', templateVars);
+  })
+  .then(org => {
+    const templateVars = { user: userIdCookie, org }
+    return res.render('orgs', templateVars);
   });
 });
 
