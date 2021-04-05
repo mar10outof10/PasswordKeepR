@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>PasswordKeepR - Login</title>
-    <%- include('partials/_head') %>
-  </head>
 
-  <body>
-    <%- include('partials/_header') %>
-    <main>
-      <h3>LOGIN</h3>
+<head>
+  <title>PasswordKeepR - Login</title>
+  <%- include('partials/_head') %>
+</head>
 
+<body>
+  <%- include('partials/_header') %>
+    <main class="m-4">
+      <h1 class="mb-4">Login</h1>
       <form action="/login" method="POST">
-
         <div class="form-group row">
-          <label for="email" class="col-sm-3">Email:</label>
-          <div class="col-sm-9">
-            <input type="email" name="email" id="email" class="form-control" placeholder="email@Email.com">
+          <label for="email" class="col-sm-3 col-form-label">Email</label>
+          <div class="col-sm-7">
+            <input type="email" name="email" id="email" class="form-control" placeholder="email">
           </div>
         </div>
         <div class="form-group row">
-          <label for="password" class="col-sm-3 col-form-label">Password:</label>
-          <div class="col-sm-9">
+          <label for="password" class="col-sm-3 col-form-label">Password</label>
+          <div class="col-sm-7">
             <input type="password" name="password" id="password" class="form-control" placeholder="password">
           </div>
         </div>
@@ -29,9 +28,9 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </div>
-
       </form>
-  </main>
-  <%- include('partials/_scripts') %>
-  </body>
+    </main>
+    <%- include('partials/_scripts') %>
+</body>
+
 </html>
