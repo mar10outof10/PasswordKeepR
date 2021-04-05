@@ -35,13 +35,14 @@ router.get('/new', isAuthenticated, (req, res) => {
 
 /* Show individual password
 * logged in user  -> go to /passwords/:id
-* else            -> go to /login
+* else            -> go to /loginf
 */
 router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
   const userId = req.params.user_id;
   getPasswordById(passwordId)
   .then(password => {
+    // // console.log(password);
     // return res.send(password)
   return res.render('passwords_show', { password , userId })
   })
@@ -57,12 +58,11 @@ router.get('/:id', isAuthenticated,  (req, res) => {
 */
 router.post('/', isAuthenticated, (req, res) => {
   const { label, username, password, category, orgId } = req.body;
-  const userId = req.session.user_id;
   const newPassObj = { label, username, password, category, orgId, userId }
   addPassword(newPassObj)
-  .then(newPassObj => {
+  .then(password => {
     // res.json(newPassObj);
-    res.redirect('passwords_show', { userId });
+    res.redirect('passwords_show');
   })
   .catch(err => {
     res.json(err);
@@ -80,8 +80,7 @@ router.post('/:id', isAuthenticated, (req, res) => {
   editPassword(editPassObj)
   .then(editedPassObj => {
     // res.json(editedPassObj);
-    const userId = req.session.user_id;
-    res.redirect('passwords_show', { userId });
+    res.redirect('passwords_show');
   })
   .catch(err => {
     res.json(err);
@@ -101,7 +100,7 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
       deletePassword(passwordId)
       .then(rowCount => {
         res.json(rowCount);
-        res.redirect('passwords_index', { userIdCookie });
+        res.redirect('passwords_index');
       })
       .catch(err => {
         res.json(err);
