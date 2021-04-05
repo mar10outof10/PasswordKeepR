@@ -82,9 +82,10 @@ router.post('/', isAuthenticated, (req, res) => {
 * else            -> go to /login
 */
 router.post('/:id', isAuthenticated, (req, res) => {
-  const { label, username, password, category, orgId } = req.body;
+  const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
-  const editPassObj = { label, username, password, category, userId, orgId, passwordId}
+  const passwordId = req.params.id;
+  const editPassObj = { label, url, username, password, category, userId, orgId, passwordId}
   editPassword(editPassObj)
   .then(editedPassObj => {
     // res.json(editedPassObj);
