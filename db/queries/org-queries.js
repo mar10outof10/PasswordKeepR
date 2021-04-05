@@ -169,4 +169,19 @@ const userIsInOrg = function (userId, orgId) {
     .then(res => res.rows[0] ? true : false);
 };
 
-module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
+/**
+ * Gets all users for a specific org.
+ *
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
+ */
+ const usersInOrg = function (userId, orgId) {
+  return db.query(`
+    SELECT *
+    FROM org_users
+    WHERE org_id = $1;
+  `, [orgId])
+    .then(res => res.rows);
+};
+
+module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg };
