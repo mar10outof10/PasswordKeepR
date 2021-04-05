@@ -88,7 +88,6 @@ router.get('/:id', isAuthenticated, (req, res) => {
 
   })
   .then(() => {
-    templateVars.org = org;
     return res.render('orgs_show', templateVars);
   })
   .catch(err => res.json(err));
