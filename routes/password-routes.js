@@ -99,8 +99,6 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
   getPasswordById(passwordId)
   .then(passwordObj => {
     const userIdCookie = req.session.user_id;
-    console.log(passwordObj);
-    console.log(userIdCookie, 'user id cookie');
     if (passwordObj.user_id === userIdCookie) {
       return deletePassword(passwordId)
     }

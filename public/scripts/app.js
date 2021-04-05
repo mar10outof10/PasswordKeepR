@@ -1,3 +1,5 @@
+$(document).ready(function() {
+
 const adjustDropdownAlignment = () => {
   if ($(window).width() >= 992) {
     $('div.dropdown-menu').addClass('dropdown-menu-right');
@@ -14,3 +16,9 @@ $(() => {
     adjustDropdownAlignment();
   });
 });
+
+  $('#generate-password').on('click', function() {
+    console.log('you pushed me');
+  })
+
+})
