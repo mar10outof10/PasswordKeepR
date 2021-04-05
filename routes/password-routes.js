@@ -1,25 +1,28 @@
 const express = require('express');
 const router  = express.Router();
 
-const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword} = require('../db/queries/password-queries')
-const { isAuthenticated } = require('./helpers')
+const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
+const { getUserById } = require('../db/queries/user-queries');
+const { isAuthenticated } = require('./helpers');
 
 /* Password dashboard
-* logged in user  -> go to /passwords
+* logged in user  -> render passwords_index
 * else            -> go to /login
 */
 router.get('/', isAuthenticated, (req, res) => {
-  userIdCookie = req.session.user_id;
-  getAllPasswords(userIdCookie)
-  .then(passwords => {
-    return res.send(passwords);
-      // const templateVars = { passwords }
-      // return res.render('passwords', templateVars);
+  const userId = req.session.user_id;
+  const passwordsPromise = getAllPasswords(userId);
+  const userPromise = getUserById(userId);
+
+  Promise.all([passwordsPromise, userPromise])
+  .then(values => {
+    return res.render('passwords_index', { passwords: values[0], email: values[1].email });
   })
   .catch(err => {
-    return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
-  })
-})
+    return res.json(err);
+    // return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
+  });
+});
 
 /* New password form
 * logged in user  -> go to /passwords/new
