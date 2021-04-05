@@ -34,7 +34,7 @@ router.get('/', isAuthenticated, (req, res) => {
     return orgData
   })
   .then(orgsArray => {
-    const templateVars = { user: req.session.user_id, orgsArray }
+    const templateVars = { userId: req.session.user_id, orgsArray }
     return res.render('orgs_index', templateVars);
   });
 });
@@ -61,8 +61,7 @@ router.post('/', isAuthenticated, (req, res) => {
     return addUserToOrg(userId, org.id, true);
   })
   .then(orgUser => {
-    const orgId = org.id;
-    return res.redirect(`orgs/${orgId}`);
+    return res.redirect(`/orgs/${orgUser.id}`);
   })
   .catch(() => res.status(401).send());
 });
@@ -73,14 +72,23 @@ router.post('/', isAuthenticated, (req, res) => {
 */
 router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
+  const templateVars = { userId: req.session.userId }
+
   getOrgById(orgId)
   .then(org => {
-    return res.json(org);
+
+    usersInOrg(org.id)
+    .then(users => {
+      templateVars.members = users; // set of rows from org_users where org_id = org.id
+    })
+    .catch(err => res.json(err));
+
   })
-  .then(org => {
-    const templateVars = { user: userIdCookie, org }
+  .then(org => {a
+    templateVars.org = org;
     return res.render('orgs_show', templateVars);
-  });
+  })
+  .catch(err => res.json(err));
 });
 
 /* Edit individual org
@@ -98,8 +106,8 @@ router.post('/:id', isAuthenticated, (req, res) => {
     }
     return Promise.reject();
   })
-  .then(org => {
-    return res.json(org);
+  .then(() => {
+    return res.redirect(`/orgs/${orgId}`);
   })
   .catch(() => res.status(401).send());
 });
