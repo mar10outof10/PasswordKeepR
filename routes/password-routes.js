@@ -30,7 +30,10 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-  return res.render('passwords_new', { userId });
+  getUserById(userId)
+  .then(user => {
+    return res.render('passwords_new', { email: user.email });
+  })
 });
 
 /* Show individual password
@@ -39,12 +42,15 @@ router.get('/new', isAuthenticated, (req, res) => {
 */
 router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
-  const userId = req.params.user_id;
-  getPasswordById(passwordId)
-  .then(password => {
-    // // console.log(password);
-    // return res.send(password)
-  return res.render('passwords_show', { password , userId })
+  const userId = req.session.user_id;
+  const getPasswordPromise = getPasswordById(passwordId);
+  const getUserPromise = getUserById(userId);
+
+  Promise.all([getPasswordPromise, getUserPromise])
+  .then(values => {
+    const password = values[0];
+    const email = values[1].email;
+    return res.render('passwords_show', { password , email, passwordId });
   })
   .catch(err => {
     res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
