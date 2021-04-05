@@ -36,6 +36,7 @@ const getPasswordById = function(passwordId) {
  *
  * @param {object} passwordObj               The password object to save.
  * @param {String} passwordObj.label         The label for the password entry.
+ * @param {String} passwordObj.url           The url for the password entry.
  * @param {String} passwordObj.username      The username for the password entry.
  * @param {String} passwordObj.password      The password.
  * @param {String} passwordObj.category      The category for the password entry.
@@ -45,16 +46,16 @@ const getPasswordById = function(passwordId) {
  */
 const addPassword = function(passwordObj) {
 
-  const { label, username, password, category, userId, orgId } = passwordObj;
+  const { label, url, username, password, category, userId, orgId } = passwordObj;
 
-  if (Object.keys(passwordObj).length < 5) {
-    return Promise.reject(`addPassword: passwordObj requires 6 keys, only received ${Object.keys(passwordObj).length}`);
+  if (Object.keys(passwordObj).length < 6) {
+    return Promise.reject(`addPassword: passwordObj requires 7 keys, only received ${Object.keys(passwordObj).length}`);
   }
   return db.query(`
-    INSERT INTO passwords (label, username, password, category, user_id, org_id)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO passwords (label, url, username, password, category, user_id, org_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
-  `, [label, username, password, category, userId, orgId])
+  `, [label, url, username, password, category, userId, orgId])
     .then(res => res.rows[0]);
 };
 
@@ -64,6 +65,7 @@ const addPassword = function(passwordObj) {
  * @param {Number} passwordId                The id of the password to update.
  * @param {object} passwordObj               The password object to save.
  * @param {String} passwordObj.label         The label for the password entry.
+ * @param {String} passwordObj.url           The url for the password entry.
  * @param {String} passwordObj.username      The username for the password entry.
  * @param {String} passwordObj.password      The password.
  * @param {String} passwordObj.category      The category for the password entry.
@@ -73,21 +75,21 @@ const addPassword = function(passwordObj) {
  */
 const editPassword = function(passwordId, passwordObj) {
 
-  const { label, username, password, category, userId, orgId } = passwordObj;
+  const { label, url, username, password, category, userId, orgId } = passwordObj;
 
   if (!passwordId) {
     return Promise.reject('editPassword: passwordId is required');
   }
-  if (Object.keys(passwordObj).length < 5) {
-    return Promise.reject(`editPassword: passwordObj requires 6 keys, only received ${Object.keys(passwordObj).length}`);
+  if (Object.keys(passwordObj).length < 6) {
+    return Promise.reject(`editPassword: passwordObj requires 7 keys, only received ${Object.keys(passwordObj).length}`);
   }
 
   return db.query(`
     UPDATE passwords
-    SET (label, username, password, category, user_id, org_id) = ($1, $2, $3, $4, $5, $6)
+    SET (label, url, username, password, category, user_id, org_id) = ($1, $2, $3, $4, $5, $6, $7)
     WHERE id = $7
     RETURNING *;
-  `, [label, username, password, category, userId, orgId, passwordId])
+  `, [label, url, username, password, category, userId, orgId, passwordId])
     .then(res => res.rows[0]);
 };
 
