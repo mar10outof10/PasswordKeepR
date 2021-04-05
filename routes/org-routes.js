@@ -176,7 +176,7 @@ router.post('/:id/:userid/delete', isAuthenticated, (req, res) => {
   })
   .then(deletedSuccessfully => {
     if (deletedSuccessfully) {
-      return res.redirect('/orgs');
+      return res.redirect(`/orgs/${orgId}`);
     } else {
       return res.status(500).send('Error deleting user from org');
     }
