@@ -34,28 +34,42 @@ $(() => {
     $('.modal').css('display', 'none');
     $('.modal-content').css('display', 'none');
   })
-
 })
 
-const generateRandomString = (length, uppers, lowers, numbers) => {
+  // generate random password
+  $('.pw-generate').on('click', function() {
+    // get input for all params
+    const passwordLength = $('.pw-length').val();
+    const lowerCase = $('.pw-lowercase').is(':checked');
+    const upperCase = $('.pw-uppercase').is(':checked');
+    const containsNumbers = $('.pw-numbers').is(':checked');
+    const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers };
+    // call generateRandom string
+    const newPassword = generateRandomString(stringParams);
+    // append password to password field
+    $('#inputPassword').val(newPassword);
+    $('.modal').css('display', 'none');
+    $('.modal-content').css('display', 'none');
+  })
+
+const generateRandomString = (stringParams) => {
   let chars = "";
-  if (!uppers && !lowers) {
+  if (!stringParams.upperCase && !stringParams.lowerCase) {
     console.log('error');
   }
-  if (uppers) {
+  if (stringParams.upperCase) {
     chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   }
-  if (lowers) {
+  if (stringParams.lowerCase) {
     chars += "abcdefghijklmnopqrstuvwxyz";
   }
-  if (numbers) {
+  if (stringParams.containsNumbers) {
     chars += "1234567890";
   }
   let result = '';
-  for (let i = length; i > 0; --i) {
+  for (let i = stringParams.passwordLength; i > 0; --i) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
 };
-
 
