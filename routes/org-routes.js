@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate } = require('../db/queries/org-queries');
+const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg } = require('../db/queries/org-queries');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers')
 
 /* Show orgs dashboard
@@ -184,4 +184,25 @@ router.post('/:id/:userid/delete', isAuthenticated, (req, res) => {
   .catch(err => res.json(err));
 });
 
+/* Update user status in organization
+* Logged in user is admin   -> updates target user's credentials within organisation
+*                              Currently only admin status is modifiable
+* else                      -> go to /login if not logged in, go to /orgs if logged in
+*/
+router.post('/:id/:userid/update', isAuthenticated, (req, res) => {
+  const userId = req.session.user_id
+  const userIdToModify = req.params.userid;
+  const orgId = req.params.id;
+  const admin = req.body.admin;
+
+  userIsOrgAdmin(userId, orgId)
+  .then(isAdmin => {
+    if (isAdmin) {
+      return updateUserInOrg(userIdToModify, orgId, admin);
+    }
+    return Promise.reject(401);
+  })
+  .then(() => res.redirect(`/orgs/${orgId}/`))
+  .catch(status => res.status(status).send());
+})
 module.exports = router;
