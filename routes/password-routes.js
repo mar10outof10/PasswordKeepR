@@ -33,7 +33,7 @@ router.get('/new', isAuthenticated, (req, res) => {
   getUserById(userId)
   .then(user => {
     return res.render('passwords_new', { email: user.email });
-  })
+  });
 });
 
 /* Show individual password
@@ -50,11 +50,8 @@ router.get('/:id', isAuthenticated,  (req, res) => {
   .then(values => {
     const password = values[0];
     const email = values[1].email;
-    return res.render('passwords_show', { password , email, passwordId });
-  })
-  .catch(err => {
-    res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
-  })
+    return res.render('passwords_show', { password, email, passwordId });
+  });
 });
 
 
