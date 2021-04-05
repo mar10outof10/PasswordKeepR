@@ -98,18 +98,20 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
   const passwordId = req.params.id;
   getPasswordById(passwordId)
   .then(passwordObj => {
-    const userIdCookie = req.params.user_id;
+    console.log(passwordObj);
+    const userIdCookie = req.session.user_id;
     if (passwordObj.userId === userIdCookie) {
-      deletePassword(passwordId)
-      .then(rowCount => {
-        res.json(rowCount);
-        res.redirect('passwords_index');
-      })
-      .catch(err => {
-        res.json(err);
-      })
+      return deletePassword(passwordId)
     }
+    return Promise.reject(500);
+  })
+  .then(rowCount => {
+    return res.redirect('passwords_index');
+  })
+  .catch(err => {
+    res.json(err);
   })
 });
+
 
 module.exports = router;
