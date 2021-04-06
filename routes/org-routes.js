@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg } = require('../db/queries/org-queries');
+const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser } = require('../db/queries/org-queries');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers')
 
 /* Show orgs dashboard
@@ -11,31 +11,10 @@ const { isAuthenticated, isNotAuthenticated } = require('./helpers')
 */
 router.get('/', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-  getAllOrgs(userId)
+
+  getOrgSummaryForUser(userId)
   .then(orgs => {
-    const orgData = [];
-    for (org of orgs) {
-      const orgObj = {};
-      orgObj.name = org.name;
-      numberUsersInOrg(org.id)
-      .then(length => {
-
-        orgObj.memberCount = length;
-        userOrgJoinDate(userId, org.id)
-        .then(joinDate => {
-          orgObj.joinDate = joinDate;
-        })
-        .catch(err => res.json(err));
-
-      })
-      .catch(err => res.json(err));
-      orgData.push(orgObj);
-    }
-    return orgData
-  })
-  .then(orgsArray => {
-    const templateVars = { userId: req.session.user_id, orgsArray }
-    return res.render('orgs_index', templateVars);
+    return res.render('orgs_index', { orgs });
   });
 });
 

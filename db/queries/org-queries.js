@@ -215,4 +215,22 @@ const userOrgJoinDate = function (userId, orgId) {
   `, [userId, orgId])
     .then(res => res.rows[0].joined_at);
 };
-module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate };
+
+const getOrgSummaryForUser = function(userId) {
+  return db.query(`
+    WITH cte AS (
+      SELECT name, COUNT(*) AS count
+      FROM orgs
+      JOIN org_users ON org_id = orgs.id
+      GROUP BY name
+    )
+    SELECT orgs.name, org_users.joined_at, count
+    FROM orgs
+    JOIN org_users ON org_id = orgs.id
+    JOIN users ON user_id = users.id
+    JOIN cte ON orgs.name = cte.name
+    WHERE user_id = $1;
+  `, [userId])
+  .then(res => res.rows);
+}
+module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, getOrgSummaryForUser };

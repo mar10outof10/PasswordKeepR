@@ -14,7 +14,7 @@
         <h1 class="mb-0">Organizations</h1>
       </div>
       <section class="articles-container">
-        <% for (org of orgsArray) { %>
+        <% for (org of orgs) { %>
           <article class="art-main">
             <div class="art-icon">
               <img src="https://i.pinimg.com/originals/b7/6c/94/b76c94e1e878957a73f486362328dd30.png">
@@ -28,10 +28,10 @@
 
               <footer>
                 <div class="art-username">
-                  <span class="art-label">Members:</span><span><%= org.memberCount %></span>
+                  <span class="art-label">Members:</span><span><%= org.count %></span>
                 </div>
                 <div class="art-password">
-                  <span class="art-label">Join date:</span><span><%= org.joinDate %></span>
+                  <span class="art-label">Join date:</span><span><%= org.joined_at.toLocaleDateString('en-CA') %></span>
                 </div>
               </footer>
 
