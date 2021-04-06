@@ -12,7 +12,12 @@
         <div class="d-flex align-items-center">
           <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
           <h1 class="mb-0">Edit name for <%= orgName %></h1>
-      </div>
+        </div>
+        <% if (locals.error) {%>
+          <div class="alert alert-danger" role="alert">
+            Organisation already exists in database
+          </div>
+        <% }%>
       <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
 
         <div class="form-group row">
