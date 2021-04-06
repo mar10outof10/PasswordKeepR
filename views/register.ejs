@@ -7,35 +7,48 @@
 
   <body>
 
-    <%- include('partials/_header') %>
-    <main>
-      <h3>REGISTER</h3>
-      <% if (locals.errorMsg) {%>
-      <div class="alert alert-danger" role="alert">
-        <%= errorMsg %>
+    <main class="register">
+      <div class="login-title">
+        <i class="bi bi-shield-lock-fill text-white" width="10px" height="10px"></i>
+        <h2>PasswordKeepR</h2>
       </div>
-      <% }%>
-      <form action="/register" method="POST">
-        <div class="form-group row">
-          <label for="email" class="col-sm-3">Email:</label>
-          <div class="col-sm-9">
-            <input type="email" name="email" id="email" class="form-control" placeholder="email@Email.com">
-          </div>
+      <div class="register-container">
+        <h1 class="mb-4">Register</h1>
+        <% if (locals.errorMsg) {%>
+        <div class="alert alert-danger" role="alert">
+          <%= errorMsg %>
         </div>
-        <div class="form-group row">
-          <label for="password" class="col-sm-3 col-form-label">Password:</label>
-          <div class="col-sm-9">
-            <input type="password" name="password" id="password" class="form-control" placeholder="password">
+        <% }%>
+        <form class="register-form-container" action="/register" method="POST">
+          <div class="form-group row">
+            <label for="email" class="col-sm-3 col-form-label">Email</label>
+            <div class="col-sm-7">
+              <input type="email" name="email" id="email" class="form-control" placeholder="email">
+            </div>
           </div>
-        </div>
-        <div class="button-container">
-          <div class="button-row">
-            <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="form-group row">
+            <label for="password" class="col-sm-3 col-form-label pw">Password</label>
+            <div class="col-sm-7">
+              <input type="password" name="password" id="password" class="form-control" placeholder="password">
+            </div>
           </div>
+          <div class="form-group row">
+            <label for="password" class="col-sm-3 col-form-label">Confirm password</label>
+            <div class="col-sm-7">
+              <input type="password" id="confirm-password" class="form-control" placeholder="password">
+            </div>
+          </div>
+          <div class="button-container">
+            <div class="button-row justify-content-start">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+        <div class="login-link">
+          <a href="/login">Back to login</a>
         </div>
-
-      </form>
-  </main>
+      </div>
+    </main>
   <%- include('partials/_scripts') %>
   </body>
 </html>

@@ -1,3 +1,5 @@
+// Helper functions
+
 const generateRandomString = (stringParams) => {
   let chars = "";
   if (stringParams.upperCase) {
@@ -22,11 +24,12 @@ const generateRandomString = (stringParams) => {
 
 $(() => {
 
+             // JQUERY MAGIC SECTION //
+
   // Generate password modal
   $('.generate-password').on('click', function () {
     $('.modal-bg').css('display', 'block');
     $('.modal-content').css('display', 'block');
-
   })
 
   // Keep buttons activated on click
@@ -165,6 +168,15 @@ $(() => {
       passwordInput.type = 'text';
     } else {
       passwordInput.type = 'password';
+    }
+  });
+
+  // compare passwords on registration form
+  $('#password, #confirm-password').on('keyup', function() {
+    if ($('#password').val() === $('#confirm-password').val()) {
+      console.log('passwords match')
+    } else {
+      console.log('passwords do not match')
     }
   });
 

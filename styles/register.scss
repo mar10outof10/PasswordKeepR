@@ -1,4 +1,4 @@
-.login {
+.register{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,18 +6,18 @@
   height: 100vh;
 }
 
-.login-container {
+.register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 26em;
-  height: 18em;
+  height: 23em;
   background-color: white;
   margin-top: 4 em;
   border: 1px grey solid;
 }
 
-.login-form-container {
+.register-form-container {
   width: 86%;
 }
 
@@ -26,7 +26,7 @@
   padding: 2em;
 }
 
-.register-link {
+.login-link {
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -35,6 +35,7 @@
   transform: translateY(-45px);
 }
 
-.register > a {
+.login-link > a {
   text-align: center;
 }
+
