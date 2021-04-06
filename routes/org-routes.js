@@ -63,9 +63,6 @@ router.get('/:id', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const templateVars = {};
 
-  console.log('orgId', orgId)
-  console.log('userId', userId)
-
   userIsInOrg(userId, orgId)
   .then(isMember => {
     if(!isMember) { return Promise.reject(401); }

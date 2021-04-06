@@ -76,11 +76,11 @@ $('.symbol-choice-no').on('click', function() {
   $('.pw-cancel').on('click', function() {
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
+    $('.pw-error').css('display', 'none');
   })
-  $('#generate-password').on('click', function() {
-    console.log('you pushed me');
-  });
 });
+
+// Hide or show password on checkbox
 
 $('#show-password').on('click', function() {
   if (this.checked) {
@@ -90,7 +90,7 @@ $('#show-password').on('click', function() {
   }
 })
 
-  // generate random password
+  // Generate random password
   $('.pw-generate').on('click', function() {
     // get input for all params
     const passwordLength = $('.pw-length').val();
@@ -98,18 +98,20 @@ $('#show-password').on('click', function() {
     const upperCase = $('.uppercase-choice-yes').hasClass('active');
     const containsNumbers = $('.number-choice-yes').hasClass('active');
     const containsSymbols = $('.symbol-choice-yes').hasClass('active');
+    // store them in object
     const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers, containsSymbols };
-    if (passwordLength > 64) {
+    // if password length is too long or too short...
+    if (passwordLength > 64 || passwordLength < 1) {
       $('.pw-error').text('Please choose a password length of less than 64 characters')
       return $('.pw-error').css('display', 'block');
     }
+    // if user hasn't selected any password paramaters....
     if (!stringParams.upperCase && !stringParams.lowerCase && !stringParams.containsNumbers && !stringParams.containsSymbols) {
       $('.pw-error').text('You must choose at least one password parameter')
       return $('.pw-error').css('display', 'block');
     }
+    // pass object to password generator function
     const newPassword = generateRandomString(stringParams);
-    // call generateRandom string
-    // append password to password field
     $('#inputPassword').val(newPassword);
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
