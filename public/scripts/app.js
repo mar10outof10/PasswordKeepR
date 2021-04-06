@@ -7,6 +7,28 @@ const adjustDropdownAlignment = () => {
 };
 
 
+const generateRandomString = (stringParams) => {
+  let chars = "";
+  if (stringParams.upperCase) {
+    chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
+  if (stringParams.lowerCase) {
+    chars += "abcdefghijklmnopqrstuvwxyz";
+  }
+  if (stringParams.containsNumbers) {
+    chars += "1234567890";
+  }
+  if (stringParams.containsSymbols) {
+    chars += "!@#$%^&*()_+<>?:{}[]()|\`~";
+  }
+  let result = '';
+  for (let i = stringParams.passwordLength; i > 0; --i) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
+};
+
+
 $(() => {
   adjustDropdownAlignment();
 
@@ -14,84 +36,81 @@ $(() => {
     adjustDropdownAlignment();
   });
 
-// Generate password modal
+  // Generate password modal
 
-  $('.generate-password').on('click', function() {
+  $('.generate-password').on('click', function () {
     $('.modal-bg').css('display', 'block');
     $('.modal-content').css('display', 'block');
 
   })
 
-// Keep buttons activated on click
+  // Keep buttons activated on click
 
-// Lowercase option
-$('.lowercase-choice-yes').on('click', function() {
-  $('.lowercase-choice-no').removeClass('active')
-  $(this).addClass('active');
-})
+  // Lowercase option
+  $('.lowercase-choice-yes').on('click', function () {
+    $('.lowercase-choice-no').removeClass('active')
+    $(this).addClass('active');
+  })
 
-$('.lowercase-choice-no').on('click', function() {
-  $('.lowercase-choice-yes').removeClass('active')
-  $(this).addClass('active');
-})
+  $('.lowercase-choice-no').on('click', function () {
+    $('.lowercase-choice-yes').removeClass('active')
+    $(this).addClass('active');
+  })
 
-// Uppercase option
-$('.uppercase-choice-yes').on('click', function() {
-  $('.uppercase-choice-no').removeClass('active')
-  $(this).addClass('active');
-})
+  // Uppercase option
+  $('.uppercase-choice-yes').on('click', function () {
+    $('.uppercase-choice-no').removeClass('active')
+    $(this).addClass('active');
+  })
 
-$('.uppercase-choice-no').on('click', function() {
-  $('.uppercase-choice-yes').removeClass('active')
-  $(this).addClass('active');
-})
+  $('.uppercase-choice-no').on('click', function () {
+    $('.uppercase-choice-yes').removeClass('active')
+    $(this).addClass('active');
+  })
 
-// Numbers
-$('.number-choice-yes').on('click', function() {
-  console.log('yo')
-  $('.number-choice-no').removeClass('active')
-  $(this).addClass('active');
-})
+  // Numbers
+  $('.number-choice-yes').on('click', function () {
+    console.log('yo')
+    $('.number-choice-no').removeClass('active')
+    $(this).addClass('active');
+  })
 
-$('.number-choice-no').on('click', function() {
-  $('.number-choice-yes').removeClass('active')
-  $(this).addClass('active');
-})
+  $('.number-choice-no').on('click', function () {
+    $('.number-choice-yes').removeClass('active')
+    $(this).addClass('active');
+  })
 
-// Symbols
-$('.symbol-choice-yes').on('click', function() {
-  console.log('yo')
-  $('.symbol-choice-no').removeClass('active')
-  $(this).addClass('active');
-})
+  // Symbols
+  $('.symbol-choice-yes').on('click', function () {
+    console.log('yo')
+    $('.symbol-choice-no').removeClass('active')
+    $(this).addClass('active');
+  })
 
-$('.symbol-choice-no').on('click', function() {
-  $('.symbol-choice-yes').removeClass('active')
-  $(this).addClass('active');
-})
+  $('.symbol-choice-no').on('click', function () {
+    $('.symbol-choice-yes').removeClass('active')
+    $(this).addClass('active');
+  });
 
 
-// Cancel password modal
-
-  $('.pw-cancel').on('click', function() {
+  // Cancel password modal
+  $('.pw-cancel').on('click', function () {
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
     $('.pw-error').css('display', 'none');
-  })
-});
+  });
 
-// Hide or show password on checkbox
-
-$('#show-password').on('click', function() {
-  if (this.checked) {
-    $('#inputPassword').attr('type','text');
-  } else {
-    $('#inputPassword').attr('type','password');
-  }
-})
+  // Hide or show password on checkbox
+  $('#show-password').on('click', function () {
+    if (this.checked) {
+      $('#inputPassword').attr('type', 'text');
+    } else {
+      $('#inputPassword').attr('type', 'password');
+    }
+  });
 
   // Generate random password
-  $('.pw-generate').on('click', function() {
+  $('.pw-generate').on('click', function () {
     // get input for all params
     const passwordLength = $('.pw-length').val();
     const lowerCase = $('.lowercase-choice-yes').hasClass('active');
@@ -115,26 +134,11 @@ $('#show-password').on('click', function() {
     $('#inputPassword').val(newPassword);
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
-  })
+  });
+});
 
-const generateRandomString = (stringParams) => {
-  let chars = "";
-  if (stringParams.upperCase) {
-    chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  }
-  if (stringParams.lowerCase) {
-    chars += "abcdefghijklmnopqrstuvwxyz";
-  }
-  if (stringParams.containsNumbers) {
-    chars += "1234567890";
-  }
-  if (stringParams.containsSymbols) {
-    chars += "!@#$%^&*()_+<>?:{}[]()|\`~";
-  }
-  let result = '';
-  for (let i = stringParams.passwordLength; i > 0; --i) {
-    result += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return result;
-};
+
+
+
+
 
