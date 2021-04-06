@@ -29,6 +29,10 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
+  // checks if query param for error exists
+  if (req.query.error) {
+    templateVars.error = req.query.error;
+  }
   getUserById(userId)
   .then(user => {
     return res.render('orgs_new', { email: user.email });
