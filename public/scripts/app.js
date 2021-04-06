@@ -1,12 +1,3 @@
-const adjustDropdownAlignment = () => {
-  if ($(window).width() >= 992) {
-    $('div.dropdown-menu').addClass('dropdown-menu-right');
-  } else {
-    $('div.dropdown-menu').removeClass('dropdown-menu-right');
-  }
-};
-
-
 const generateRandomString = (stringParams) => {
   let chars = "";
   if (stringParams.upperCase) {
@@ -30,14 +21,8 @@ const generateRandomString = (stringParams) => {
 
 
 $(() => {
-  adjustDropdownAlignment();
-
-  $(window).resize(() => {
-    adjustDropdownAlignment();
-  });
 
   // Generate password modal
-
   $('.generate-password').on('click', function () {
     $('.modal-bg').css('display', 'block');
     $('.modal-content').css('display', 'block');
@@ -149,7 +134,11 @@ $(() => {
   // setup 'copy password to clipboard' button
   $('.bi-clipboard-plus').on('click', function() {
     // store password
-    const password = $(this).siblings('input')[0].value;
+    const password = $(this).parent()
+                            .siblings('.art-login-info')
+                            .children('.art-password')
+                            .children('.art-value')[0].value;
+
     // create temporary textarea to allow copying to clipboard
     const tmp = $('<textarea id="tmpPassword"></textarea>');
     // put password in textarea
