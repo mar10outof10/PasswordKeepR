@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser, userIsInOrg } = require('../db/queries/org-queries');
+const { getAllOrgs, getOrgById, getOrgByName, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser, userIsInOrg } = require('../db/queries/org-queries');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers');
 const { reset } = require('nodemon');
 
@@ -94,18 +94,25 @@ router.get('/:id', isAuthenticated, (req, res) => {
 router.post('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
-  userIsOrgAdmin(userId, orgId)
-  .then(isAdmin => {
-    if (isAdmin) {
-      const orgName = req.body.org_name;
-      return editOrg(orgId, orgName);
-    }
-    return Promise.reject(401);
-  })
-  .then(() => {
-    return res.redirect(`/orgs/${orgId}`);
-  })
-  .catch(status => res.status(status).send());
+  const newOrgName = req.body.org_name;
+  getOrgByName(newOrgName)
+    .then((orgExists) => {
+      if (orgExists && orgExists.id !== Number(orgId)) {
+        return Promise.reject(401);
+      }
+      return userIsOrgAdmin(userId, orgId)
+    })
+    .then(isAdmin => {
+      console.log('isadmin', isAdmin);
+      if (isAdmin) {
+        return editOrg(orgId, newOrgName);
+      }
+      return Promise.reject(401);
+    })
+    .then(() => {
+      return res.redirect(`/orgs/${orgId}`);
+    })
+    .catch(status => res.status(status).send());
 });
 
 /* Delete individual org

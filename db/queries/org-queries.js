@@ -34,6 +34,21 @@ const getOrgById = function(orgId) {
 };
 
 /**
+ * Gets the organization for a given orgName. Returns false if org name does not exist.
+ *
+ * @param {String} userId          The id of the org.
+ * @return {Promise<object>}       A promise that resolves to the organization object.
+ */
+const getOrgByName = function(orgName) {
+  return db.query(`
+    SELECT *
+    FROM orgs
+    WHERE name = $1;
+  `, [orgName])
+    .then(res => res.rows[0] ? res.rows[0] : false);
+};
+
+/**
  * Adds an organization to the orgs table.
  *
  * @param {String} orgName       The name of the organization.
@@ -242,4 +257,4 @@ const getOrgSummaryForUser = function(userId) {
   `, [userId])
   .then(res => res.rows);
 }
-module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, getOrgSummaryForUser };
+module.exports = { getAllOrgs, getOrgById, getOrgByName, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, getOrgSummaryForUser };
