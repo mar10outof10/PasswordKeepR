@@ -17,34 +17,26 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-    <ul class="navbar-nav mr-aut text-white">
+    <ul class="nav flex-column">
    <% if (!locals.email) { %>
-      <li class="nav-item active">
-        <a class="nav-link" href="/login"><span>Login</span></a>
+      <li>
+        <a class="nav-link text-light" href="/login"><span>Login</span></a>
       </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="/register"><span>Register</span></a>
+      <li>
+        <a class="nav-link text-light"href="/register"><span>Register</span></a>
       </li>
     <% } else { %>
-      <!-- <li class="nav-item active">
-        <a class="nav-link"><span>Welcome <%= email %></span></a>
-      </li> -->
+      <ul class="nav flex-column">
       <li>
-        <a class="dropdown-item" href="/passwords">My Passwords</a>
+        <a class="nav-link text-light" href="/passwords">My Passwords</a>
       </li>
       <li>
-        <a class="dropdown-item" href="/passwords/new">New Password</a>
+        <a class="nav-link text-light" href="/passwords/new">New Password</a>
       </li>
       <li>
-        <div class="dropdown-divider"></div>
-      </li>
+        <a class="nav-link text-light" href="/orgs">My Organizations</a>
       <li>
-        <a class="dropdown-item" href="/orgs">My Organizations</a>
-      <li>
-        <a class="dropdown-item" href="/orgs/new">New Organization</a>
-      </li>
-      <li>
-        <div class="dropdown-divider"></div>
+        <a class="nav-link text-light" href="/orgs/new">New Organization</a>
       </li>
     </ul>
     <!-- </ul>
