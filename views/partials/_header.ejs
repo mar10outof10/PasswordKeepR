@@ -17,26 +17,26 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-    <ul class="nav flex-column">
+    <ul class="nav flex-column flex-nowrap">
    <% if (!locals.email) { %>
       <li>
-        <a class="nav-link text-light" href="/login"><span>Login</span></a>
+        <a class="nav-link text-light text-nowrap " href="/login"><span>Login</span></a>
       </li>
       <li>
-        <a class="nav-link text-light"href="/register"><span>Register</span></a>
+        <a class="nav-link text-light text-nowrap "href="/register"><span>Register</span></a>
       </li>
     <% } else { %>
-      <ul class="nav flex-row">
+      <ul class="nav flex-row flex-nowrap">
       <li>
-        <a class="nav-link text-light" href="/passwords">My Passwords</a>
+        <a class="nav-link text-light text-nowrap " href="/passwords">My Passwords</a>
       </li>
       <li>
-        <a class="nav-link text-light" href="/passwords/new">New Password</a>
+        <a class="nav-link text-light text-nowrap" href="/passwords/new">New Password</a>
       </li>
       <li>
-        <a class="nav-link text-light" href="/orgs">My Organizations</a>
+        <a class="nav-link text-light text-nowrap" href="/orgs">My Organizations</a>
       <li>
-        <a class="nav-link text-light" href="/orgs/new">New Organization</a>
+        <a class="nav-link text-light text-nowrap" href="/orgs/new">New Organization</a>
       </li>
     </ul>
     <!-- </ul>
