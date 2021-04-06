@@ -90,17 +90,16 @@ router.post('/register', isNotAuthenticated, (req, res) => {
     .then(id => {
       if (id) {
         return res.render('register', { errorMsg: 'email already exists in database' });
-      } else {
-        // hash the password
-        const hashedPassword = bcrypt.hashSync(password, 10);
-        // add the user to the db & store the new user_id in the users' cookie
-        addUser(email, hashedPassword)
-          .then(user => {
-            req.session.user_id = user.id;
-            return res.redirect('/passwords');
-          })
-          .catch(() => res.send('super err'));
       }
+      // hash the password
+      const hashedPassword = bcrypt.hashSync(password, 10);
+      // add the user to the db & store the new user_id in the users' cookie
+      addUser(email, hashedPassword)
+        .then(user => {
+          req.session.user_id = user.id;
+          return res.redirect('/passwords');
+        })
+        .catch(() => res.send('super err'));
     })
     .catch(() => res.send('err'));
 });
