@@ -118,6 +118,10 @@ h1 {
   text-decoration: none;
 }
 
+.art-value {
+  width: 30%;
+}
+
 .orgs-body {
   display: flex;
   flex-direction: column;
@@ -135,4 +139,8 @@ h1 {
 #tmpPassword {
   position: absolute;
   left: -9999px;
+}
+
+.bi-clipboard-plus {
+  font-size: x-large;
 }
