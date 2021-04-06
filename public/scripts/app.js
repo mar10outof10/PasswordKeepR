@@ -99,7 +99,7 @@ $('#show-password').on('click', function() {
     const containsNumbers = $('.number-choice-yes').hasClass('active');
     const containsSymbols = $('.symbol-choice-yes').hasClass('active');
     const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers, containsSymbols };
-    if (passwordLength > 64) {
+    if (passwordLength > 64 || passwordLength < 1) {
       $('.pw-error').text('Please choose a password length of less than 64 characters')
       return $('.pw-error').css('display', 'block');
     }
