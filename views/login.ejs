@@ -7,8 +7,12 @@
 </head>
 
 <body>
-  <%- include('partials/_header') %>
-    <main class="m-4">
+  <main class="login">
+    <div class="login-title">
+      <i class="bi bi-shield-lock-fill text-white" width="10px" height="10px"></i>
+      <h2>PasswordKeepR</h2>
+    </div>
+    <div class="login-container">
       <h1 class="mb-4">Login</h1>
       <% if (locals.errorMsg) {%>
       <div class="alert alert-danger" role="alert">
@@ -29,12 +33,13 @@
           </div>
         </div>
         <div class="button-container">
-          <div class="button-row">
+          <div class="button-row justify-content-start">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </div>
       </form>
-    </main>
+    </div>
+  </main>
     <%- include('partials/_scripts') %>
 </body>
 
