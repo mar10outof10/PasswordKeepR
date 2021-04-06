@@ -9,36 +9,56 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
     <ul class="navbar-nav mr-auto">
-      <% if (!locals.email) { %>
-        <li class="nav-item active">
-          <a class="nav-link" href="/login"><span>Login</span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/register"><span>Register</span></a>
-        </li>
-        <% } else { %>
-          <li class="nav-item active">
-            <a class="nav-link"><span>Welcome <%= email %></span></a>
-          </li>
-
+   <% if (!locals.email) { %>
+      <li class="nav-item active">
+        <a class="nav-link" href="/login"><span>Login</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/register"><span>Register</span></a>
+      </li>
+    <% } else { %>
+      <!-- <li class="nav-item active">
+        <a class="nav-link"><span>Welcome <%= email %></span></a>
+      </li> -->
+      <li>
+        <a class="dropdown-item" href="/passwords">My Passwords</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="/passwords/new">New Password</a>
+      </li>
+      <li>
+        <div class="dropdown-divider"></div>
+      </li>
+      <li>
+        <a class="dropdown-item" href="/orgs">My Organizations</a>
+      <li>
+        <a class="dropdown-item" href="/orgs/new">New Organization</a>
+      </li>
+      <li>
+        <div class="dropdown-divider"></div>
+      </li>
     </ul>
+    <form class="dropdown-item" method="POST" action="/logout">
+      <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+    <!-- </ul>
     <div class="nav-item dropdown">
       <div class="dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
         Manage
+        <div class="dropdown-menu" data-bs-display="static" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/passwords">My Passwords</a>
+          <a class="dropdown-item" href="/passwords/new">New Password</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/orgs">My Organizations</a>
+          <a class="dropdown-item" href="/orgs/new">New Organization</a>
+          <div class="dropdown-divider"></div>
+          <form class="dropdown-item" method="POST" action="/logout">
+            <button type="submit" class="btn btn-danger">Logout</button>
+          </form>
+        </div>
       </div>
-      <div class="dropdown-menu" data-bs-display="static" aria-labelledby="navbarDropdown">
-        <a class="dropdown-item" href="/passwords">My Passwords</a>
-        <a class="dropdown-item" href="/passwords/new">New Password</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="/orgs">My Organizations</a>
-        <a class="dropdown-item" href="/orgs/new">New Organization</a>
-        <div class="dropdown-divider"></div>
-        <form class="dropdown-item" method="POST" action="/logout">
-          <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
-      </div>
-    </div>
+    </div> -->
     <% } %>
   </div>
 </nav>
