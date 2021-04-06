@@ -212,11 +212,18 @@ const userOrgJoinDate = function (userId, orgId) {
   SELECT joined_at
   FROM org_users
   WHERE user_id = $1
-  AND org_id = $2
+  AND org_id = $2;
   `, [userId, orgId])
     .then(res => res.rows[0].joined_at);
 };
 
+/**
+ * Gets the list of organizations a user belongs to along with the member count of the org
+ * and date they joined.
+ *
+ * @param {Number} userId         The id of the user to check.
+ * @return {Promise<object>}      A promise that resolves to an object containing the org name, member count, and user join date.
+ */
 const getOrgSummaryForUser = function(userId) {
   return db.query(`
     WITH cte AS (

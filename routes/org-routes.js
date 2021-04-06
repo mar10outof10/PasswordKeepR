@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser } = require('../db/queries/org-queries');
+const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser, userIsInOrg } = require('../db/queries/org-queries');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers');
 const { reset } = require('nodemon');
 
@@ -60,21 +60,27 @@ router.post('/', isAuthenticated, (req, res) => {
 */
 router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
-  const templateVars = { };
-  getUserById(req.session.user_id)
-    .then((user) => {
-      templateVars.email = user.email;
-      return getOrgById(orgId)
-    })
-    .then(org => {
-      templateVars.orgName = org.name;
-      return usersInOrg(org.id)
-    })
-    .then(users => {
-      templateVars.members = users; // set of rows from org_users where org_id = org.id
-      return res.render('orgs_show', templateVars);
-    })
-    .catch(err => res.json(err));
+  const userId = req.session.user_id;
+  const templateVars = {};
+
+  userIsInOrg(userId, orgId)
+  .then(isMember => {
+    if(!isMember) { return Promise.reject(401); }
+  })
+  .then(() => getOrgById(orgId))
+  .then(org => {
+    templateVars.orgName = org.name;
+    return usersInOrg(org.id);
+  })
+  .then(users => {
+    templateVars.members = users; // set of rows from org_users where org_id = org.id
+  })
+  .then(() => getUserById(userId))
+  .then(user => {
+    templateVars.email = user.email;
+    return res.render('orgs_show', templateVars);
+  })
+  .catch(status => res.status(status).send());
 });
 
 /* Edit individual org
