@@ -10,10 +10,10 @@ const getAllPasswords = function(userId) {
   return db.query(`
     SELECT passwords.*, orgs.name AS org_name
     FROM passwords
-    JOIN orgs ON org_id = orgs.id
+    LEFT OUTER JOIN orgs ON org_id = orgs.id
     WHERE user_id = $1
     OR org_id IN (SELECT org_id FROM org_users WHERE user_id = $1)
-    ORDER BY category NULLS FIRST, label;
+    ORDER BY org_name NULLS FIRST, category NULLS FIRST, label;
   `, [userId])
     .then(res => res.rows);
 };
