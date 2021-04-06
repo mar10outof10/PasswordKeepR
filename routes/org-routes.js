@@ -62,7 +62,10 @@ router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
   const templateVars = { orgId };
-
+  // checks if query param for error exists
+  if (req.query.error) {
+    templateVars.error = req.query.error;
+  }
   userIsInOrg(userId, orgId)
   .then(isMember => {
     if(!isMember) { return Promise.reject(401); }
