@@ -109,6 +109,15 @@ $(() => {
     }
   });
 
+  // Confirm update of org parameters on checkbox
+  $('#org-update-check').on('click', function () {
+    if (this.checked) {
+      $('#org-update').attr('type', 'submit');
+    } else {
+      $('#org-update').attr('type', 'button');
+    }
+  });
+
   // Generate random password
   $('.pw-generate').on('click', function () {
     // get input for all params
