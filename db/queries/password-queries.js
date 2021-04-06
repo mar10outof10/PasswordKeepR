@@ -12,7 +12,7 @@ const getAllPasswords = function(userId) {
     FROM passwords
     WHERE user_id = $1
     OR org_id IN (SELECT org_id FROM org_users WHERE user_id = $1)
-    ORDER BY category NULLS FIRST;
+    ORDER BY category NULLS FIRST, label;
   `, [userId])
     .then(res => res.rows);
 };
