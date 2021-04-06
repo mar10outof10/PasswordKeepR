@@ -18,3 +18,11 @@ $(() => {
     console.log('you pushed me');
   });
 });
+
+$('#show-password').on('click', function() {
+  if (this.checked) {
+    $('#inputPassword').attr('type','text');
+  } else {
+    $('#inputPassword').attr('type','password');
+  }
+})
