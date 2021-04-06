@@ -60,17 +60,18 @@ router.post('/', isAuthenticated, (req, res) => {
 */
 router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
-  const templateVars = { userId: req.session.user_id }
-
-  getOrgById(orgId)
+  const templateVars = { };
+  getUserById(req.session.user_id)
+    .then((user) => {
+      templateVars.email = user.email;
+      return getOrgById(orgId)
+    })
     .then(org => {
       templateVars.orgName = org.name;
       return usersInOrg(org.id)
     })
     .then(users => {
       templateVars.members = users; // set of rows from org_users where org_id = org.id
-    })
-    .then(() => {
       return res.render('orgs_show', templateVars);
     })
     .catch(err => res.json(err));
