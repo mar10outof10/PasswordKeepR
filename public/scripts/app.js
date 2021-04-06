@@ -25,6 +25,55 @@ $(() => {
 
   })
 
+// Keep buttons activated on click
+
+// Lowercase option
+$('.lowercase-choice-yes').on('click', function() {
+  $('.lowercase-choice-no').removeClass('active')
+  $(this).addClass('active');
+})
+
+$('.lowercase-choice-no').on('click', function() {
+  $('.lowercase-choice-yes').removeClass('active')
+  $(this).addClass('active');
+})
+
+// Uppercase option
+$('.uppercase-choice-yes').on('click', function() {
+  $('.uppercase-choice-no').removeClass('active')
+  $(this).addClass('active');
+})
+
+$('.uppercase-choice-no').on('click', function() {
+  $('.uppercase-choice-yes').removeClass('active')
+  $(this).addClass('active');
+})
+
+// Numbers
+$('.number-choice-yes').on('click', function() {
+  console.log('yo')
+  $('.number-choice-no').removeClass('active')
+  $(this).addClass('active');
+})
+
+$('.number-choice-no').on('click', function() {
+  $('.number-choice-yes').removeClass('active')
+  $(this).addClass('active');
+})
+
+// Symbols
+$('.symbol-choice-yes').on('click', function() {
+  console.log('yo')
+  $('.symbol-choice-no').removeClass('active')
+  $(this).addClass('active');
+})
+
+$('.symbol-choice-no').on('click', function() {
+  $('.symbol-choice-yes').removeClass('active')
+  $(this).addClass('active');
+})
+
+
 // Cancel password modal
 
   $('.pw-cancel').on('click', function() {
@@ -37,7 +86,9 @@ $(() => {
   $('.pw-generate').on('click', function() {
     // get input for all params
     const passwordLength = $('.pw-length').val();
-    const lowerCase = $('.pw-lowercase').is(':checked');
+
+    const lowerCase = $('.input-group mb-3').is(':checked');
+    console.log(lowerCase)
     const upperCase = $('.pw-uppercase').is(':checked');
     const containsNumbers = $('.pw-numbers').is(':checked');
     const containsSymbols = $('.pw-symbols').is(':checked');
@@ -46,7 +97,7 @@ $(() => {
     const newPassword = generateRandomString(stringParams);
     // append password to password field
     $('#inputPassword').val(newPassword);
-    $('.modal').css('display', 'none');
+    $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
   })
 

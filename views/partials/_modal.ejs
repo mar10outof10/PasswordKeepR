@@ -2,10 +2,55 @@
 
   <div class="modal-content">
     <h3>Customize your password</h3>
+
+
     <form class="customize">
-      <div class="form-field">
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon3">Password length:</span>
+  </div>
+  <input type="text" class="length-input form-control" id="basic-url" aria-describedby="basic-addon">
+</div>
+
+<h5>Should your password contain...</h5>
+
+<div class="input-group mb-3" >
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon2">lowercase characters?</span>
+    <button class="btn btn-outline-secondary lowercase-choice-yes" type="button">Yes</button>
+    <button class="btn btn-outline-secondary lowercase-choice-no" type="button">No</button>
+  </div>
+</div>
+
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon2">uppercase characters?</span>
+    <button class="btn btn-outline-secondary uppercase-choice-yes" type="button">Yes</button>
+    <button class="btn btn-outline-secondary uppercase-choice-no" type="button">No</button>
+  </div>
+
+</div>
+
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon2">numbers?</span>
+    <button class="btn btn-outline-secondary number-choice-yes" type="button">Yes</button>
+    <button class="btn btn-outline-secondary number-choice-no" type="button">No</button>
+  </div>
+
+</div>
+
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon2">symbols?</span>
+    <button class="btn btn-outline-secondary symbol-choice-yes" type="button">Yes</button>
+    <button class="btn btn-outline-secondary symbol-choice-no" type="button">No</button>
+  </div>
+
+</div>
+      <!-- <div class="form-field">
         <label for="pw-length">Password length</label>
-        <input class="pw-length"type="text"id="pw-length">
+        <input class="pw-length input-group mb-3"type="text"id="pw-length">
       </div>
       <div class="form-field">
         <label for="pw-lowercase">Contains lowercase characters?</label>
@@ -22,10 +67,10 @@
       <div class="form-field">
         <label for="pw-symbols">Contains symbols?</label>
         <input class="pw-symbols"type="checkbox"id="pw-symbols">
-      </div>
+      </div> -->
     </form>
-    <button class="pw-cancel">Cancel</button>
-    <button class="pw-generate">Generate your password</button>
+    <button class="pw-cancel btn btn-secondary">Cancel</button>
+    <button class="pw-generate btn btn-primary">Generate your password</button>
   </div>
 
 </div>
