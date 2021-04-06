@@ -17,21 +17,18 @@ $(() => {
   });
 });
 
-// Generate password window
+// Generate password modal
 
   $('.generate-password').on('click', function() {
-    // click will trigger modal window to appear
-    $('.modal').css('display', 'block');
+    $('.modal-bg').css('display', 'block');
     $('.modal-content').css('display', 'block');
-    // change modal display from none to anything
-    // generate and display password
-    // move password to password field on page
+
   })
 
-// While inside password window
-  // cancel out of window
+// Cancel password modal
+
   $('.pw-cancel').on('click', function() {
-    $('.modal').css('display', 'none');
+    $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
   })
 })
@@ -43,7 +40,7 @@ $(() => {
     const lowerCase = $('.pw-lowercase').is(':checked');
     const upperCase = $('.pw-uppercase').is(':checked');
     const containsNumbers = $('.pw-numbers').is(':checked');
-    const containsSymbols = $('.pw-symbols').is(':checked')
+    const containsSymbols = $('.pw-symbols').is(':checked');
     const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers, containsSymbols };
     // call generateRandom string
     const newPassword = generateRandomString(stringParams);
