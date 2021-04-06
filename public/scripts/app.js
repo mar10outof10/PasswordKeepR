@@ -153,6 +153,21 @@ $(() => {
     tmp.remove();
   });
 
+  // setup 'show password' button
+  $('.bi-eye').on('click', function() {
+    const passwordInput = $(this).parent()
+                            .siblings('.art-login-info')
+                            .children('.art-password')
+                            .children('.art-value')[0];
+
+    // toggle between type 'password' and 'text' to show/hide
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+    } else {
+      passwordInput.type = 'password';
+    }
+  });
+
   // enable popovers
   $('[data-toggle="popover"]').popover().on('click', function() {
     setTimeout(function() {
