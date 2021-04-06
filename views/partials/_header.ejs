@@ -1,6 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#"><img class="navbar-brand" src="https://image.flaticon.com/icons/png/512/61/61457.png"
-      width="40" height="50"></a>
+  <div class="nav-logout">
+    <a class="navbar-brand" href="#"><img class="navbar-brand" src="https://image.flaticon.com/icons/png/512/61/61457.png" width="40" height="50"></a>
+    <% if (locals.email) { %>
+    <form method="POST" action="/logout">
+      <button type="submit" class="btn btn-danger logout-button">Logout</button>
+    </form>
+    <% } %>
+  </div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -38,9 +44,6 @@
         <div class="dropdown-divider"></div>
       </li>
     </ul>
-    <form class="dropdown-item" method="POST" action="/logout">
-      <button type="submit" class="btn btn-danger">Logout</button>
-    </form>
     <!-- </ul>
     <div class="nav-item dropdown">
       <div class="dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
