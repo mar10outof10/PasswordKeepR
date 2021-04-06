@@ -177,11 +177,27 @@ const userIsInOrg = function (userId, orgId) {
  */
 const usersInOrg = function (orgId) {
   return db.query(`
+    SELECT users.id, email
+    FROM users
+    JOIN org_users ON user_id = users.id
+    WHERE org_id = $1;
+  `, [orgId])
+    .then(res => res.rows);
+};
+
+/**
+ * Gets number of users for a specific org.
+ *
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
+ */
+ const numberUsersInOrg = function (orgId) {
+  return db.query(`
     SELECT *
     FROM org_users
     WHERE org_id = $1;
   `, [orgId])
-    .then(res => res.rows);
+    .then(res => res.rows.length);
 };
 
 /**
@@ -198,6 +214,24 @@ const userOrgJoinDate = function (userId, orgId) {
   WHERE user_id = $1
   AND org_id = $2
   `, [userId, orgId])
-    .then(res => res.rows);
+    .then(res => res.rows[0].joined_at);
 };
-module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, userOrgJoinDate };
+
+const getOrgSummaryForUser = function(userId) {
+  return db.query(`
+    WITH cte AS (
+      SELECT name, COUNT(*) AS count
+      FROM orgs
+      JOIN org_users ON org_id = orgs.id
+      GROUP BY name
+    )
+    SELECT orgs.name, org_users.joined_at, count
+    FROM orgs
+    JOIN org_users ON org_id = orgs.id
+    JOIN users ON user_id = users.id
+    JOIN cte ON orgs.name = cte.name
+    WHERE user_id = $1;
+  `, [userId])
+  .then(res => res.rows);
+}
+module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, getOrgSummaryForUser };

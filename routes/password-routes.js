@@ -16,7 +16,8 @@ router.get('/', isAuthenticated, (req, res) => {
 
   Promise.all([passwordsPromise, userPromise])
   .then(values => {
-    return res.render('passwords_index', { passwords: values[0], email: values[1].email, userId: userId });
+    console.log('passwords', values[0])
+    return res.render('passwords_index', { passwords: values[0], email: values[1].email });
   })
   .catch(err => {
     return res.json(err);

@@ -1,5 +1,3 @@
-$(document).ready(function() {
-
 const adjustDropdownAlignment = () => {
   if ($(window).width() >= 992) {
     $('div.dropdown-menu').addClass('dropdown-menu-right');
@@ -15,7 +13,6 @@ $(() => {
   $(window).resize(() => {
     adjustDropdownAlignment();
   });
-});
 
 // Generate password modal
 
@@ -80,6 +77,17 @@ $('.symbol-choice-no').on('click', function() {
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
   })
+  $('#generate-password').on('click', function() {
+    console.log('you pushed me');
+  });
+});
+
+$('#show-password').on('click', function() {
+  if (this.checked) {
+    $('#inputPassword').attr('type','text');
+  } else {
+    $('#inputPassword').attr('type','password');
+  }
 })
 
   // generate random password
