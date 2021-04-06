@@ -1,3 +1,7 @@
+nav {
+  background-color: rgba(0,0,0,1.00);
+}
+
 .nav-logout {
   display: flex;
   justify-content: flex-start;
@@ -7,4 +11,9 @@
 
 .logout-button {
   margin-top: .2em;
+}
+
+.welcome-div {
+  padding-left: 1em;
+  padding-top: .2em;
 }
