@@ -89,12 +89,12 @@ router.post('/:id', isAuthenticated, (req, res) => {
       const orgName = req.body.org_name;
       return editOrg(orgId, orgName);
     }
-    return Promise.reject();
+    return Promise.reject(401);
   })
   .then(() => {
     return res.redirect(`/orgs/${orgId}`);
   })
-  .catch(() => res.status(401).send());
+  .catch(status => res.status(status).send());
 });
 
 /* Delete individual org
@@ -114,7 +114,7 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
   })
   .then(deletedSuccessfully => {
     if (deletedSuccessfully) {
-      return res.send('org deleted');
+      return res.redirect('/orgs');
     }
     return Promise.reject(500);
   })
@@ -140,7 +140,8 @@ router.post('/:id/:userid', isAuthenticated, (req, res) => {
       return addUserToOrg(userIdToAdd, orgId, makeAdmin);
     }
   })
-  .then(orgUser => res.json(orgUser));
+  .then(() => res.redirect(`/orgs/${orgId}`))
+  .catch(() => res.status(401).send());
 });
 
 // Remove user from org
