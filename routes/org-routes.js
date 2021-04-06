@@ -61,7 +61,7 @@ router.post('/', isAuthenticated, (req, res) => {
 router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
-  const templateVars = {};
+  const templateVars = { orgId };
 
   userIsInOrg(userId, orgId)
   .then(isMember => {
@@ -74,10 +74,14 @@ router.get('/:id', isAuthenticated, (req, res) => {
   })
   .then(users => {
     templateVars.members = users; // set of rows from org_users where org_id = org.id
+    return getUserById(userId);
   })
-  .then(() => getUserById(userId))
   .then(user => {
     templateVars.email = user.email;
+    return userIsOrgAdmin(userId, orgId)
+  })
+  .then(isAdmin => {
+    templateVars.isAdmin = isAdmin;
     return res.render('orgs_show', templateVars);
   })
   .catch(status => res.status(status).send());
