@@ -76,12 +76,11 @@ $('.symbol-choice-no').on('click', function() {
   $('.pw-cancel').on('click', function() {
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
+    $('.pw-error').css('display', 'none');
   })
-  $('#generate-password').on('click', function() {
-    console.log('you pushed me');
-  });
 });
 
+// Hide or show password on checkbox
 $('#show-password').on('click', function() {
   if (this.checked) {
     $('#inputPassword').attr('type','text');
@@ -90,7 +89,7 @@ $('#show-password').on('click', function() {
   }
 })
 
-  // generate random password
+  // Generate random password
   $('.pw-generate').on('click', function() {
     // get input for all params
     const passwordLength = $('.pw-length').val();
@@ -99,7 +98,7 @@ $('#show-password').on('click', function() {
     const containsNumbers = $('.number-choice-yes').hasClass('active');
     const containsSymbols = $('.symbol-choice-yes').hasClass('active');
     const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers, containsSymbols };
-    if (passwordLength > 64) {
+    if (passwordLength > 64 || passwordLength < 1) {
       $('.pw-error').text('Please choose a password length of less than 64 characters')
       return $('.pw-error').css('display', 'block');
     }
