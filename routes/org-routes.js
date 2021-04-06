@@ -13,9 +13,13 @@ const { reset } = require('nodemon');
 router.get('/', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
 
-  getOrgSummaryForUser(userId)
-  .then(orgs => {
-    return res.render('orgs_index', { orgs });
+  const getOrgSummaryPromise = getOrgSummaryForUser(userId);
+  const getUserPromise = getUserById(userId);
+  Promise.all([getOrgSummaryPromise, getUserPromise])
+  .then(values => {
+    const orgs = values[0];
+    const email = values[1].email
+    return res.render('orgs_index', { orgs, email });
   });
 });
 
