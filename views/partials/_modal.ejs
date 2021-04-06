@@ -9,24 +9,28 @@
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon3">Password length:</span>
   </div>
-  <input type="text" class="length-input form-control" id="basic-url" aria-describedby="basic-addon">
+  <div class="col-xs-1">
+    <input type="text" class="length-input form-control pw-length" id="basic-url" aria-describedby="basic-addon">
+  </div>
 </div>
 
 <h5>Should your password contain...</h5>
 
+<div class="pw-error"></div>
+
 <div class="input-group mb-3" >
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon2">lowercase characters?</span>
-    <button class="btn btn-outline-secondary lowercase-choice-yes" type="button">Yes</button>
-    <button class="btn btn-outline-secondary lowercase-choice-no" type="button">No</button>
+    <button class="btn btn-outline-secondary lowercase-choice-yes shadow-none" type="button" aria-pressed="true">Yes</button>
+    <button class="btn btn-outline-secondary lowercase-choice-no shadow-none" type="button" aria-pressed="true">No</button>
   </div>
 </div>
 
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon2">uppercase characters?</span>
-    <button class="btn btn-outline-secondary uppercase-choice-yes" type="button">Yes</button>
-    <button class="btn btn-outline-secondary uppercase-choice-no" type="button">No</button>
+    <button class="btn btn-outline-secondary uppercase-choice-yes shadow-none" type="button">Yes</button>
+    <button class="btn btn-outline-secondary uppercase-choice-no shadow-none" type="button">No</button>
   </div>
 
 </div>
@@ -34,8 +38,8 @@
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon2">numbers?</span>
-    <button class="btn btn-outline-secondary number-choice-yes" type="button">Yes</button>
-    <button class="btn btn-outline-secondary number-choice-no" type="button">No</button>
+    <button class="btn btn-outline-secondary number-choice-yes shadow-none" type="button">Yes</button>
+    <button class="btn btn-outline-secondary number-choice-no shadow-none" type="button">No</button>
   </div>
 
 </div>
@@ -43,8 +47,8 @@
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon2">symbols?</span>
-    <button class="btn btn-outline-secondary symbol-choice-yes" type="button">Yes</button>
-    <button class="btn btn-outline-secondary symbol-choice-no" type="button">No</button>
+    <button class="btn btn-outline-secondary symbol-choice-yes shadow-none" type="button">Yes</button>
+    <button class="btn btn-outline-secondary symbol-choice-no shadow-none" type="button">No</button>
   </div>
 
 </div>

@@ -86,15 +86,21 @@ $('.symbol-choice-no').on('click', function() {
   $('.pw-generate').on('click', function() {
     // get input for all params
     const passwordLength = $('.pw-length').val();
-
-    const lowerCase = $('.input-group mb-3').is(':checked');
-    console.log(lowerCase)
-    const upperCase = $('.pw-uppercase').is(':checked');
-    const containsNumbers = $('.pw-numbers').is(':checked');
-    const containsSymbols = $('.pw-symbols').is(':checked');
+    const lowerCase = $('.lowercase-choice-yes').hasClass('active');
+    const upperCase = $('.uppercase-choice-yes').hasClass('active');
+    const containsNumbers = $('.number-choice-yes').hasClass('active');
+    const containsSymbols = $('.symbol-choice-yes').hasClass('active');
     const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers, containsSymbols };
-    // call generateRandom string
+    if (passwordLength > 64) {
+      $('.pw-error').text('Please choose a password length of less than 64 characters')
+      return $('.pw-error').css('display', 'block');
+    }
+    if (!stringParams.upperCase && !stringParams.lowerCase && !stringParams.containsNumbers && !stringParams.containsSymbols) {
+      $('.pw-error').text('You must choose at least one password parameter')
+      return $('.pw-error').css('display', 'block');
+    }
     const newPassword = generateRandomString(stringParams);
+    // call generateRandom string
     // append password to password field
     $('#inputPassword').val(newPassword);
     $('.modal-bg').css('display', 'none');
@@ -103,9 +109,6 @@ $('.symbol-choice-no').on('click', function() {
 
 const generateRandomString = (stringParams) => {
   let chars = "";
-  if (!stringParams.upperCase && !stringParams.lowerCase) {
-    console.log('error');
-  }
   if (stringParams.upperCase) {
     chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   }
