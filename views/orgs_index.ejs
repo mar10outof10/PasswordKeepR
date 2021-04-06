@@ -21,11 +21,9 @@
             </div>
             <div class="art-body">
               <header>
-                <% if (org.is_admin) { %>
                 <form action="/orgs/<%= org.org_id %>" method="GET">
                   <button type="submit" class="btn btn-primary">View Users</button>
                 </form>
-                <% } %>
                 <span class="art-url"><%= org.name %></span>
                 <% if (org.is_admin) { %>
                 <form action="/orgs/<%= org.org_id %>/delete" method="POST">
