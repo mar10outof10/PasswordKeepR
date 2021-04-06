@@ -11,7 +11,8 @@ const getAllPasswords = function(userId) {
     SELECT *
     FROM passwords
     WHERE user_id = $1
-    OR org_id IN (SELECT org_id FROM org_users WHERE user_id = $1);
+    OR org_id IN (SELECT org_id FROM org_users WHERE user_id = $1)
+    ORDER BY category NULLS FIRST;
   `, [userId])
     .then(res => res.rows);
 };
@@ -50,6 +51,9 @@ const addPassword = function(passwordObj) {
 
   if (orgId === '') {
     orgId = null;
+  }
+  if (category === '') {
+    category = null;
   }
 
   if (Object.keys(passwordObj).length < 6) {
