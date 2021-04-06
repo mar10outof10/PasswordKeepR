@@ -225,7 +225,7 @@ const getOrgSummaryForUser = function(userId) {
       JOIN org_users ON org_id = orgs.id
       GROUP BY name
     )
-    SELECT orgs.name, org_users.joined_at, count
+    SELECT orgs.name, org_users.joined_at, count, is_admin
     FROM orgs
     JOIN org_users ON org_id = orgs.id
     JOIN users ON user_id = users.id
