@@ -98,7 +98,7 @@ router.post('/:id', isAuthenticated, (req, res) => {
   getOrgByName(newOrgName)
     .then((orgExists) => {
       if (orgExists && orgExists.id !== Number(orgId)) {
-        return Promise.reject(401);
+        return res.redirect(`/orgs/${orgId}?error=orgExists`);
       }
       return userIsOrgAdmin(userId, orgId)
     })
