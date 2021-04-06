@@ -20,12 +20,17 @@
               <img src="https://i.pinimg.com/originals/b7/6c/94/b76c94e1e878957a73f486362328dd30.png">
             </div>
             <div class="art-body">
-              <header>
-                <span class="art-url"><%= org.name %></span>
+              <header class="org-header">
                 <!-- must add javascript to  -->
                 <% if (org.is_admin) { %>
+                <form action="/orgs/<%= org.org_id %>" method="GET">
+                  <button type="submit" class="btn btn-primary">View Users</button>
+                </form>
+                <% } %>
+                <span class="art-url"><%= org.name %></span>
+                <% if (org.is_admin) { %>
                 <form action="/orgs/<%= org.org_id %>/delete" method="POST">
-                  <button type="submit" class="btn btn-danger">&#128465;&#65039;</button>
+                  <button type="submit" class="btn btn-danger">DELETE ORGANISATION</button>
                 </form>
                 <% } %>
               </header>
