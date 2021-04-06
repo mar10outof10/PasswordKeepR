@@ -3,6 +3,7 @@ const router  = express.Router();
 
 const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
 const { getUserById } = require('../db/queries/user-queries');
+const { getAllOrgs } = require('../db/queries/org-queries');
 const { isAuthenticated } = require('./helpers');
 
 /* Password dashboard
@@ -31,9 +32,16 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-  getUserById(userId)
-  .then(user => {
-    return res.render('passwords_new', { email: user.email });
+
+  const getUserPromise = getUserById(userId);
+  const getOrgsPromise = getAllOrgs(userId);
+
+  Promise.all([getUserPromise, getOrgsPromise])
+  .then(values => {
+    const user = values[0];
+    const orgs = values[1];
+    console.log(orgs);
+    return res.render('passwords_new', { email: user.email, orgs });
   });
 });
 
@@ -44,19 +52,23 @@ router.get('/new', isAuthenticated, (req, res) => {
 router.get('/:id', isAuthenticated,  (req, res) => {
   const passwordId = req.params.id;
   const userId = req.session.user_id;
+
   const getPasswordPromise = getPasswordById(passwordId);
   const getUserPromise = getUserById(userId);
+  const getOrgsPromise = getAllOrgs(userId);
 
-  Promise.all([getPasswordPromise, getUserPromise])
+  Promise.all([getPasswordPromise, getUserPromise, getOrgsPromise])
   .then(values => {
     const password = values[0];
-    const email = values[1].email;
-    return res.render('passwords_show', { password, email, passwordId });
+    const user = values[1];
+    const orgs = values[2];
+
+    return res.render('passwords_show', { password, email: user.email, orgs });
   });
 });
 
 
-/* Add new passwordf
+/* Add new password
 * logged in user  -> add new password to Db
 * else            -> go to /login
 */
