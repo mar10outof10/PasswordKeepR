@@ -81,12 +81,23 @@ h1 {
 }
 
 
-.art-body > footer {
+.art-body footer {
+  display: flex;
+  height: 100%;
+}
+
+.art-body .art-login-info {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   width: 100%;
-  height: 60%;
+  height: 100%;
+}
+
+.art-body .art-login-interactions {
+  display: flex;
+justify-content: center;
+align-items: center;
 }
 
 .art-username {
@@ -141,8 +152,12 @@ h1 {
   left: -9999px;
 }
 
-.bi-clipboard-plus {
+.bi {
   font-size: x-large;
+}
+
+.bi:hover {
+  cursor: pointer;
 }
 
 .org-header {
@@ -161,4 +176,20 @@ h1 {
   text-align: center;
   font-size: 12px;
   margin: 0.5em;
+}
+
+@media only screen and (max-width: 767px) {
+
+  .art-body footer {
+    flex-direction: column;
+  }
+
+  .art-main {
+    height: unset;
+  }
+
+  .art-body .art-login-interactions {
+    justify-content: space-evenly;
+  }
+
 }

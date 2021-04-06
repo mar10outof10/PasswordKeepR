@@ -29,9 +29,15 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
+  const templateVars = {};
+  // checks if query param for error exists
+  if (req.query.error) {
+    templateVars.error = req.query.error;
+  }
   getUserById(userId)
   .then(user => {
-    return res.render('orgs_new', { email: user.email });
+    templateVars.email = user.email;
+    return res.render('orgs_new', templateVars);
   });
 });
 
@@ -42,7 +48,13 @@ router.get('/new', isAuthenticated, (req, res) => {
 router.post('/', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const orgName = req.body.org_name;
-  addOrg(orgName)
+  getOrgByName(orgName)
+  .then((orgExists) => {
+    if (orgExists) {
+      return res.redirect(`/orgs/new?error=orgExists`);
+    }
+    return addOrg(orgName)
+  })
   .then(org => {
     console.log('org', org);
     return addUserToOrg(userId, org.id, true);
@@ -62,7 +74,10 @@ router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
   const templateVars = { orgId };
-
+  // checks if query param for error exists
+  if (req.query.error) {
+    templateVars.error = req.query.error;
+  }
   userIsInOrg(userId, orgId)
   .then(isMember => {
     if(!isMember) { return Promise.reject(401); }
