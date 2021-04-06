@@ -127,3 +127,12 @@ h1 {
   align-items: center;
   justify-content: center;
 }
+
+.no-border {
+  border: 0;
+}
+
+#tmpPassword {
+  position: absolute;
+  left: -9999px;
+}

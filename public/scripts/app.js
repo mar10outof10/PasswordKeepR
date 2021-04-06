@@ -135,6 +135,25 @@ $(() => {
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
   });
+
+
+  // setup 'copy password to clipboard' button
+  $('.bi-clipboard-plus').on('click', function() {
+    // store password
+    const password = $(this).siblings('input')[0].value;
+    // create temporary textarea to allow copying to clipboard
+    const tmp = $('<textarea id="tmpPassword"></textarea>');
+    // put password in textarea
+    tmp.val(password);
+    // append the textarea to the document body
+    $('body').append(tmp);
+    // select the password
+    tmp.select();
+    // copy to clipboard
+    document.execCommand('copy');
+    // delete the textarea element after
+    tmp.remove();
+  });
 });
 
 
