@@ -12,7 +12,8 @@ const getAllOrgs = function (userId) {
     FROM orgs
     JOIN org_users ON org_id = orgs.id
     JOIN users ON user_id = users.id
-    WHERE user_id = $1;
+    WHERE user_id = $1
+    ORDER BY name;
   `, [userId])
     .then(res => res.rows);
 };
