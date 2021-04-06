@@ -177,8 +177,9 @@ const userIsInOrg = function (userId, orgId) {
  */
 const usersInOrg = function (orgId) {
   return db.query(`
-    SELECT *
-    FROM org_users
+    SELECT users.id, email
+    FROM users
+    JOIN org_users ON user_id = users.id
     WHERE org_id = $1;
   `, [orgId])
     .then(res => res.rows);

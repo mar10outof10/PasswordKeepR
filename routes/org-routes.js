@@ -3,7 +3,8 @@ const router  = express.Router();
 
 const { getUserById } = require('../db/queries/user-queries');
 const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser } = require('../db/queries/org-queries');
-const { isAuthenticated, isNotAuthenticated } = require('./helpers')
+const { isAuthenticated, isNotAuthenticated } = require('./helpers');
+const { reset } = require('nodemon');
 
 /* Show orgs dashboard
 * logged in user  -> go to /orgs
@@ -43,10 +44,9 @@ router.post('/', isAuthenticated, (req, res) => {
     return addUserToOrg(userId, org.id, true);
   })
   .then(orgUser => {
-    console.log('orgUser', orgUser);
+    console.log('redir to', `/orgs/${orgUser.org_id}`)
     return res.redirect(`/orgs/${orgUser.org_id}`);
   })
-  // .catch(() => res.status(401).send());
   .catch(err => console.error(err));
 });
 
@@ -56,22 +56,20 @@ router.post('/', isAuthenticated, (req, res) => {
 */
 router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
-  const templateVars = { userId: req.session.userId }
+  const templateVars = { userId: req.session.user_id }
 
   getOrgById(orgId)
-  .then(org => {
-    templateVars.orgName = org.name;
-    usersInOrg(org.id)
+    .then(org => {
+      templateVars.orgName = org.name;
+      return usersInOrg(org.id)
+    })
     .then(users => {
       templateVars.members = users; // set of rows from org_users where org_id = org.id
     })
+    .then(() => {
+      return res.render('orgs_show', templateVars);
+    })
     .catch(err => res.json(err));
-
-  })
-  .then(() => {
-    return res.render('orgs_show', templateVars);
-  })
-  .catch(err => res.json(err));
 });
 
 /* Edit individual org
