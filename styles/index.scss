@@ -23,7 +23,7 @@
   flex-direction: row;
   align-items: center;
   border-style: solid;
-  margin-bottom: 1em;
+  margin-bottom: 0.75em;
   border-radius: .8em;
 }
 
@@ -147,9 +147,11 @@ h1 {
 
 .org-header {
   background-color: darkgray;
+  padding: 0.5em;
   font-weight: bold;
+  font-size: larger;
 }
 
 .category-header {
-  background-color: lightblue;
+  // background-color: lightblue;
 }
