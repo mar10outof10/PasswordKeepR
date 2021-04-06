@@ -43,9 +43,11 @@ router.post('/', isAuthenticated, (req, res) => {
     return addUserToOrg(userId, org.id, true);
   })
   .then(orgUser => {
-    return res.redirect(`/orgs/${orgUser.id}`);
+    console.log('orgUser', orgUser);
+    return res.redirect(`/orgs/${orgUser.org_id}`);
   })
-  .catch(() => res.status(401).send());
+  // .catch(() => res.status(401).send());
+  .catch(err => console.error(err));
 });
 
 /* Show individual org
