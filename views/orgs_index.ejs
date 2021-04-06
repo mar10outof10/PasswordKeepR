@@ -23,7 +23,11 @@
               <header>
                 <span class="art-url"><%= org.name %></span>
                 <!-- must add javascript to  -->
-                <button type="button" class="btn btn-danger">&#128465;&#65039;</button>
+                <% if (org.is_admin) { %>
+                <form action="/orgs/<%= org.org_id %>/delete" method="POST">
+                  <button type="submit" class="btn btn-danger">&#128465;&#65039;</button>
+                </form>
+                <% } %>
               </header>
 
               <footer>
