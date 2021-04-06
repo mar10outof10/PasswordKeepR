@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers');
-const { getUserByEmail, addUser, deleteUser } = require('../db/queries/user-queries');
+const { getUserByEmail, addUser, deleteUser, userEmailExists } = require('../db/queries/user-queries');
 
 /* Root
 * logged in user  -> go to /passwords
@@ -81,24 +81,28 @@ router.get('/register', isNotAuthenticated, (req, res) => {
 router.post('/register', isNotAuthenticated, (req, res) => {
   // check user is not logged in already
   const { email, password } = req.body;
-
   // check email & password were provided
   if (!email || !password) {
-    return res.send('Must provide username and password');
+    return res.render('register', { errorMsg: 'Must provide username and password' });
   }
-
-  // hash the password
-  const hashedPassword = bcrypt.hashSync(password, 10);
-
-  // add the user to the db & store the new user_id in the users' cookie
-  addUser(email, hashedPassword)
-    .then(user => {
-      req.session.user_id = user.id;
-      return res.redirect('/passwords');
+  // check email does not exist in system already
+  userEmailExists(email)
+    .then(id => {
+      if (id) {
+        return res.render('register', { errorMsg: 'email already exists in database' });
+      } else {
+        // hash the password
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        // add the user to the db & store the new user_id in the users' cookie
+        addUser(email, hashedPassword)
+          .then(user => {
+            req.session.user_id = user.id;
+            return res.redirect('/passwords');
+          })
+          .catch(() => res.send('super err'));
+      }
     })
-    .catch(err => {
-      return res.json(err);
-    });
+    .catch(() => res.send('err'));
 });
 
 // Delete user
