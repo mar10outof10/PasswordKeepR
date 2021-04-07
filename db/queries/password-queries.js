@@ -8,7 +8,13 @@ const db = require('../db');
  */
 const getAllPasswords = function(userId) {
   return db.query(`
-    SELECT passwords.*, orgs.name AS org_name
+    SELECT  passwords.*,
+            orgs.name AS org_name,
+            CASE
+              WHEN user_id = $1 THEN TRUE
+              WHEN org_id IN (SELECT org_id FROM org_users WHERE user_id=$1 AND is_admin=TRUE) THEN TRUE
+              ELSE FALSE
+            END has_write_access
     FROM passwords
     LEFT OUTER JOIN orgs ON org_id = orgs.id
     WHERE user_id = $1

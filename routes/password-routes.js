@@ -2,9 +2,9 @@ const express = require('express');
 const router  = express.Router();
 
 const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
+const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess } = require('./helpers');
 const { getUserById } = require('../db/queries/user-queries');
 const { getAllOrgs } = require('../db/queries/org-queries');
-const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess } = require('./helpers');
 
 /* Password dashboard
 * logged in user  -> render passwords_index
