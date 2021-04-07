@@ -71,11 +71,11 @@ $(() => {
   });
 
   $('#by-email').on('click', function () {
-    $('#inputUser').attr('placeholder', 'user@email.com');
+    $('#inputUser').attr({type: 'email', placeholder: 'user@email.com'});
   });
 
   $('#by-userid').on('click', function () {
-    $('#inputUser').attr('placeholder', '64');
+    $('#inputUser').attr({type: 'number', placeholder: '64'});
   });
 
   // Generate random password
