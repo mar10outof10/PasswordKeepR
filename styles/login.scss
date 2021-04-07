@@ -27,12 +27,11 @@
 }
 
 .register-link {
-  width: 100%;
   display: flex;
   justify-content: flex-end;
-  padding-top: 1em;
-  padding-right: 1.1em;
-  transform: translateY(-45px);
+  align-items: center;
+  width: 100%;
+
 }
 
 .register > a {

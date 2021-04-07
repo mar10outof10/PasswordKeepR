@@ -8,14 +8,14 @@
   <body>
 
     <main class="register">
-      <div class="login-title">
+      <div class="register-title">
         <i class="bi bi-shield-lock-fill text-white" width="10px" height="10px"></i>
         <h2>PasswordKeepR</h2>
       </div>
       <div class="register-container">
-        <h1 class="mb-4">Register</h1>
+        <h1>Register</h1>
         <% if (locals.errorMsg) {%>
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger h-25" role="alert">
           <%= errorMsg %>
         </div>
         <% }%>
@@ -40,13 +40,13 @@
           </div>
           <div class="button-container">
             <div class="button-row justify-content-start">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary register-button">Submit</button>
+              <div class="login-link">
+                <a href="/login">Back to login</a>
+              </div>
             </div>
           </div>
         </form>
-        <div class="login-link">
-          <a href="/login">Back to login</a>
-        </div>
       </div>
     </main>
   <%- include('partials/_scripts') %>

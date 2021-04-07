@@ -19,7 +19,7 @@
         <%= errorMsg %>
       </div>
       <% }%>
-      <form class="login-form-container" action="/login" method="POST">
+      <form action="/login" method="POST">
         <div class="form-group row">
           <label for="email" class="col-sm-3 col-form-label">Email</label>
           <div class="col-sm-7">
@@ -32,16 +32,13 @@
             <input type="password" name="password" id="password" class="form-control" placeholder="password">
           </div>
         </div>
-        <div class="button-container">
-          <div class="button-row justify-content-start">
+        <div class="button-container d-flex justify-content-between">
+          <div class="button-row">
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/register">Register Now</a>
           </div>
         </div>
       </form>
-      <div class="register-link">
-        <a href="/register">Register now</a>
-      </div>
-    </div>
   </main>
     <%- include('partials/_scripts') %>
 </body>
