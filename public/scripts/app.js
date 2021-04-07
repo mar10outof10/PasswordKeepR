@@ -186,7 +186,7 @@ $(() => {
   });
 
   // enable popovers
-  $('[data-toggle="popover"]').popover().on('click', function() {
+  $('.clipboard').popover().on('click', function() {
     setTimeout(function() {
       $('[data-toggle="popover"]').popover('hide');
     }, 2000);
