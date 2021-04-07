@@ -95,7 +95,7 @@ router.post('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
 
   editPassword(passwordId, editPassObj)
   .then(editedPassObj => {
-    res.redirect(`/passwords/${passwordId}`);
+    res.redirect(`/passwords`);
   })
   .catch(err => {
     res.json(err);
