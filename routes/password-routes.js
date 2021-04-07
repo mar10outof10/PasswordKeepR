@@ -4,7 +4,7 @@ const router  = express.Router();
 const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
 const { getUserById } = require('../db/queries/user-queries');
 const { getAllOrgs } = require('../db/queries/org-queries');
-const { isAuthenticated } = require('./helpers');
+const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess } = require('./helpers');
 
 /* Password dashboard
 * logged in user  -> render passwords_index
@@ -17,12 +17,10 @@ router.get('/', isAuthenticated, (req, res) => {
 
   Promise.all([passwordsPromise, userPromise])
   .then(values => {
-    console.log('passwords', values[0])
     return res.render('passwords_index', { passwords: values[0], email: values[1].email });
   })
   .catch(err => {
     return res.json(err);
-    // return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
   });
 });
 
@@ -32,7 +30,6 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-
   const getUserPromise = getUserById(userId);
   const getOrgsPromise = getAllOrgs(userId);
 
@@ -40,7 +37,6 @@ router.get('/new', isAuthenticated, (req, res) => {
   .then(values => {
     const user = values[0];
     const orgs = values[1];
-    console.log(orgs);
     return res.render('passwords_new', { email: user.email, orgs });
   });
 });
@@ -49,7 +45,7 @@ router.get('/new', isAuthenticated, (req, res) => {
 * logged in user  -> go to /passwords/:id
 * else            -> go to /loginf
 */
-router.get('/:id', isAuthenticated,  (req, res) => {
+router.get('/:id', isAuthenticated, hasPasswordReadAccess, (req, res) => {
   const passwordId = req.params.id;
   const userId = req.session.user_id;
 
@@ -91,26 +87,26 @@ router.post('/', isAuthenticated, (req, res) => {
 * logged in user  -> edit inidivual password in Db
 * else            -> go to /login
 */
-router.post('/:id', isAuthenticated, (req, res) => {
+router.post('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
   const passwordId = req.params.id;
   const editPassObj = { label, url, username, password, category, userId, orgId };
+
   editPassword(passwordId, editPassObj)
   .then(editedPassObj => {
-    // res.json(editedPassObj);
     res.redirect(`/passwords/${passwordId}`);
   })
   .catch(err => {
     res.json(err);
-  })
+  });
 });
 
 /* Delete individual password
 * logged in user  -> Delete password from Db
 * else            -> go to /login
 */
-router.post('/:id/delete', isAuthenticated, (req, res) => {
+router.post('/:id/delete', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
   getPasswordById(passwordId)
   .then(passwordObj => {
