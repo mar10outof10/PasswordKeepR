@@ -1,0 +1,16 @@
+<div class="modal-bg">
+
+  <div class="modal-content">
+    <div class="warning-text">
+      <span>Are you sure you want to Delete this organization?</span>
+    </div>
+
+    <div class="button-row">
+      <form action="/orgs/<%= org.org_id %>/delete" method="POST">
+        <button type="submit" class="btn btn-danger ">DELETE ORG</button>
+        <button type="button" class="modal-cancel btn btn-secondary">Cancel</button>
+      </form>
+    </div>
+
+  </div>
+</div>
