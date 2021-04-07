@@ -14,6 +14,10 @@
         <h1 class="mb-3 mt-3">Organizations</h1>
       </div>
       <section class="articles-container">
+        <% if (orgs.length === 0) { %>
+          <h4 class="m-2 mt-3">You currently have no organizations</h4>
+          <div class='m-2'><a href="/orgs/new">Click here </a>to add an organization</div>
+          <% } %>
         <% for (org of orgs) { %>
           <article class="art-main">
             <div class="art-icon-large">
