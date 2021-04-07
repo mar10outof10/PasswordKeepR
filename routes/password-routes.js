@@ -73,32 +73,14 @@ router.post('/', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const newPassObj = { label, url, username, password, category, orgId, userId }
 
-  if (orgId !== '') {
-    // an org was provided -> check user is admin before saving
-    userIsOrgAdmin(userId, orgId)
-    .then(isAdmin => {
-      if (!isAdmin) {
-        return res.status(401).send();
-      }
-      return addPassword(newPassObj)
-    })
-    .then(values => {
-      // res.json(newPassObj);
-      res.redirect('/passwords');
-    })
-    .catch(err => {
-      res.json(err);
-    })
-  } else {
-    addPassword(newPassObj)
-    .then(values => {
-      // res.json(newPassObj);
-      res.redirect('/passwords');
-    })
-    .catch(err => {
-      res.json(err);
-    })
-  }
+  let promiseChain = Promise.resolve();
+  if (orgId !== '') promiseChain = promiseChain.then(() => userIsOrgAdmin(userId, orgId));
+                    promiseChain = promiseChain.then(admin => {
+                      if (admin !== false) { return addPassword(newPassObj); }
+                      else { return Promise.reject(); }
+                    });
+                    promiseChain = promiseChain.then(() => res.redirect('/passwords'));
+                    promiseChain = promiseChain.catch(() => res.status(401).send());
 });
 
 
