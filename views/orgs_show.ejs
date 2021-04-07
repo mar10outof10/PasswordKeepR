@@ -107,16 +107,16 @@
             <div class="org-member-text">
             User ID: <%= member.id %>   |   User email: <%= member.email %>  |
             </div>
-            <% if (member.is_admin) { %>
             <div class="org-admin-icon">
-              <% if (isAdmin) { %>
+              <% if (isAdmin && member.id !== userId) { %>
                 <form action="<%= orgId %>/<%= member.id %>/delete" method="POST">
-
+                  <button type="submit" class="btn-danger btn">&#128465;&#65039;</button>
                 </form>
               <% } %>
+              <% if (member.is_admin) { %>
               <i class="bi bi-key"></i>
+              <% } %>
             </div>
-            <% } %>
           </div>
         </article>
       </section>

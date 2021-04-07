@@ -73,7 +73,8 @@ router.post('/', isAuthenticated, (req, res) => {
 router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
-  const templateVars = { orgId };
+  const templateVars = { orgId, userId };
+  console.log(templateVars);
   // checks if query param for error exists
   if (req.query.error) {
     templateVars.error = req.query.error;
