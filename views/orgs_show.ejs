@@ -148,7 +148,7 @@
         </article>
       </section>
       <% } %>
-      <% if (member.is_admin) { %>
+      <% if (isAdmin) { %>
         <form action="/orgs/<%= member.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= member.name %>?');">
           <button type="button" class="btn btn-danger modal-call">DELETE ORG</button>
         </form>
