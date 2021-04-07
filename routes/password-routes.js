@@ -4,7 +4,7 @@ const router  = express.Router();
 const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
 const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess } = require('./helpers');
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getAllOrgsWhereAdmin } = require('../db/queries/org-queries');
+const { getAllOrgs, getAllOrgsWhereAdmin, userIsOrgAdmin } = require('../db/queries/org-queries');
 
 /* Password dashboard
 * logged in user  -> render passwords_index
@@ -72,15 +72,34 @@ router.post('/', isAuthenticated, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
   const newPassObj = { label, url, username, password, category, orgId, userId }
-  addPassword(newPassObj)
-  .then(password => {
-    // res.json(newPassObj);
-    res.redirect('/passwords');
-  })
-  .catch(err => {
-    res.json(err);
-  })
-})
+
+  if (orgId !== '') {
+    // an org was provided -> check user is admin before saving
+    userIsOrgAdmin(userId, orgId)
+    .then(isAdmin => {
+      if (!isAdmin) {
+        return res.status(401).send();
+      }
+      return addPassword(newPassObj)
+    })
+    .then(values => {
+      // res.json(newPassObj);
+      res.redirect('/passwords');
+    })
+    .catch(err => {
+      res.json(err);
+    })
+  } else {
+    addPassword(newPassObj)
+    .then(values => {
+      // res.json(newPassObj);
+      res.redirect('/passwords');
+    })
+    .catch(err => {
+      res.json(err);
+    })
+  }
+});
 
 
 /* Edit individual password
@@ -93,13 +112,30 @@ router.post('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
   const editPassObj = { label, url, username, password, category, userId, orgId };
 
-  editPassword(passwordId, editPassObj)
-  .then(editedPassObj => {
-    res.redirect(`/passwords`);
-  })
-  .catch(err => {
-    res.json(err);
-  });
+  if (orgId !== '') {
+    // an org was provided -> check user is admin before saving
+    userIsOrgAdmin(userId, orgId)
+    .then(isAdmin => {
+      if (!isAdmin) {
+        return res.status(401).send();
+      }
+      editPassword(passwordId, editPassObj)
+      .then(editedPassObj => {
+        res.redirect(`/passwords`);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+    });
+  } else {
+    editPassword(passwordId, editPassObj)
+    .then(editedPassObj => {
+      res.redirect(`/passwords`);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+  }
 });
 
 /* Delete individual password
