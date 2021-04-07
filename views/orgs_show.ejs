@@ -83,9 +83,9 @@
           <div class="button-container col-sm-4">
 
             <div class="form-check col-sm-8">
-              <input class="form-check-input" type="checkbox" id="org-update-check">
-              <label class="form-check-label" for="org-update-check">
-                Confirm update?
+              <input class="form-check-input" type="checkbox" name="admin" value="true">
+              <label class="form-check-label" for="org-admin">
+                Make admin?
               </label>
             </div>
             <button type="submit" id="org-update" class="btn btn-primary">Add User</button>
@@ -109,6 +109,11 @@
             </div>
             <% if (member.is_admin) { %>
             <div class="org-admin-icon">
+              <% if (isAdmin) { %>
+                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST">
+
+                </form>
+              <% } %>
               <i class="bi bi-key"></i>
             </div>
             <% } %>
