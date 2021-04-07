@@ -27,23 +27,26 @@
               <header>
                 <% if (org.is_admin) { %>
                 <form action="/orgs/<%= org.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= org.name %>?');">
-                  <button type="submit" class="btn btn-danger">DELETE ORG</button>
+                  <button type="submit" class="btn btn-danger ">DELETE ORG</button>
                 </form>
                 <% } %>
                 <span class="art-url"><%= org.name %></span>
-                  <form action="/orgs/<%= org.org_id %>" method="GET">
-                    <button type="submit" class="btn btn-primary">
-                      <i class="bi bi-eye-fill"> View </i>
-                    </button>
-                  </form>
               </header>
 
-              <footer class="org-footer">
-                <div class="art-username">
-                  <span class="art-label">Members:</span><span><%= org.count %></span>
+              <footer class="orgs-footer">
+                <div class="orgs-info">
+
+                    <div>
+                      <span class="orgs-label"><b>Members:</b>  <%= org.count %> </span>
+                    </div>
+
+                    <div>
+                      <span class="orgs-label"><b>Join date:</b> <%= org.joined_at.toLocaleDateString('en-CA') %></span>
+                    </div>
+
                 </div>
-                <div class="art-password">
-                  <span class="art-label">Join date:</span><span><%= org.joined_at.toLocaleDateString('en-CA') %></span>
+                <div class="orgs-interactions">
+                  <a class="" href="/orgs/<%= org.org_id %>"><i class="bi bi-pencil-fill text-dark mx-2"></i></a>
                 </div>
               </footer>
 
