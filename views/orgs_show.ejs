@@ -6,6 +6,7 @@
   </head>
 
   <body>
+    <%- include('partials/_modal-warning') %>
     <%- include('partials/_header') %>
     <main class="container">
 
@@ -37,15 +38,16 @@
 
             <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
 
-              <div class="form-check col-sm-3">
-                <input class="form-check-input" type="checkbox" id="org-update-check">
-                <label class="form-check-label" for="org-update-check">
-                  Confirm update?
-                </label>
-              </div>
-              <div class="button-row">
-                <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
-              </div>
+
+            <div class="form-check col-sm-3">
+              <input class="form-check-input" type="checkbox" id="org-update-check">
+              <label class="form-check-label" for="org-update-check">
+                Confirm update?
+              </label>
+            </div>
+            <div class="d-flex button-row justify-content-start">
+              <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
+
             </div>
             <!-- form to add users-->
           </form>
@@ -89,6 +91,7 @@
 
           <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
 
+
               <div class="form-check col-sm-3">
                 <input class="form-check-input" name="admin" value="true" type="checkbox" id="make-admin-check">
                 <label class="form-check-label" for="make-admin-check">
@@ -98,6 +101,7 @@
               <div class="button-row">
                 <button type="submit" id="org-update" class="btn btn-primary ml-2">Add user</button>
               </div>
+
             </div>
 
           </form>
@@ -146,9 +150,9 @@
         </article>
       </section>
       <% } %>
-      <% if (org.is_admin) { %>
+      <% if (member.is_admin) { %>
         <form action="/orgs/<%= org.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= org.name %>?');">
-          <button type="submit" class="btn btn-danger ">DELETE ORG</button>
+          <button type="button" class="btn btn-danger modal-call">DELETE ORG</button>
         </form>
         <% } %>
     </main>
