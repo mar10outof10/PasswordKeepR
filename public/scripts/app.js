@@ -81,6 +81,7 @@ $(() => {
     $('#add-button').removeClass('text-warning');
   });
 
+  // expands or collapses form at /orgs/:id
   $('.expand-collapse').on('click', function () {
     if ($('.expand-collapse').attr('value') === "down") {
       $('#orgs-show-options').slideUp();
