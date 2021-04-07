@@ -45,8 +45,8 @@ const getAllPasswords = function(userId) {
       ORDER BY org_name NULLS FIRST, category NULLS FIRST, label)
     SELECT *,
           CASE
-            WHEN user_id = 11 THEN TRUE
-            WHEN org_id IN (SELECT org_id FROM org_users WHERE user_id=11 AND is_admin=TRUE) THEN TRUE
+            WHEN user_id = $1 THEN TRUE
+            WHEN org_id IN (SELECT org_id FROM org_users WHERE user_id=$1 AND is_admin=TRUE) THEN TRUE
             ELSE FALSE
           END has_write_access
     FROM cte
