@@ -6,6 +6,7 @@
   </head>
 
   <body>
+    <%- include('partials/_modal-warning') %>
     <%- include('partials/_header') %>
     <main class="container">
       <% if (isAdmin) { %>
@@ -38,7 +39,7 @@
                 Confirm update?
               </label>
             </div>
-            <div class="button-row">
+            <div class="d-flex button-row justify-content-start">
               <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
             </div>
           </div>
@@ -90,7 +91,7 @@
                 Confirm update?
               </label>
             </div>
-            <div class="button-row">
+            <div class="d-flex button-row justify-content-start">
               <button type="button" id="org-update" class="btn btn-primary ml-2">Add user</button>
             </div>
           </div>
@@ -135,9 +136,9 @@
         </article>
       </section>
       <% } %>
-      <% if (org.is_admin) { %>
+      <% if (member.is_admin) { %>
         <form action="/orgs/<%= org.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= org.name %>?');">
-          <button type="submit" class="btn btn-danger ">DELETE ORG</button>
+          <button type="button" class="btn btn-danger modal-call">DELETE ORG</button>
         </form>
         <% } %>
     </main>

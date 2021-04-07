@@ -27,11 +27,18 @@ $(() => {
              // JQUERY MAGIC SECTION //
 
   // Generate generate password modal
-  $('.generate-password').on('click', function () {
+  $('.modal-call').on('click', function () {
     $('.modal-bg').css('display', 'block');
     $('.modal-content').css('display', 'block');
     $('.length-input').focus();
   })
+
+  // Cancel password modal
+  $('.modal-cancel').on('click', function () {
+    $('.modal-bg').css('display', 'none');
+    $('.modal-content').css('display', 'none');
+    $('.pw-error').css('display', 'none');
+  });
 
   // Keep buttons activated on click
 
@@ -45,12 +52,6 @@ $(() => {
     $(this).addClass('active');
   })
 
-  // Cancel password modal
-  $('.pw-cancel').on('click', function () {
-    $('.modal-bg').css('display', 'none');
-    $('.modal-content').css('display', 'none');
-    $('.pw-error').css('display', 'none');
-  });
 
   // Hide or show password on checkbox
   $('#show-password').on('click', function () {
