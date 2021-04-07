@@ -36,51 +36,15 @@ $(() => {
   // Keep buttons activated on click
 
   // Lowercase option
-  $('.lowercase-choice-yes').on('click', function () {
-    $('.lowercase-choice-no').removeClass('active')
+  $('.choice-yes').on('click', function () {
+    $(this).siblings().removeClass('active')
     $(this).addClass('active');
   })
 
-  $('.lowercase-choice-no').on('click', function () {
-    $('.lowercase-choice-yes').removeClass('active')
+  $('.choice-no').on('click', function () {
+    $(this).siblings().removeClass('active')
     $(this).addClass('active');
   })
-
-  // Uppercase option
-  $('.uppercase-choice-yes').on('click', function () {
-    $('.uppercase-choice-no').removeClass('active')
-    $(this).addClass('active');
-  })
-
-  $('.uppercase-choice-no').on('click', function () {
-    $('.uppercase-choice-yes').removeClass('active')
-    $(this).addClass('active');
-  })
-
-  // Numbers
-  $('.number-choice-yes').on('click', function () {
-    console.log('yo')
-    $('.number-choice-no').removeClass('active')
-    $(this).addClass('active');
-  })
-
-  $('.number-choice-no').on('click', function () {
-    $('.number-choice-yes').removeClass('active')
-    $(this).addClass('active');
-  })
-
-  // Symbols
-  $('.symbol-choice-yes').on('click', function () {
-    console.log('yo')
-    $('.symbol-choice-no').removeClass('active')
-    $(this).addClass('active');
-  })
-
-  $('.symbol-choice-no').on('click', function () {
-    $('.symbol-choice-yes').removeClass('active')
-    $(this).addClass('active');
-  });
-
 
   // Cancel password modal
   $('.pw-cancel').on('click', function () {
@@ -119,10 +83,10 @@ $(() => {
   $('.pw-generate').on('click', function () {
     // get input for all params
     const passwordLength = $('.pw-length').val();
-    const lowerCase = $('.lowercase-choice-yes').hasClass('active');
-    const upperCase = $('.uppercase-choice-yes').hasClass('active');
-    const containsNumbers = $('.number-choice-yes').hasClass('active');
-    const containsSymbols = $('.symbol-choice-yes').hasClass('active');
+    const lowerCase = $('.lower-yes').hasClass('active');
+    const upperCase = $('.upper-yes').hasClass('active');
+    const containsNumbers = $('.number-yes').hasClass('active');
+    const containsSymbols = $('.symbol-yes').hasClass('active');
     // store them in object
     const stringParams = { passwordLength, lowerCase, upperCase, containsNumbers, containsSymbols };
     // if password length is too long or too short...
