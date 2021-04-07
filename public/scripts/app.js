@@ -82,6 +82,17 @@ $(() => {
     $('#add-button').removeClass('text-warning');
   });
 
+  // expands or collapses form at /orgs/:id
+  $('.expand-collapse').on('click', function () {
+    if ($('.expand-collapse').attr('value') === "down") {
+      $('#orgs-show-options').slideUp();
+      $('.expand-collapse').attr('value', 'up');
+    } else {
+      $('#orgs-show-options').slideDown();
+      $('.expand-collapse').attr('value', 'down');
+    }
+  })
+
 
   $('#by-email').on('click', function () {
     $('#inputUser').attr({type: 'email', placeholder: 'user@email.com'});
