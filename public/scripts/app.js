@@ -2,11 +2,11 @@
 
 const generateRandomString = (stringParams) => {
   let chars = "";
-  if (stringParams.upperCase) {
-    chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  }
   if (stringParams.lowerCase) {
     chars += "abcdefghijklmnopqrstuvwxyz";
+  }
+  if (stringParams.upperCase) {
+    chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   }
   if (stringParams.containsNumbers) {
     chars += "1234567890";
@@ -26,7 +26,7 @@ $(() => {
 
              // JQUERY MAGIC SECTION //
 
-  // Generate password modal
+  // Generate generate password modal
   $('.generate-password').on('click', function () {
     $('.modal-bg').css('display', 'block');
     $('.modal-content').css('display', 'block');
@@ -35,7 +35,6 @@ $(() => {
 
   // Keep buttons activated on click
 
-  // Lowercase option
   $('.choice-yes').on('click', function () {
     $(this).siblings().removeClass('active')
     $(this).addClass('active');
