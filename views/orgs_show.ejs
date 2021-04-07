@@ -46,9 +46,19 @@
           <i class="pr-3 text-dark bi bi-arrow-down-right bi-5x" style="font-size: 2rem"></i>
           <h1 class="mb-0">Add members to <%= orgName %></h1>
         </div>
-        <% if (locals.error === 'orgExists') {%>
+        <% if (locals.error === 'userDNE') {%>
           <div class="alert alert-danger" role="alert">
-            Organisation already exists in database
+            User does not exist
+          </div>
+        <% }%>
+        <% if (locals.error === 'userInOrg') {%>
+          <div class="alert alert-danger" role="alert">
+            User is already in <%= orgName %>
+          </div>
+        <% }%>
+        <% if (locals.error === 'idNotInt') {%>
+          <div class="alert alert-danger" role="alert">
+            Only numbers allowed in field when searching by id
           </div>
         <% }%>
         <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
@@ -58,15 +68,15 @@
               <label for="inputName" class="col-form-label">Add user by:</label>
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-info active">
-                  <input type="radio" name="query_type" id="by-email" autocomplete="off" checked> email
+                  <input type="radio" name="query_type" id="by-email" autocomplete="off" value="email" checked> email
                 </label>
                 <label class="btn btn-info">
-                  <input type="radio" name="query_type" id="by-userid" autocomplete="off"> userId
+                  <input type="radio" name="query_type" id="by-userid" autocomplete="off" value="userId"> userId
                 </label>
               </div>
             </div>
             <div class="col-sm-8">
-              <input type="text" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com">
+              <input type="email" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com" required>
             </div>
           </div>
 
@@ -78,7 +88,7 @@
                 Confirm update?
               </label>
             </div>
-            <button type="button" id="org-update" class="btn btn-primary">Add User</button>
+            <button type="submit" id="org-update" class="btn btn-primary">Add User</button>
           </div>
 
         </form>
