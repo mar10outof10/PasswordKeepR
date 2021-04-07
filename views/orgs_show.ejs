@@ -26,8 +26,7 @@
           <div class="form-group row">
             <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
             <div class="col-sm-9">
-              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName"
-                placeholder="Org Name">
+              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="Org Name" required>
             </div>
           </div>
 
@@ -109,11 +108,21 @@
             <div class="org-member-text">
             User ID: <%= member.id %>   |   User email: <%= member.email %>  |
             </div>
-            <% if (member.is_admin) { %>
             <div class="org-admin-icon">
+              <% if (isAdmin && member.id !== userId) { %>
+                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete user <%= member.email %> from <%= orgName %>?')">
+                  <button type="submit" class="btn-danger btn">&#128465;&#65039;</button>
+                </form>
+              <% } %>
+              <% if (isAdmin && member.id !== userId) { %>
+                <form action="<%= orgId %>/<%= member.id %>/update" method="POST">
+                  <button type="submit" class="btn-info btn"> <i class="bi bi-key"></i></button>
+                </form>
+              <% } %>
+              <% if (member.is_admin) { %>
               <i class="bi bi-key"></i>
+              <% } %>
             </div>
-            <% } %>
           </div>
         </article>
       </section>

@@ -73,7 +73,8 @@ router.post('/', isAuthenticated, (req, res) => {
 router.get('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
-  const templateVars = { orgId };
+  const templateVars = { orgId, userId };
+  console.log(templateVars);
   // checks if query param for error exists
   if (req.query.error) {
     templateVars.error = req.query.error;
@@ -243,11 +244,19 @@ router.post('/:id/:userid/update', isAuthenticated, (req, res) => {
   userIsOrgAdmin(userId, orgId)
   .then(isAdmin => {
     if (isAdmin) {
+      return userIsOrgAdmin(userIdToModify, orgId)
       return updateUserInOrg(userIdToModify, orgId, admin);
     }
     return Promise.reject(401);
   })
-  .then(() => res.redirect(`/orgs/${orgId}/`))
+  .then((userIsAdmin) => {
+    if (userIsAdmin) {
+      return updateUserInOrg(userIdToModify, orgId, false);
+    } else {
+      return updateUserInOrg(userIdToModify, orgId, true);
+    }
+  })
+  .then(() => res.redirect(`/orgs/${orgId}`))
   .catch(status => res.status(status).send());
 })
 module.exports = router;
