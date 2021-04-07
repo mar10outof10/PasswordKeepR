@@ -165,10 +165,7 @@ router.post('/:id', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const userToAdd = req.body.user_name;
   const queryType = req.body.query_type;
-  console.log('queryType', queryType);
-  console.log('userId', userId);
-  console.log('userToAdd', userToAdd);
-  console.log('orgId', orgId);
+  let id;
 
   const isAdminPromise = userIsOrgAdmin(userId, orgId)
   let userExistsPromise;
@@ -179,22 +176,29 @@ router.post('/:id', isAuthenticated, (req, res) => {
   }
   Promise.all([isAdminPromise, userExistsPromise])
   .then(values => {
-    console.log(values);
     const isAdmin = values[0];
     const userExists = values[1];
     if (!userExists) {
       return res.redirect(`/orgs/${orgId}?error=userDNE`);
     }
     if (isAdmin && userExists) {
-      console.log('AHHHH');
-      return [userIsInorg(user.id), user.id];
+      if (queryType === 'email') {
+        return getUserByEmail(userToAdd);
+      } else if (queryType === 'userId') {
+        return getUserById(userToAdd);
+      }
     }
+    return res.status(401).send(); // if user not admin
   })
-  .then(values => {
-    const inOrg = values[0]
-    const userId = values[1].id;
-    if (!inOrg) {
-      addUserToOrg(userId, orgId, makeAdmin)
+  .then(user => {
+    id = user.id;
+    return userIsInOrg(id, orgId)
+  })
+  .then(userInOrg => {
+    if (!userInOrg) {
+      addUserToOrg(id, orgId, makeAdmin)
+    } else {
+      return res.redirect(`/orgs/${orgId}?error=userInOrg`);
     }
   })
   .then(() => res.redirect(`/orgs/${orgId}`))

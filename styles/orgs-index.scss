@@ -22,4 +22,42 @@
     font-size: xx-large;
     padding-right: 1em;
   }
+
+  @media only screen and (max-width: 767px) {
+
+    .orgs-footer {
+      flex-direction: column;
+    }
+
+    .orgs-info {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .art-body {
+      width: 100%;
+      border-left-style: unset;
+
+      footer {
+        flex-direction: column;
+      }
+
+      .art-login-interactions {
+        justify-content: space-evenly;
+      }
+    }
+
+    .art-main {
+      height: unset;
+    }
+
+    .art-icon-large {
+      display: none;
+    }
+
+    .art-icon-small {
+      display: inline;
+      padding: 5px;
+    }
+  }
 }
