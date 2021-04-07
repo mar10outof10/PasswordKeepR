@@ -131,6 +131,11 @@
         </article>
       </section>
       <% } %>
+      <% if (org.is_admin) { %>
+        <form action="/orgs/<%= org.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= org.name %>?');">
+          <button type="submit" class="btn btn-danger ">DELETE ORG</button>
+        </form>
+        <% } %>
     </main>
     <%- include('partials/_scripts') %>
   </body>
