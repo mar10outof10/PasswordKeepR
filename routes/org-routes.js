@@ -1,7 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 
-const { getUserById } = require('../db/queries/user-queries');
+const { getUserById, getUserByEmail, userEmailExists, userIdExists } = require('../db/queries/user-queries');
 const { getAllOrgs, getOrgById, getOrgByName, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser, userIsInOrg } = require('../db/queries/org-queries');
 const { isAuthenticated, isNotAuthenticated } = require('./helpers');
 const { reset } = require('nodemon');
@@ -163,14 +163,42 @@ router.post('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const makeAdmin = req.body.admin || false;
   const userId = req.session.user_id;
-  const userIdToAdd = req.params.userid;
+  const userToAdd = req.body.user_name;
+  const queryType = req.body.query_type;
+  let id;
 
-  console.log('userId', userId);
-  console.log('orgId', orgId);
-  userIsOrgAdmin(userId, orgId)
-  .then(isOrgAdmin => {
-    if (isOrgAdmin) {
-      return addUserToOrg(userIdToAdd, orgId, makeAdmin);
+  const isAdminPromise = userIsOrgAdmin(userId, orgId)
+  let userExistsPromise;
+  if (queryType === 'userId') {
+    userExistsPromise = userIdExists(userToAdd);
+  } else if (queryType === 'email') {
+    userExistsPromise = userEmailExists(userToAdd);
+  }
+  Promise.all([isAdminPromise, userExistsPromise])
+  .then(values => {
+    const isAdmin = values[0];
+    const userExists = values[1];
+    if (!userExists) {
+      return res.redirect(`/orgs/${orgId}?error=userDNE`);
+    }
+    if (isAdmin && userExists) {
+      if (queryType === 'email') {
+        return getUserByEmail(userToAdd);
+      } else if (queryType === 'userId') {
+        return getUserById(userToAdd);
+      }
+    }
+    return res.status(401).send(); // if user not admin
+  })
+  .then(user => {
+    id = user.id;
+    return userIsInOrg(id, orgId)
+  })
+  .then(userInOrg => {
+    if (!userInOrg) {
+      addUserToOrg(id, orgId, makeAdmin)
+    } else {
+      return res.redirect(`/orgs/${orgId}?error=userInOrg`);
     }
   })
   .then(() => res.redirect(`/orgs/${orgId}`))
