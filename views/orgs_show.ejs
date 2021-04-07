@@ -52,7 +52,14 @@
             <img src="https://i.pinimg.com/originals/25/43/8e/25438ea8bd6b720289d8a01e3da82c6f.png">
           </div>
           <div class="orgs-body">
-            User ID: <%= member.id %>   |   User email: <%= member.email %>
+            <div class="org-member-text">
+            User ID: <%= member.id %>   |   User email: <%= member.email %>  |
+            </div>
+            <% if (member.is_admin) { %>
+            <div class="org-admin-icon">
+              <i class="bi bi-key"></i>
+            </div>
+            <% } %>
           </div>
         </article>
       </section>
