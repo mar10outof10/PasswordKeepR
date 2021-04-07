@@ -81,13 +81,13 @@ $(() => {
     $('#add-button').removeClass('text-warning');
   });
 
-  $('#orgs-show-options-header').on('click', function () {
-    if ($('#the-button').attr('value') === "down") {
+  $('.expand-collapse').on('click', function () {
+    if ($('.expand-collapse').attr('value') === "down") {
       $('#orgs-show-options').slideUp();
-      $('#the-button').attr('value', 'up');
+      $('.expand-collapse').attr('value', 'up');
     } else {
       $('#orgs-show-options').slideDown();
-      $('#the-button').attr('value', 'down');
+      $('.expand-collapse').attr('value', 'down');
     }
   })
 
