@@ -16,7 +16,7 @@
       <h1 class="mb-4">Login</h1>
       <% if (locals.errorMsg) {%>
       <div class="alert alert-danger" role="alert">
-        <%= errorMsg %>
+        <%= errorMsg %>w
       </div>
       <% }%>
       <form class="login-form-container" action="/login" method="POST">
@@ -32,15 +32,13 @@
             <input type="password" name="password" id="password" class="form-control" placeholder="password">
           </div>
         </div>
-        <div class="button-container">
-          <div class="button-row justify-content-start">
+        <div class="btn-group">
+          <div class="button-row justify-content-between">
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/register" class="btn btn-secondary">Register</a>
           </div>
         </div>
       </form>
-      <div class="register-link">
-        <a href="/register">Register now</a>
-      </div>
     </div>
   </main>
     <%- include('partials/_scripts') %>
