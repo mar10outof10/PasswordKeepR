@@ -13,7 +13,7 @@
   display: none;
   position: fixed;
   top: 0%;
-  left: 9%;
+  left: 10%;
   z-index: 2;
   background-color: #fefefe;
   margin: 15% auto;
@@ -31,4 +31,11 @@
 
 .modal-content > h3 {
   padding-bottom: .7em;
+}
+
+@media only screen and (max-width: 450px) {
+  .modal-content {
+    left: 5%;
+    width: 90%;
+  }
 }
