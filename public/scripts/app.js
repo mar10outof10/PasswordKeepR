@@ -30,6 +30,7 @@ $(() => {
   $('.generate-password').on('click', function () {
     $('.modal-bg').css('display', 'block');
     $('.modal-content').css('display', 'block');
+    $('.length-input').focus();
   })
 
   // Keep buttons activated on click
