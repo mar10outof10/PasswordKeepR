@@ -4,7 +4,7 @@ const router  = express.Router();
 const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
 const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess } = require('./helpers');
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs } = require('../db/queries/org-queries');
+const { getAllOrgs, getAllOrgsWhereAdmin } = require('../db/queries/org-queries');
 
 /* Password dashboard
 * logged in user  -> render passwords_index
@@ -31,7 +31,7 @@ router.get('/', isAuthenticated, (req, res) => {
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const getUserPromise = getUserById(userId);
-  const getOrgsPromise = getAllOrgs(userId);
+  const getOrgsPromise = getAllOrgsWhereAdmin(userId);
 
   Promise.all([getUserPromise, getOrgsPromise])
   .then(values => {
@@ -51,7 +51,7 @@ router.get('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
 
   const getPasswordPromise = getPasswordById(passwordId);
   const getUserPromise = getUserById(userId);
-  const getOrgsPromise = getAllOrgs(userId);
+  const getOrgsPromise = getAllOrgsWhereAdmin(userId);
 
   Promise.all([getPasswordPromise, getUserPromise, getOrgsPromise])
   .then(values => {

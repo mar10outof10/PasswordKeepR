@@ -19,6 +19,25 @@ const getAllOrgs = function (userId) {
 };
 
 /**
+ * Gets all organizations a user is an admin of.
+ *
+ * @param {String} userId          The id of the user.
+ * @return {Promise<[object]>}     A promise that resolves to an array of organization objects.
+ */
+ const getAllOrgsWhereAdmin = function (userId) {
+  return db.query(`
+    SELECT orgs.*
+    FROM orgs
+    JOIN org_users ON org_id = orgs.id
+    JOIN users ON user_id = users.id
+    WHERE user_id = $1
+    AND is_admin = TRUE
+    ORDER BY name;
+  `, [userId])
+    .then(res => res.rows);
+};
+
+/**
  * Gets the organization for a given orgId.
  *
  * @param {String} userId          The id of the org.
@@ -257,4 +276,4 @@ const getOrgSummaryForUser = function(userId) {
   `, [userId])
   .then(res => res.rows);
 }
-module.exports = { getAllOrgs, getOrgById, getOrgByName, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, getOrgSummaryForUser };
+module.exports = { getAllOrgs, getAllOrgsWhereAdmin, getOrgById, getOrgByName, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, getOrgSummaryForUser };
