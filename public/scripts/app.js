@@ -174,9 +174,14 @@ $(() => {
  // compare passwords on registration form
   $('#password, #confirm-password').on('keyup', function() {
     if ($('#password').val() === $('#confirm-password').val()) {
-      $('.register-button').removeAttr('disabled')
+      $('.register-button').removeAttr('disabled');
+      $('[data-toggle="popover"]').popover('hide');
     } else {
-      $('.register-button').prop('disabled', 'true')
+      $('.register-button').prop('disabled', 'true');
+      $('#confirm-password').popover('show');
+      setTimeout(function() {
+        $('[data-toggle="popover"]').popover('hide');
+      }, 2000);
     }
   });
 
