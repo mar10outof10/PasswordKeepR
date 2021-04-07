@@ -12,38 +12,38 @@
         <!-- form to edit org name -->
         <div class="d-flex align-items-center">
           <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
-          <h3 class="mb-4 mt-3">Edit name for <%= orgName %></h3>
+          <h3 class="mb-3 mt-3">Edit name for <%= orgName %></h3>
         </div>
         <% if (locals.error === 'orgExists') {%>
           <div class="alert alert-danger" role="alert">
             Organisation already exists in database
           </div>
         <% }%>
-        <form action="/orgs/<%= orgId %>/update" method="POST" class="justify-content-center">
+
+
+        <form action="/orgs/<%= orgId %>/update" method="POST" class="form-group pt-2">
 
           <div class="form-group row">
             <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
             <div class="col-sm-9">
-              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName"
-                placeholder="Org Name">
+              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="Org Name" required>
             </div>
           </div>
 
-          <div class="button-container col-sm-4">
+          <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
 
-            <div class="form-check col-sm-8">
+            <div class="form-check col-sm-3">
               <input class="form-check-input" type="checkbox" id="org-update-check">
               <label class="form-check-label" for="org-update-check">
                 Confirm update?
               </label>
             </div>
-            <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
+            <button type="button" id="org-update" class="btn btn-primary ml-2">Edit Name</button>
           </div>
           <!-- form to add users-->
         </form>
 
         <div class="d-flex align-items-center">
-          <i class="pr-3 text-dark bi bi-arrow-down-right bi-5x" style="font-size: 2rem"></i>
           <h3 class="mb-4 mt-3">Add members to <%= orgName %></h3>
         </div>
         <% if (locals.error === 'userDNE') {%>
@@ -64,9 +64,12 @@
         <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
 
           <div class="form-group row">
-            <div class="col-sm-3">
-              <label for="inputName" class="col-form-label">Add user by:</label>
+            <div class="d-flex row-sm-3 justify-content-between">
+              <label for="inputName" class="col-form-label pl-3 pr-2">Add user by:</label>
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <div class="col-sm-8">
+                  <input type="email" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com" required>
+                </div>
                 <label class="btn btn-info active">
                   <input type="radio" name="query_type" id="by-email" autocomplete="off" value="email" checked> email
                 </label>
@@ -75,20 +78,17 @@
                 </label>
               </div>
             </div>
-            <div class="col-sm-8">
-              <input type="email" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com" required>
-            </div>
           </div>
 
-          <div class="button-container col-sm-4">
+         <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
 
-            <div class="form-check col-sm-8">
-              <input class="form-check-input" type="checkbox" name="admin" value="true">
-              <label class="form-check-label" for="org-admin">
-                Make admin?
+            <div class="form-check col-sm-3">
+              <input class="form-check-input" type="checkbox" id="org-update-check">
+              <label class="form-check-label" for="org-update-check">
+                Confirm update?
               </label>
             </div>
-            <button type="submit" id="org-update" class="btn btn-primary">Add User</button>
+            <button type="button" id="org-update" class="btn btn-primary ml-2">Add user</button>
           </div>
 
         </form>
@@ -109,8 +109,13 @@
             </div>
             <div class="org-admin-icon">
               <% if (isAdmin && member.id !== userId) { %>
-                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST">
+                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete user <%= member.email %> from <%= orgName %>?')">
                   <button type="submit" class="btn-danger btn">&#128465;&#65039;</button>
+                </form>
+              <% } %>
+              <% if (isAdmin && member.id !== userId) { %>
+                <form action="<%= orgId %>/<%= member.id %>/update" method="POST">
+                  <button type="submit" class="btn-info btn"> <i class="bi bi-key"></i></button>
                 </form>
               <% } %>
               <% if (member.is_admin) { %>
