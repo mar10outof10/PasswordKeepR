@@ -171,15 +171,14 @@ $(() => {
     }
   });
 
-  // compare passwords on registration form
-  // $('#password, #confirm-password').on('keyup', function() {
-  //   if ($('#password').val() === $('#confirm-password').val()) {
-  //     console.log('passwords are the same')
-  //     $('.register-button').removeClass('disabled');
-  //   } else {
-  //     $('.register-button').addClass('disabled');
-  //   }
-  // });
+ // compare passwords on registration form
+  $('#password, #confirm-password').on('keyup', function() {
+    if ($('#password').val() === $('#confirm-password').val()) {
+      $('.register-button').removeAttr('disabled')
+    } else {
+      $('.register-button').prop('disabled', 'true')
+    }
+  });
 
   // enable popovers
   $('[data-toggle="popover"]').popover().on('click', function() {
