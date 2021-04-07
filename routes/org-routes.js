@@ -159,7 +159,7 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
 * logged in user  -> add user to org in Db
 * else            -> go to /login
 */
-router.post('/:id/:userid', isAuthenticated, (req, res) => {
+router.post('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const makeAdmin = req.body.admin || false;
   const userId = req.session.user_id;
