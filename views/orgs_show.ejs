@@ -12,7 +12,7 @@
         <!-- form to edit org name -->
         <div class="d-flex align-items-center">
           <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
-          <h1 class="mb-0">Edit name for <%= orgName %></h1>
+          <h3 class="mb-4 mt-3">Edit name for <%= orgName %></h3>
         </div>
         <% if (locals.error === 'orgExists') {%>
           <div class="alert alert-danger" role="alert">
@@ -44,7 +44,7 @@
 
         <div class="d-flex align-items-center">
           <i class="pr-3 text-dark bi bi-arrow-down-right bi-5x" style="font-size: 2rem"></i>
-          <h1 class="mb-0">Add members to <%= orgName %></h1>
+          <h3 class="mb-4 mt-3">Add members to <%= orgName %></h3>
         </div>
         <% if (locals.error === 'userDNE') {%>
           <div class="alert alert-danger" role="alert">
@@ -94,7 +94,7 @@
         </form>
       <% } %>
 
-      <h1> Members of <%= orgName %> </h1>
+      <h3 class="mb-4 mt-3"> Members of <%= orgName %> </h3>
 
       <% for (member of members) { %>
       <section class="articles-container">
