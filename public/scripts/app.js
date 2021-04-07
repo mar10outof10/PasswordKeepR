@@ -81,6 +81,16 @@ $(() => {
     $('#add-button').removeClass('text-warning');
   });
 
+  $('#orgs-show-options-header').on('click', function () {
+    if ($('#the-button').attr('value') === "down") {
+      $('#orgs-show-options').slideUp();
+      $('#the-button').attr('value', 'up');
+    } else {
+      $('#orgs-show-options').slideDown();
+      $('#the-button').attr('value', 'down');
+    }
+  })
+
 
   $('#by-email').on('click', function () {
     $('#inputUser').attr({type: 'email', placeholder: 'user@email.com'});

@@ -10,93 +10,99 @@
     <main class="container">
 
       <% if (isAdmin) { %>
-        <!-- form to edit org name -->
-        <div class="d-flex align-items-center">
-          <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
-          <h3 class="mb-3 mt-4">Edit <%= orgName %></h3>
+        <div id="orgs-show-options-header">
+          <button type="button" value="down" id="the-button">YAY</button>
         </div>
-        <% if (locals.error === 'orgExists') {%>
-          <div class="alert alert-danger" role="alert">
-            Organisation already exists in database
+        <section id="orgs-show-options">
+          <!-- form to edit org name -->
+          <div class="d-flex align-items-center">
+            <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
+            <h3 class="mb-3 mt-4">Edit <%= orgName %></h3>
           </div>
-        <% } %>
-
-
-        <form action="/orgs/<%= orgId %>/update" method="POST" class="form-group pt-2">
-
-          <div class="form-group row">
-            <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
-            <div class="col-sm-9">
-              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="Org Name" required>
+          <% if (locals.error === 'orgExists') {%>
+            <div class="alert alert-danger" role="alert">
+              Organisation already exists in database
             </div>
+          <% } %>
+
+
+          <form action="/orgs/<%= orgId %>/update" method="POST" class="form-group pt-2">
+
+            <div class="form-group row">
+              <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
+              <div class="col-sm-9">
+                <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="Org Name" required>
+              </div>
+            </div>
+
+            <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
+
+              <div class="form-check col-sm-3">
+                <input class="form-check-input" type="checkbox" id="org-update-check">
+                <label class="form-check-label" for="org-update-check">
+                  Confirm update?
+                </label>
+              </div>
+              <div class="button-row">
+                <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
+              </div>
+            </div>
+            <!-- form to add users-->
+          </form>
+
+          <div class="d-flex align-items-center">
+            <h3 class="mb-4 mt-3">Add members to <%= orgName %></h3>
           </div>
+          <% if (locals.error === 'userDNE') {%>
+            <div class="alert alert-danger" role="alert">
+              User does not exist
+            </div>
+          <% }%>
+          <% if (locals.error === 'userInOrg') {%>
+            <div class="alert alert-danger" role="alert">
+              User is already in <%= orgName %>
+            </div>
+          <% }%>
+          <% if (locals.error === 'idNotInt') {%>
+            <div class="alert alert-danger" role="alert">
+              Only numbers allowed in field when searching by id
+            </div>
+          <% }%>
+          <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
+
+            <div class="form-group row">
+              <div class="d-flex row-sm-3 justify-content-between">
+                <label for="inputName" class="col-form-label pl-3 pr-2">Add user by:</label>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <div class="col-sm-8">
+                    <input type="email" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com" required>
+                  </div>
+                  <label class="btn btn-info active">
+                    <input type="radio" name="query_type" id="by-email" autocomplete="off" value="email" checked> email
+                  </label>
+                  <label class="btn btn-info">
+                    <input type="radio" name="query_type" id="by-userid" autocomplete="off" value="userId"> userId
+                  </label>
+                </div>
+              </div>
+            </div>
 
           <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
 
-            <div class="form-check col-sm-3">
-              <input class="form-check-input" type="checkbox" id="org-update-check">
-              <label class="form-check-label" for="org-update-check">
-                Confirm update?
-              </label>
-            </div>
-            <div class="button-row">
-              <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
-            </div>
-          </div>
-          <!-- form to add users-->
-        </form>
-
-        <div class="d-flex align-items-center">
-          <h3 class="mb-4 mt-3">Add members to <%= orgName %></h3>
-        </div>
-        <% if (locals.error === 'userDNE') {%>
-          <div class="alert alert-danger" role="alert">
-            User does not exist
-          </div>
-        <% }%>
-        <% if (locals.error === 'userInOrg') {%>
-          <div class="alert alert-danger" role="alert">
-            User is already in <%= orgName %>
-          </div>
-        <% }%>
-        <% if (locals.error === 'idNotInt') {%>
-          <div class="alert alert-danger" role="alert">
-            Only numbers allowed in field when searching by id
-          </div>
-        <% }%>
-        <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
-
-          <div class="form-group row">
-            <div class="d-flex row-sm-3 justify-content-between">
-              <label for="inputName" class="col-form-label pl-3 pr-2">Add user by:</label>
-              <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <div class="col-sm-8">
-                  <input type="email" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com" required>
-                </div>
-                <label class="btn btn-info active">
-                  <input type="radio" name="query_type" id="by-email" autocomplete="off" value="email" checked> email
-                </label>
-                <label class="btn btn-info">
-                  <input type="radio" name="query_type" id="by-userid" autocomplete="off" value="userId"> userId
+              <div class="form-check col-sm-3">
+                <input class="form-check-input" name="admin" value="true" type="checkbox" id="make-admin-check">
+                <label class="form-check-label" for="make-admin-check">
+                  Make admin?
                 </label>
               </div>
+              <div class="button-row">
+                <button type="submit" id="org-update" class="btn btn-primary ml-2">Add user</button>
+              </div>
             </div>
-          </div>
 
-         <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
-
-            <div class="form-check col-sm-3">
-              <input class="form-check-input" name="admin" value="true" type="checkbox" id="make-admin-check">
-              <label class="form-check-label" for="make-admin-check">
-                Make admin?
-              </label>
-            </div>
-            <div class="button-row">
-              <button type="submit" id="org-update" class="btn btn-primary ml-2">Add user</button>
-            </div>
-          </div>
-
-        </form>
+          </form>
+        </section>
+        <!-- closes if (is_admin) tag -->
       <% } %>
       <div class="d-flex align-items-center">
         <% if(!isAdmin) { %>
