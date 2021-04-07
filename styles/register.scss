@@ -10,19 +10,23 @@
     flex-direction: column;
     align-items: center;
     width: 26em;
-    height: 22em;
+    height: 21em;
     background-color: white;
     margin-top: 4 em;
     border: 1px grey solid;
   }
 
-  .register-form-container {
-    width: 86%;
+  form{
+    width: 90%;
   }
 
   .register-title {
     display: flex;
     padding: 2em;
+  }
+
+  .alert {
+    margin-top: .5em;
   }
 
   @media only screen and (max-width: 575px) {
