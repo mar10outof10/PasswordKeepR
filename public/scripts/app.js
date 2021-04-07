@@ -106,6 +106,14 @@ $(() => {
     }
   });
 
+  $('#by-email').on('click', function () {
+    $('#inputUser').attr('placeholder', 'user@email.com');
+  });
+
+  $('#by-userid').on('click', function () {
+    $('#inputUser').attr('placeholder', '64');
+  });
+
   // Generate random password
   $('.pw-generate').on('click', function () {
     // get input for all params
