@@ -8,6 +8,7 @@
   <body>
     <%- include('partials/_header') %>
     <main class="container">
+
       <% if (isAdmin) { %>
         <!-- form to edit org name -->
         <div class="d-flex align-items-center">
@@ -97,8 +98,12 @@
 
         </form>
       <% } %>
-
-      <h3 class="mb-4 mt-3"> Members of <%= orgName %> </h3>
+      <div class="d-flex align-items-center">
+        <% if(!isAdmin) { %>
+        <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
+        <% } %>
+        <h3 class="mb-4 mt-3"> Members of <%= orgName %> </h3>
+      </div>
 
       <% for (member of members) { %>
       <section class="articles-container">
