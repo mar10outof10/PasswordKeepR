@@ -19,6 +19,31 @@ const getAllPasswords = function(userId) {
 };
 
 /**
+ * Gets all passwords belonging to a user, or any organization they're a part, matching a given search query.
+ *
+ * @param {String} userId        Id of the user.
+ * @param {String} searchQuery   Search query to match on the password label or URL.
+ * @return {Promise<[object]>}   A promise that resolves to an array containing password objects.
+ */
+ const getAllPasswordsSearch = function(userId, searchQuery) {
+
+  searchQuery = '%' + searchQuery + '%';
+
+  return db.query(`
+    WITH cte AS (
+      SELECT passwords.*, orgs.name AS org_name
+      FROM passwords
+      LEFT OUTER JOIN orgs ON org_id = orgs.id
+      WHERE user_id = $1
+      OR org_id IN (SELECT org_id FROM org_users WHERE user_id = $1)
+      ORDER BY org_name NULLS FIRST, category NULLS FIRST, label)
+    SELECT * FROM cte
+    WHERE (label ILIKE $2 OR url ILIKE $2);
+  `, [userId, searchQuery])
+    .then(res => res.rows);
+};
+
+/**
  * Gets the password with the given id.
  *
  * @param {String} passwordId    Id of the password.
@@ -120,4 +145,4 @@ const deletePassword = function(passwordId) {
     .then(res => res.rowCount === 1);
 };
 
-module.exports = { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword };
+module.exports = { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword };
