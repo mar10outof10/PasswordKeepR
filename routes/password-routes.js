@@ -43,9 +43,9 @@ router.get('/new', isAuthenticated, (req, res) => {
 
 /* Show individual password
 * logged in user  -> go to /passwords/:id
-* else            -> go to /loginf
+* else            -> go to /login
 */
-router.get('/:id', isAuthenticated, hasPasswordReadAccess, (req, res) => {
+router.get('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
   const userId = req.session.user_id;
 
