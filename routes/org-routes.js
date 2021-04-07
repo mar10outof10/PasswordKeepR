@@ -106,7 +106,7 @@ router.get('/:id', isAuthenticated, (req, res) => {
 * logged in user  -> edit org in Db
 * else            -> go to /login
 */
-router.post('/:id', isAuthenticated, (req, res) => {
+router.post('/:id/update', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
   const newOrgName = req.body.org_name;

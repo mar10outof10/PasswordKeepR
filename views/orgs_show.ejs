@@ -9,6 +9,7 @@
     <%- include('partials/_header') %>
     <main class="container">
       <% if (isAdmin) { %>
+        <!-- form to edit org name -->
         <div class="d-flex align-items-center">
           <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
           <h1 class="mb-0">Edit name for <%= orgName %></h1>
@@ -18,16 +19,17 @@
             Organisation already exists in database
           </div>
         <% }%>
-      <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
+        <form action="/orgs/<%= orgId %>/update" method="POST" class="justify-content-center">
 
-        <div class="form-group row">
-          <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
-          <div class="col-sm-9">
-            <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="Org Name">
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
+            <div class="col-sm-9">
+              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName"
+                placeholder="Org Name">
+            </div>
           </div>
-        </div>
 
-        <div class="button-container col-sm-4">
+          <div class="button-container col-sm-4">
 
             <div class="form-check col-sm-8">
               <input class="form-check-input" type="checkbox" id="org-update-check">
@@ -35,11 +37,46 @@
                 Confirm update?
               </label>
             </div>
-            <button type="button" id="org-update" class="btn btn-primary">Submit</button>
+            <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
+          </div>
+          <!-- form to add users-->
+        </form>
+
+        <div class="d-flex align-items-center">
+          <i class="pr-3 text-dark bi bi-arrow-down-right bi-5x" style="font-size: 2rem"></i>
+          <h1 class="mb-0">Add members to <%= orgName %></h1>
+        </div>
+        <% if (locals.error === 'orgExists') {%>
+          <div class="alert alert-danger" role="alert">
+            Organisation already exists in database
+          </div>
+        <% }%>
+        <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
+
+          <div class="form-group row">
+            <div class="col-sm-3">
+              <label for="inputName" class="col-form-label">Add user by:</label>
+              <button class="btn btn-outline-secondary lowercase-choice-yes shadow-none" type="button" aria-pressed="true">ID</button>
+              <button class="btn btn-outline-secondary lowercase-choice-no shadow-none" type="button" aria-pressed="true">email</button>
+            </div>
+            <div class="col-sm-8">
+              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName"
+                placeholder="Org Name">
+            </div>
           </div>
 
-        </div>
-      </form>
+          <div class="button-container col-sm-4">
+
+            <div class="form-check col-sm-8">
+              <input class="form-check-input" type="checkbox" id="org-update-check">
+              <label class="form-check-label" for="org-update-check">
+                Confirm update?
+              </label>
+            </div>
+            <button type="button" id="org-update" class="btn btn-primary">Add User</button>
+          </div>
+
+        </form>
       <% } %>
 
       <h1> Members of <%= orgName %> </h1>
