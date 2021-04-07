@@ -172,13 +172,14 @@ $(() => {
   });
 
   // compare passwords on registration form
-  $('#password, #confirm-password').on('keyup', function() {
-    if ($('#password').val() === $('#confirm-password').val()) {
-      console.log('passwords match')
-    } else {
-      console.log('passwords do not match')
-    }
-  });
+  // $('#password, #confirm-password').on('keyup', function() {
+  //   if ($('#password').val() === $('#confirm-password').val()) {
+  //     console.log('passwords are the same')
+  //     $('.register-button').removeClass('disabled');
+  //   } else {
+  //     $('.register-button').addClass('disabled');
+  //   }
+  // });
 
   // enable popovers
   $('[data-toggle="popover"]').popover().on('click', function() {
