@@ -16,8 +16,8 @@
     border: 1px grey solid;
   }
 
-  .login-form-container {
-    width: 86%;
+  form {
+    width: 90%;
   }
 
   .login-title {
@@ -27,6 +27,10 @@
 
   .btn-group {
     padding-top: .5em;
+  }
+
+  .alert {
+    margin-top: .5em;
   }
 
   @media only screen and (max-width: 575px) {
@@ -41,6 +45,7 @@
       border: 1px grey solid;
     }
   }
+
 
 }
 

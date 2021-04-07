@@ -14,7 +14,7 @@
       </div>
       <div class="register-container">
         <h1 class="m-4">Register</h1>
-        <form class="register-form-container" action="/register" method="POST">
+        <form action="/register" method="POST">
           <div class="form-group row">
             <label for="email" class="col-sm-3 col-form-label">Email</label>
             <div class="col-sm-7">
@@ -33,12 +33,10 @@
               <input type="password" id="confirm-password" class="form-control" placeholder="password" data-toggle="popover" data-content="Passwords must match" data-placement="bottom">
             </div>
           </div>
-          <div class="button-container">
-            <div class="button-row">
+            <div class="d-flex button-row justify-content-between">
               <button type="submit" class="btn btn-primary register-button">Submit</button>
               <a href="/login" class="btn btn-secondary">Go To Login</a>
             </div>
-          </div>
         </form>
       </div>
       <% if (locals.errorMsg) {%>
