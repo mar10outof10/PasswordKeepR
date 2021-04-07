@@ -28,6 +28,19 @@
   .btn-group {
     padding-top: .5em;
   }
-}
 
+  @media only screen and (max-width: 575px) {
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 20em;
+      height: 23em;
+      background-color: white;
+      margin-top: 4 em;
+      border: 1px grey solid;
+    }
+  }
+
+}
 
