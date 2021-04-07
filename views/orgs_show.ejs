@@ -56,12 +56,17 @@
           <div class="form-group row">
             <div class="col-sm-3">
               <label for="inputName" class="col-form-label">Add user by:</label>
-              <button class="btn btn-outline-secondary lowercase-choice-yes shadow-none" type="button" aria-pressed="true">ID</button>
-              <button class="btn btn-outline-secondary lowercase-choice-no shadow-none" type="button" aria-pressed="true">email</button>
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-info active">
+                  <input type="radio" name="query_type" id="by-email" autocomplete="off" checked> email
+                </label>
+                <label class="btn btn-info">
+                  <input type="radio" name="query_type" id="by-userid" autocomplete="off"> userId
+                </label>
+              </div>
             </div>
             <div class="col-sm-8">
-              <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName"
-                placeholder="Org Name">
+              <input type="text" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com">
             </div>
           </div>
 
