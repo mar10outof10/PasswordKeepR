@@ -12,13 +12,13 @@
         <!-- form to edit org name -->
         <div class="d-flex align-items-center">
           <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
-          <h3 class="mb-3 mt-3">Edit name for <%= orgName %></h3>
+          <h3 class="mb-3 mt-4">Edit <%= orgName %></h3>
         </div>
         <% if (locals.error === 'orgExists') {%>
           <div class="alert alert-danger" role="alert">
             Organisation already exists in database
           </div>
-        <% }%>
+        <% } %>
 
 
         <form action="/orgs/<%= orgId %>/update" method="POST" class="form-group pt-2">
@@ -104,8 +104,13 @@
             <img src="https://i.pinimg.com/originals/25/43/8e/25438ea8bd6b720289d8a01e3da82c6f.png">
           </div>
           <div class="orgs-body">
-            <div class="org-member-text">
-            User ID: <%= member.id %>   |   User email: <%= member.email %>  |
+            <div class="col org-member-text">
+            <!-- <span>
+            User ID: <%= member.id %>
+            </span> -->
+            <span>
+            User email: <%= member.email %>
+            </span>
             </div>
             <div class="org-admin-icon">
               <% if (isAdmin && member.id !== userId) { %>
