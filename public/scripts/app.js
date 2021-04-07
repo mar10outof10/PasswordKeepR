@@ -200,6 +200,13 @@ $(() => {
       $('[data-toggle="popover"]').popover('hide');
     }, 2000);
   });
+
+  $('.search-form').on('submit', function() {
+    const query = $('.search-bar')[0].value;
+    $(this).attr('action', '/passwords/search/' + query);
+  })
+
+
 });
 
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 
-const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
+const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
 const { getUserById } = require('../db/queries/user-queries');
 const { getAllOrgs } = require('../db/queries/org-queries');
 const { isAuthenticated } = require('./helpers');
@@ -126,6 +126,24 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
   .catch(err => {
     res.json(err);
   })
+});
+
+router.get('/search/:query', isAuthenticated, (req, res) => {
+  const userId = req.session.user_id;
+  const searchQuery = req.params.query.trim();
+
+  const passwordsPromise = getAllPasswordsSearch(userId, searchQuery);
+  const userPromise = getUserById(userId);
+
+  Promise.all([passwordsPromise, userPromise])
+  .then(values => {
+    console.log('passwords', values[0])
+    return res.render('passwords_index', { passwords: values[0], email: values[1].email, searchQuery });
+  })
+  .catch(err => {
+    return res.json(err);
+    // return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
+  });
 });
 
 
