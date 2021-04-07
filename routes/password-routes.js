@@ -2,9 +2,9 @@ const express = require('express');
 const router  = express.Router();
 
 const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
+const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess } = require('./helpers');
 const { getUserById } = require('../db/queries/user-queries');
 const { getAllOrgs } = require('../db/queries/org-queries');
-const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess } = require('./helpers');
 
 /* Password dashboard
 * logged in user  -> render passwords_index
@@ -43,9 +43,9 @@ router.get('/new', isAuthenticated, (req, res) => {
 
 /* Show individual password
 * logged in user  -> go to /passwords/:id
-* else            -> go to /loginf
+* else            -> go to /login
 */
-router.get('/:id', isAuthenticated, hasPasswordReadAccess, (req, res) => {
+router.get('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
   const userId = req.session.user_id;
 

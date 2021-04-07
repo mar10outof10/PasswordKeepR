@@ -8,7 +8,13 @@ const db = require('../db');
  */
 const getAllPasswords = function(userId) {
   return db.query(`
-    SELECT passwords.*, orgs.name AS org_name
+    SELECT  passwords.*,
+            orgs.name AS org_name,
+            CASE
+              WHEN user_id = $1 THEN TRUE
+              WHEN org_id IN (SELECT org_id FROM org_users WHERE user_id=$1 AND is_admin=TRUE) THEN TRUE
+              ELSE FALSE
+            END has_write_access
     FROM passwords
     LEFT OUTER JOIN orgs ON org_id = orgs.id
     WHERE user_id = $1
@@ -37,7 +43,13 @@ const getAllPasswords = function(userId) {
       WHERE user_id = $1
       OR org_id IN (SELECT org_id FROM org_users WHERE user_id = $1)
       ORDER BY org_name NULLS FIRST, category NULLS FIRST, label)
-    SELECT * FROM cte
+    SELECT *,
+          CASE
+            WHEN user_id = 11 THEN TRUE
+            WHEN org_id IN (SELECT org_id FROM org_users WHERE user_id=11 AND is_admin=TRUE) THEN TRUE
+            ELSE FALSE
+          END has_write_access
+    FROM cte
     WHERE (label ILIKE $2 OR url ILIKE $2);
   `, [userId, searchQuery])
     .then(res => res.rows);
