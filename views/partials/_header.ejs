@@ -2,11 +2,9 @@
   <div class="nav-logout">
     <a class="navbar-brand" href="/passwords"><i class="bi bi-shield-lock-fill text-white" width="10px" height="10px"></i></a>
     <% if (locals.email) { %>
-    <form method="POST" action="/logout">
-      <button type="submit" class="btn btn-danger logout-button btn-sm">Logout</button>
-    </form>
-    <div class="welcome-div" style="color: white;">
-      <span>Welcome - <%= email %></span>
+
+    <div class="welcome-div-large" style="color: white;">
+      <span><%= email %></span>
     </div>
     <% } %>
   </div>
@@ -26,6 +24,9 @@
         <a class="nav-link text-light text-nowrap"href="/register"><span>Register</span></a>
       </li>
     <% } else { %>
+      <div class="welcome-div-small" style="color: white;">
+        <span><%= email %></span>
+      </div>
       <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link text-light text-nowrap" href="/passwords">My Passwords</a>
@@ -39,6 +40,9 @@
         <a class="nav-link text-light text-nowrap" href="/orgs/new">New Organization</a>
       </li>
     </ul>
+    <form method="POST" action="/logout" class="ml-auto">
+      <button type="submit" class="btn btn-danger logout-button btn-sm">Logout</button>
+    </form>
     <% } %>
   </div>
 </nav>

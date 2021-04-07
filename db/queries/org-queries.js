@@ -193,7 +193,7 @@ const userIsInOrg = function (userId, orgId) {
  */
 const usersInOrg = function (orgId) {
   return db.query(`
-    SELECT users.id, email
+    SELECT users.id, email, is_admin
     FROM users
     JOIN org_users ON user_id = users.id
     WHERE org_id = $1;
