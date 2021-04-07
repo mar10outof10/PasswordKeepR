@@ -213,6 +213,10 @@ align-items: center;
   .art-icon-small {
     display: inline;
     padding: 5px;
+
+    > img {
+      height: 35px;
+    }
   }
 
 }
