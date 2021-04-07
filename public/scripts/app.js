@@ -70,6 +70,18 @@ $(() => {
     }
   });
 
+   // changes chevron on add new password button gold on hover
+   $(".new-pw-button").on("mouseover", function() {
+    $('#add-button').removeClass('text-white');
+    $('#add-button').addClass('text-warning');
+
+  });
+  $(".new-pw-button").on("mouseout", function() {
+    $('#add-button').addClass('text-white');
+    $('#add-button').removeClass('text-warning');
+  });
+
+
   $('#by-email').on('click', function () {
     $('#inputUser').attr({type: 'email', placeholder: 'user@email.com'});
   });

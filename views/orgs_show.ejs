@@ -38,7 +38,9 @@
                 Confirm update?
               </label>
             </div>
-            <button type="button" id="org-update" class="btn btn-primary ml-2">Edit Name</button>
+            <div class="button-row">
+              <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
+            </div>
           </div>
           <!-- form to add users-->
         </form>
@@ -88,7 +90,9 @@
                 Confirm update?
               </label>
             </div>
-            <button type="button" id="org-update" class="btn btn-primary ml-2">Add user</button>
+            <div class="button-row">
+              <button type="button" id="org-update" class="btn btn-primary ml-2">Add user</button>
+            </div>
           </div>
 
         </form>
@@ -131,6 +135,11 @@
         </article>
       </section>
       <% } %>
+      <% if (org.is_admin) { %>
+        <form action="/orgs/<%= org.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= org.name %>?');">
+          <button type="submit" class="btn btn-danger ">DELETE ORG</button>
+        </form>
+        <% } %>
     </main>
     <%- include('partials/_scripts') %>
   </body>
