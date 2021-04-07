@@ -14,7 +14,7 @@
     background-color: white;
     margin-top: 4 em;
     border: 1px grey solid;
-  }
+  }r
 
   .login-form-container {
     width: 86%;
@@ -30,11 +30,9 @@
     display: flex;
     justify-content: flex-end;
     padding-top: 1em;
-    padding-right: 2em;
-    transform: translateY(-45px);
   }
 
-  .register > a {
+  button > a {
     text-align: center;;
   }
 
