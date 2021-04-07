@@ -14,11 +14,6 @@
       </div>
       <div class="register-container">
         <h1>Register</h1>
-        <% if (locals.errorMsg) {%>
-        <div class="alert alert-danger h-25" role="alert">
-          <%= errorMsg %>
-        </div>
-        <% }%>
         <form class="register-form-container" action="/register" method="POST">
           <div class="form-group row">
             <label for="email" class="col-sm-3 col-form-label">Email</label>
@@ -41,11 +36,16 @@
           <div class="button-container">
             <div class="button-row">
               <button type="submit" class="btn btn-primary">Submit</button>
-              <a href="/login" class="btn btn-secondary">Login</a>
+              <a href="/login" class="btn btn-secondary">Go To Login</a>
             </div>
           </div>
         </form>
       </div>
+      <% if (locals.errorMsg) {%>
+      <div class="alert alert-danger" role="alert">
+        <%= errorMsg %>
+      </div>
+      <% }%>
     </main>
   <%- include('partials/_scripts') %>
   </body>

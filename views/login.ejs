@@ -14,11 +14,6 @@
     </div>
     <div class="login-container">
       <h1 class="mb-4">Login</h1>
-      <% if (locals.errorMsg) {%>
-      <div class="alert alert-danger" role="alert">
-        <%= errorMsg %>w
-      </div>
-      <% }%>
       <form class="login-form-container" action="/login" method="POST">
         <div class="form-group row">
           <label for="email" class="col-sm-3 col-form-label">Email</label>
@@ -33,15 +28,19 @@
           </div>
         </div>
         <div class="btn-group">
-          <div class="button-row justify-content-between">
+          <div class="button-row">
             <button type="submit" class="btn btn-primary">Submit</button>
-            <a href="/register" class="btn btn-secondary">Register</a>
+            <a href="/register" class="btn btn-secondary">Go To Register</a>
           </div>
         </div>
       </form>
     </div>
+    <% if (locals.errorMsg) {%>
+      <div class="alert alert-danger" role="alert">
+        <%= errorMsg %>w
+      </div>
+      <% }%>
   </main>
-    <%- include('partials/_scripts') %>
 </body>
 
 </html>
