@@ -109,8 +109,13 @@
             </div>
             <div class="org-admin-icon">
               <% if (isAdmin && member.id !== userId) { %>
-                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST">
+                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete user <%= member.email %> from <%= orgName %>?')">
                   <button type="submit" class="btn-danger btn">&#128465;&#65039;</button>
+                </form>
+              <% } %>
+              <% if (isAdmin && member.id !== userId) { %>
+                <form action="<%= orgId %>/<%= member.id %>/update" method="POST">
+                  <button type="submit" class="btn-info btn"> <i class="bi bi-key"></i></button>
                 </form>
               <% } %>
               <% if (member.is_admin) { %>
