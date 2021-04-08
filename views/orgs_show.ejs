@@ -107,8 +107,11 @@
       <section class="articles-container">
         <article class="art-main orgs-main">
           <div class="art-icon org-icon">
-            <!-- <img src="<%= member.pictureURL %>" -->
-            <img src="https://i.pinimg.com/originals/25/43/8e/25438ea8bd6b720289d8a01e3da82c6f.png">
+            <% if (member.is_admin) { %>
+              <i class="bi bi-key-fill text-warning"></i>
+            <% } else{ %>
+              <i class="bi bi-person-check-fill text-info"></i>
+              <% } %>
           </div>
           <div class="orgs-body">
             <div class="col org-member-text">
@@ -129,9 +132,6 @@
                 <form action="<%= orgId %>/<%= member.id %>/update" method="POST">
                   <button type="submit" class="btn-info btn"> <i class="bi bi-key"></i></button>
                 </form>
-              <% } %>
-              <% if (member.is_admin) { %>
-              <i class="bi bi-key"></i>
               <% } %>
             </div>
           </div>
