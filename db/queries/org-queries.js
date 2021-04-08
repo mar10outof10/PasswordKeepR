@@ -215,7 +215,8 @@ const usersInOrg = function (orgId) {
     SELECT users.id, email, is_admin
     FROM users
     JOIN org_users ON user_id = users.id
-    WHERE org_id = $1;
+    WHERE org_id = $1
+    ORDER BY org_users.joined_at;
   `, [orgId])
     .then(res => res.rows);
 };
