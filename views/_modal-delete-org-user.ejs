@@ -4,7 +4,8 @@
       <span>Are you sure you want to remove this user?</span>
     </div>
 
-    <form action="<%= orgId %>/<%= member.id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete user <%= member.email %> from <%= orgName %>?')">
+
+    <form action="<%= orgId %>/<%= member.id %>/delete" method="POST">
       <button type="submit" class="btn-danger btn">Delete user</button>
       <button type="button" class="modal-cancel btn btn-secondary ml-1">Cancel</button>
     </form>
