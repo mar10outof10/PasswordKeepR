@@ -145,16 +145,11 @@ router.post('/:id', isAuthenticated, (req, res) => {
   const makeAdmin = req.body.admin || false;
   const userId = req.session.user_id;
   const userToAdd = req.body.user_name;
-  const queryType = req.body.query_type;
   let id;
 
   const isAdminPromise = userIsOrgAdmin(userId, orgId)
-  let userExistsPromise;
-  if (queryType === 'userId') {
-    userExistsPromise = userIdExists(userToAdd);
-  } else if (queryType === 'email') {
-    userExistsPromise = userEmailExists(userToAdd);
-  }
+  const userExistsPromise = userEmailExists(userToAdd);
+
   Promise.all([isAdminPromise, userExistsPromise])
   .then(values => {
     const isAdmin = values[0];
@@ -163,11 +158,7 @@ router.post('/:id', isAuthenticated, (req, res) => {
       return res.redirect(`/orgs/${orgId}?error=userDNE`);
     }
     if (isAdmin && userExists) {
-      if (queryType === 'email') {
-        return getUserByEmail(userToAdd);
-      } else if (queryType === 'userId') {
-        return getUserById(userToAdd);
-      }
+      return getUserByEmail(userToAdd);
     }
     return res.status(401).send(); // if user not admin
   })
