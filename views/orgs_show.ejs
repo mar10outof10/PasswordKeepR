@@ -6,8 +6,11 @@
   </head>
 
   <body>
-    <%- include('partials/_modal-org-warning') %>
+    <div class="modal-bg"></div>
+
+    <%- include('partials/_modal-delete-org') %>
     <%- include('partials/_header') %>
+
     <main class="container">
       <% if (locals.error === 'userDNE') {%>
         <div class="alert alert-danger" role="alert">
@@ -46,20 +49,21 @@
               <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
               <div class="col-sm-9">
                 <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="Org Name" required>
+                <%- include('partials/_modal-edit-org') %>
               </div>
             </div>
 
             <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
 
-              <div class="form-check col-sm-3">
+              <!-- <div class="form-check col-sm-3">
                 <input class="form-check-input" type="checkbox" id="org-update-check">
                 <label class="form-check-label" for="org-update-check">
                   Confirm update?
-                </label>
-              </div>
+                </label>w
+              </div> -->
 
               <div class="d-flex button-row justify-content-start">
-                <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
+                <button type="button" class="btn btn-primary org-update">Edit Name</button>
               </div>
             </div>
             <!-- form to add users-->
@@ -140,7 +144,7 @@
       </section>
       <% } %>
       <% if (isAdmin) { %>
-          <button type="button" class="btn btn-danger modal-call">Delete Organization</button>
+          <button type="button" id="org-delete" class="btn btn-danger">Delete Organization</button>
         <% } %>
     </main>
     <%- include('partials/_scripts') %>

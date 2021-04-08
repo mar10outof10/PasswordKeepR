@@ -22,7 +22,33 @@
   width: 80%;
 }
 
-.modal-pw-content {
+.modal-delete-org {
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 10%;
+  z-index: 2;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.modal-pw-warning {
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 10%;
+  z-index: 2;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.modal-edit-org {
   display: none;
   position: fixed;
   top: 0%;

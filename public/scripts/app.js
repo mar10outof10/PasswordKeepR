@@ -33,10 +33,24 @@ $(() => {
     $('.length-input').focus();
   })
 
-  // Generate generate password delete modal
+  // Generate password delete modal
   $('#delete-password').on('click', function () {
     $('.modal-bg').css('display', 'block');
-    $('.modal-pw-content').css('display', 'block');
+    $('.modal-pw-warning').css('display', 'block');
+    $('.length-input').focus();
+  })
+
+  // Generate edit org modal
+  $('.org-update').on('click', function () {
+    $('.modal-bg').css('display', 'block');
+    $('.modal-edit-org').css('display', 'block');
+    $('.length-input').focus();
+  })
+
+  // Generate delete org modal
+  $('#org-delete').on('click', function () {
+    $('.modal-bg').css('display', 'block');
+    $('.modal-delete-org').css('display', 'block');
     $('.length-input').focus();
   })
 
@@ -44,6 +58,9 @@ $(() => {
   $('.modal-cancel').on('click', function () {
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
+    $('.modal-delete-org').css('display', 'none');
+    $('.modal-pw-warning').css('display', 'none');
+    $('.modal-edit-org').css('display', 'none');
     $('.pw-error').css('display', 'none');
   });
 
@@ -70,13 +87,13 @@ $(() => {
   });
 
   // Confirm update of org parameters on checkbox
-  $('#org-update-check').on('click', function () {
-    if (this.checked) {
-      $('#org-update').attr('type', 'submit');
-    } else {
-      $('#org-update').attr('type', 'button');
-    }
-  });
+  // $('#org-update-check').on('click', function () {
+  //   if (this.checked) {
+  //     $('#org-update').attr('type', 'submit');
+  //   } else {
+  //     $('#org-update').attr('type', 'button');
+  //   }
+  // });
 
    // changes chevron on add new password button gold on hover
    $(".new-pw-button").on("mouseover", function() {
