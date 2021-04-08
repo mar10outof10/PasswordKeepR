@@ -55,10 +55,14 @@ $(() => {
   })
 
    // Generate delete org user modal
-   $('#delete-org-user').on('click', function () {
+   $('.delete-org-user').on('click', function () {
     $('.modal-bg').css('display', 'block');
     $('.modal-delete-org-user').css('display', 'block');
     $('.length-input').focus();
+    const values = $(this).attr('value').split(' '); //values array: [0]: memberId [1]: memberEmail [2]: orgId
+
+    $('.member-id').html(`${values[1]}`);
+    $('.delete-user-form').attr('action',`${values[2]}/${values[0]}/delete`)
   })
 
   // Cancel modal
