@@ -6,8 +6,6 @@ const { isAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess } = require('
 const { getAllOrgsWhereAdmin } = require('../db/queries/org-queries');
 const { getUserById } = require('../db/queries/user-queries');
 
-
-
 /* Password dashboard
 * logged in user  -> render passwords_index
 * else            -> go to /login
@@ -18,12 +16,8 @@ router.get('/', isAuthenticated, (req, res) => {
   const userPromise = getUserById(userId);
 
   Promise.all([passwordsPromise, userPromise])
-  .then(values => {
-    return res.render('passwords_index', { passwords: values[0], email: values[1].email });
-  })
-  .catch(err => {
-    return res.json(err);
-  });
+  .then(values => res.render('passwords_index', { passwords: values[0], email: values[1].email }))
+  .catch(err => res.status(500).send(err));
 });
 
 /* New password form
@@ -39,7 +33,8 @@ router.get('/new', isAuthenticated, (req, res) => {
   .then(values => {
     const [user, orgs] = values;
     return res.render('passwords_new', { email: user.email, orgs });
-  });
+  })
+  .catch(err => res.status(500).send(err));
 });
 
 /* Show individual password
