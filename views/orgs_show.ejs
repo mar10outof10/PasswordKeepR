@@ -7,7 +7,7 @@
 
   <body>
     <div class="modal-bg"></div>
-
+    <%- include('partials/_modal-delete-org-user') %>
     <%- include('partials/_modal-delete-org') %>
     <%- include('partials/_header') %>
 
@@ -120,11 +120,10 @@
             User email: <%= member.email %>
             </span>
             </div>
+            <!-- --- -->
             <div class="org-admin-icon">
               <% if (isAdmin && member.id !== userId) { %>
-                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete user <%= member.email %> from <%= orgName %>?')">
-                  <button type="submit" class="btn-danger btn">&#128465;&#65039;</button>
-                </form>
+                  <button type="button" id="delete-org-user" class="btn-danger btn">&#128465;&#65039;</button>
               <% } %>
               <% if (isAdmin && member.id !== userId) { %>
                 <form action="<%= orgId %>/<%= member.id %>/update" method="POST">

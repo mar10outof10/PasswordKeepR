@@ -54,6 +54,13 @@ $(() => {
     $('.length-input').focus();
   })
 
+   // Generate delete org user modal
+   $('#delete-org-user').on('click', function () {
+    $('.modal-bg').css('display', 'block');
+    $('.modal-delete-org-user').css('display', 'block');
+    $('.length-input').focus();
+  })
+
   // Cancel modal
   $('.modal-cancel').on('click', function () {
     $('.modal-bg').css('display', 'none');
@@ -61,6 +68,7 @@ $(() => {
     $('.modal-delete-org').css('display', 'none');
     $('.modal-pw-warning').css('display', 'none');
     $('.modal-edit-org').css('display', 'none');
+    $('.modal-delete-org-user').css('display', 'none');
     $('.pw-error').css('display', 'none');
   });
 
