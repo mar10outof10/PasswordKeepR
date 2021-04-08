@@ -94,9 +94,11 @@ $(() => {
     if ($('.expand-collapse').attr('value') === "down") {
       $('#orgs-show-options').slideUp();
       $('.expand-collapse').attr('value', 'up');
+      $('.expand-collapse').text('Edit Organization')
     } else {
       $('#orgs-show-options').slideDown();
       $('.expand-collapse').attr('value', 'down');
+      $('.expand-collapse').text('Close Menu');
     }
   })
 
