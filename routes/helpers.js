@@ -73,4 +73,23 @@ const hasPasswordWriteAccess = (req, res, next) => {
   });
 };
 
-module.exports = { isAuthenticated, isNotAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess };
+/**
+ * Verify a user is an org admin (if org is provided), then call some function.
+ *
+ * @param {String[]} adminCheckArgs   An array containing the userId and orgId to provide to userIsOrgAdmin check.
+ * @param {Function} func             A function to run if the admin check is successful.
+ * @param {Object[]} funcArgs         Argumements to pass to the function above.
+ * @return {any}                      The result of the passed in function.
+ */
+ const verifyOrgAdminThenDo = (adminCheckArgs, func, funcArgs) => {
+  let promiseChain = Promise.resolve();
+  if (adminCheckArgs[1] !== '') promiseChain = promiseChain.then(() => userIsOrgAdmin(... adminCheckArgs));
+                       promiseChain = promiseChain.then(admin => {
+                       if (admin !== false) { return func(... funcArgs); }
+                         else { return Promise.reject(); }
+                       });
+                       return promiseChain;
+};
+
+
+module.exports = { isAuthenticated, isNotAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess, verifyOrgAdminThenDo };
