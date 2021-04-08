@@ -1,0 +1,75 @@
+.orgs-main {
+  height: 100%;
+}
+
+.org-icon {
+  display: flex;
+  justify-content: center;
+  width: 4em;
+  border-right-style: solid;
+
+  .bi {
+    font-size: 2em;
+    text-shadow: 2px 1.5px 3px #000000;
+  }
+}
+
+.orgs-header {
+  width: 100%;
+  position: relative;
+
+  .bi {
+    position: absolute;
+    font-size: x-large;
+    text-shadow: 2px 1.5px 3px #000000;
+    right: 1.8em;
+  }
+}
+
+.orgs-footer {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+}
+
+
+.orgs-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 80%;
+
+  span {
+    padding: .5em;
+  }
+}
+
+.orgs-interactions .bi {
+  font-size: xx-large;
+  padding-right: 1em;
+}
+
+@media only screen and (max-width: 767px) {
+
+  .orgs-footer {
+    flex-direction: column;
+  }
+
+  .orgs-info {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .orgs-body {
+    flex-direction: column;
+  }
+
+  .org-admin-icon {
+    width: 60%
+  }
+
+  .org-member-text {
+    width: unset;
+  }
+}
+

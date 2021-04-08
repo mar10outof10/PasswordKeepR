@@ -12,7 +12,27 @@ const getAllOrgs = function (userId) {
     FROM orgs
     JOIN org_users ON org_id = orgs.id
     JOIN users ON user_id = users.id
-    WHERE user_id = $1;
+    WHERE user_id = $1
+    ORDER BY name;
+  `, [userId])
+    .then(res => res.rows);
+};
+
+/**
+ * Gets all organizations a user is an admin of.
+ *
+ * @param {String} userId          The id of the user.
+ * @return {Promise<[object]>}     A promise that resolves to an array of organization objects.
+ */
+ const getAllOrgsWhereAdmin = function (userId) {
+  return db.query(`
+    SELECT orgs.*
+    FROM orgs
+    JOIN org_users ON org_id = orgs.id
+    JOIN users ON user_id = users.id
+    WHERE user_id = $1
+    AND is_admin = TRUE
+    ORDER BY name;
   `, [userId])
     .then(res => res.rows);
 };
@@ -30,6 +50,21 @@ const getOrgById = function(orgId) {
     WHERE id = $1;
   `, [orgId])
   .then(res => res.rows[0]);
+};
+
+/**
+ * Gets the organization for a given orgName. Returns false if org name does not exist.
+ *
+ * @param {String} userId          The id of the org.
+ * @return {Promise<object>}       A promise that resolves to the organization object.
+ */
+const getOrgByName = function(orgName) {
+  return db.query(`
+    SELECT *
+    FROM orgs
+    WHERE name = $1;
+  `, [orgName])
+    .then(res => res.rows[0] ? res.rows[0] : false);
 };
 
 /**
@@ -169,4 +204,77 @@ const userIsInOrg = function (userId, orgId) {
     .then(res => res.rows[0] ? true : false);
 };
 
-module.exports = { getAllOrgs, getOrgById, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg };
+/**
+ * Gets all users for a specific org.
+ *
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
+ */
+const usersInOrg = function (orgId) {
+  return db.query(`
+    SELECT users.id, email, is_admin
+    FROM users
+    JOIN org_users ON user_id = users.id
+    WHERE org_id = $1
+    ORDER BY org_users.joined_at;
+  `, [orgId])
+    .then(res => res.rows);
+};
+
+/**
+ * Gets number of users for a specific org.
+ *
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
+ */
+ const numberUsersInOrg = function (orgId) {
+  return db.query(`
+    SELECT *
+    FROM org_users
+    WHERE org_id = $1;
+  `, [orgId])
+    .then(res => res.rows.length);
+};
+
+/**
+ * Gets the user's join_date for a specific org
+ *
+ * @param {Number} userId         The id of the user to check.
+ * @param {Number} orgId          The id of the organization.
+ * @return {Promise<boolean>}     A promise that resolves to true if the user is a member of an org.
+ */
+const userOrgJoinDate = function (userId, orgId) {
+  return db.query(`
+  SELECT joined_at
+  FROM org_users
+  WHERE user_id = $1
+  AND org_id = $2;
+  `, [userId, orgId])
+    .then(res => res.rows[0].joined_at);
+};
+
+/**
+ * Gets the list of organizations a user belongs to along with the member count of the org
+ * and date they joined.
+ *
+ * @param {Number} userId         The id of the user to check.
+ * @return {Promise<object>}      A promise that resolves to an object containing the org name, member count, and user join date.
+ */
+const getOrgSummaryForUser = function(userId) {
+  return db.query(`
+    WITH cte AS (
+      SELECT name, COUNT(*) AS count
+      FROM orgs
+      JOIN org_users ON org_id = orgs.id
+      GROUP BY name
+    )
+    SELECT orgs.name, org_users.joined_at, count, is_admin, org_id
+    FROM orgs
+    JOIN org_users ON org_id = orgs.id
+    JOIN users ON user_id = users.id
+    JOIN cte ON orgs.name = cte.name
+    WHERE user_id = $1;
+  `, [userId])
+  .then(res => res.rows);
+}
+module.exports = { getAllOrgs, getAllOrgsWhereAdmin, getOrgById, getOrgByName, addOrg, editOrg, deleteOrg, addUserToOrg, updateUserInOrg, deleteUserFromOrg, userIsOrgAdmin, userIsInOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, getOrgSummaryForUser };

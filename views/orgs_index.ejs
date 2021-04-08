@@ -2,56 +2,58 @@
 <html lang="en">
   <head>
     <title>PasswordKeepR - Organisations</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../styles/index.css" type="text/css" />
-
-    <!-- unsure if additional jquery script necessary, needs testing-->
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
-    <script type="text/javascript" src="/scripts/app.js"></script>
+    <%- include('partials/_head') %>
   </head>
 
   <body>
     <%- include('partials/_header') %>
 
-    <main class="page-container">
-      <h1>Organisations</h1>
+
+    <main class="container">
+      <div class="d-flex align-items-center">
+        <a class="pr-3 text-dark" href="/passwords"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
+        <h1 class="mb-4 mt-3">Organizations</h1>
+      </div>
       <section class="articles-container">
-        <!-- <% for (org of orgsArray) { %> -->
+        <% if (orgs.length === 0) { %>
+          <h4 class="m-2 mt-3">You currently have no organizations</h4>
+          <div class='m-2'><a href="/orgs/new">Click here </a>to add an organization</div>
+          <% } %>
+        <% for (org of orgs) { %>
           <article class="art-main">
-            <div class="art-icon">
+            <div class="art-icon-large">
               <img src="https://i.pinimg.com/originals/b7/6c/94/b76c94e1e878957a73f486362328dd30.png">
             </div>
             <div class="art-body">
-              <header>
+              <header class="orgs-header">
                 <span class="art-url"><%= org.name %></span>
-                <!-- must add javascript to  -->
-                <button type="button" class="btn btn-danger">&#128465;&#65039;</button>
+                <% if (org.is_admin) { %>
+                  <i class="bi bi-key-fill text-warning"></i>
+                <% } %>
               </header>
 
-              <footer>
-                <div class="art-username">
-                  <span class="art-label">Members:</span><span><%= length(org.members) %></span>
-                </div>
-                <div class="art-password">
-                  <span class="art-label">Join date:</span><span><%= user.org.joindate %></span>
+              <footer class="orgs-footer">
+                <div class="orgs-info">
+
+                    <div>
+                      <span><b>Members:</b>  <%= org.count %> </span>
+                    </div>
+
+                    <div>
+                      <span><b>Join date:</b> <%= org.joined_at.toLocaleDateString('en-CA') %></span>
+                    </div>
 
                 </div>
-
+                <div class="orgs-interactions">
+                  <a class="" href="/orgs/<%= org.org_id %>"><i class="bi bi-pencil-fill text-dark mx-2"></i></a>
+                </div>
               </footer>
-
 
             </div>
           </article>
-        <!-- <% } %> -->
+        <% } %>
       </section>
-
-
     </main>
+    <%- include('partials/_scripts') %>
   </body>
 </html>

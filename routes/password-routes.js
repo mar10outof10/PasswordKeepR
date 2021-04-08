@@ -1,9 +1,10 @@
 const express = require('express');
 const router  = express.Router();
 
-const { getAllPasswords, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
+const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
+const { isAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess } = require('./helpers');
+const { getAllOrgsWhereAdmin } = require('../db/queries/org-queries');
 const { getUserById } = require('../db/queries/user-queries');
-const { isAuthenticated } = require('./helpers');
 
 /* Password dashboard
 * logged in user  -> render passwords_index
@@ -15,13 +16,8 @@ router.get('/', isAuthenticated, (req, res) => {
   const userPromise = getUserById(userId);
 
   Promise.all([passwordsPromise, userPromise])
-  .then(values => {
-    return res.render('passwords_index', { passwords: values[0], email: values[1].email });
-  })
-  .catch(err => {
-    return res.json(err);
-    // return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
-  });
+  .then(values => res.render('passwords_index', { passwords: values[0], email: values[1].email }))
+  .catch(err => res.status(500).send(err));
 });
 
 /* New password form
@@ -29,26 +25,35 @@ router.get('/', isAuthenticated, (req, res) => {
 * else            -> go to /login
 */
 router.get('/new', isAuthenticated, (req, res) => {
-    return res.send('password form')
-    // const templateVars = { user: userIdCookie }
-    // return res.render('password/new', templateVars);
+  const userId = req.session.user_id;
+  const getUserPromise = getUserById(userId);
+  const getOrgsPromise = getAllOrgsWhereAdmin(userId);
+
+  Promise.all([getUserPromise, getOrgsPromise])
+  .then(values => {
+    const [user, orgs] = values;
+    return res.render('passwords_new', { email: user.email, orgs });
+  })
+  .catch(err => res.status(500).send(err));
 });
 
 /* Show individual password
 * logged in user  -> go to /passwords/:id
 * else            -> go to /login
 */
-router.get('/:id', isAuthenticated,  (req, res) => {
+router.get('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
-  getPasswordById(passwordId)
-  .then(password => {
-    return res.send(password)
-  // const templateVars = { password , user: userIdCookie }
-  // return res.render('/password/:id', templateVars)
-  })
-  .catch(err => {
-    res.redirect('/login', { errorMsg: 'This password doesn\'t exist' });
-  })
+  const userId = req.session.user_id;
+
+  const getUserPromise = getUserById(userId);
+  const getOrgsPromise = getAllOrgsWhereAdmin(userId);
+  const getPasswordPromise = getPasswordById(passwordId);
+
+  Promise.all([getPasswordPromise, getUserPromise, getOrgsPromise])
+  .then(values => {
+    const [password, user, orgs] = values;
+    return res.render('passwords_show', { password, email: user.email, orgs });
+  });
 });
 
 
@@ -56,55 +61,57 @@ router.get('/:id', isAuthenticated,  (req, res) => {
 * logged in user  -> add new password to Db
 * else            -> go to /login
 */
-router.post('/', isAuthenticated, (req, res) => {
-  const { label, username, password, category, orgId } = req.body;
-  const newPassObj = { label, username, password, category, orgId, userId }
-  addPassword(newPassObj)
-  .then(newPassObj => {
-    res.json(newPassObj);
-  })
-  .catch(err => {
-    res.json(err);
-  })
-})
+router.post('/', isAuthenticated, hasOrgWriteAccess, (req, res) => {
+  const { label, url, username, password, category, orgId } = req.body;
+  const userId = req.session.user_id;
+  const passwordObj = { label, url, username, password, category, orgId, userId }
+
+  addPassword(passwordObj)
+  .then(() => res.redirect('/passwords'))
+  .catch(err => res.status(500).send(err));
+});
 
 
-/* Show individual password
+/* Edit individual password
 * logged in user  -> edit inidivual password in Db
 * else            -> go to /login
 */
-router.post('/:id', isAuthenticated, (req, res) => {
-  const { label, username, password, category, orgId } = req.body;
-  const editPassObj = { label, username, password, category, userId, orgId, passwordId}
-  editPassword(editPassObj)
-  .then(editedPassObj => {
-    res.json(editedPassObj);
-  })
-  .catch(err => {
-    res.json(err);
-  })
+router.post('/:id', isAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess, (req, res) => {
+  const { label, url, username, password, category, orgId } = req.body;
+  const userId = req.session.user_id;
+  const passwordId = req.params.id;
+  const passwordObj = { label, url, username, password, category, userId, orgId };
+
+  editPassword(passwordId, passwordObj)
+  .then(() => res.redirect('/passwords'))
+  .catch(err => res.status(500).send(err));
 });
 
 /* Delete individual password
 * logged in user  -> Delete password from Db
 * else            -> go to /login
 */
-router.post('/:id/delete', isAuthenticated, (req, res) => {
+router.post('/:id/delete', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
-  getPasswordById(passwordId)
-  .then(passwordObj => {
-    userIdCookie = req.params.user_id;
-    if (passwordObj.userId === userIdCookie) {
-      deletePassword(passwordId)
-      .then(rowCount => {
-        res.json(rowCount);
-        // res.redirect('/passwords');
-      })
-      .catch(err => {
-        res.json(err);
-      })
-    }
-  })
+  deletePassword(passwordId)
+  .then(() => res.redirect('/passwords'))
+  .catch(err => res.status(500).send(err))
+});
+
+/* Password dashboard, filtered by a search query applied to password labels and URLs
+* logged in user  -> Delete password from Db
+* else            -> go to /login
+*/
+router.get('/search/:query', isAuthenticated, (req, res) => {
+  const userId = req.session.user_id;
+  const searchQuery = req.params.query.trim();
+
+  const passwordsPromise = getAllPasswordsSearch(userId, searchQuery);
+  const userPromise = getUserById(userId);
+
+  Promise.all([passwordsPromise, userPromise])
+  .then(values => res.render('passwords_index', { passwords: values[0], email: values[1].email, searchQuery }))
+  .catch(err => res.status(500).send(err));
 });
 
 module.exports = router;

@@ -1,39 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>PasswordKeepr - <%= org.name %></title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../styles/index.css" type="text/css" />
-
-    <!-- unsure if additional jquery script necessary, needs testing-->
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-    <script type="text/javascript" src="../public/vendor/jquery-3.0.0.js"></script>
-    <script type="text/javascript" src="../public/scripts/app.js"></script>
+    <title>PasswordKeepr - <%= orgName %></title>
+    <%- include('partials/_head') %>
   </head>
 
   <body>
+    <div class="modal-bg"></div>
+
+    <%- include('partials/_modal-delete-org') %>
     <%- include('partials/_header') %>
+
     <main class="container">
-      <h1> Members of <%= org.name %> </h1>
-      <% for (member of org.members) { %>
+      <% if (locals.error === 'userDNE') {%>
+        <div class="alert alert-danger" role="alert">
+          User does not exist
+        </div>
+      <% }%>
+      <% if (locals.error === 'userInOrg') {%>
+        <div class="alert alert-danger" role="alert">
+          User is already in <%= orgName %>
+        </div>
+      <% }%>
+      <% if (locals.error === 'idNotInt') {%>
+        <div class="alert alert-danger" role="alert">
+          Only numbers allowed in field when searching by id
+        </div>
+      <% }%>
+      <% if (locals.error === 'orgExists') {%>
+        <div class="alert alert-danger" role="alert">
+          Organisation already exists in database
+        </div>
+      <% } %>
+      <% if (isAdmin) { %>
+        <div id="orgs-show-options-header" class="col-sm-12 d-flex justify-content-center">
+          <button type="button" value="up" class="expand-collapse centre btn btn-primary shadow-none">Edit Organization</button>
+        </div>
+        <section id="orgs-show-options">
+          <!-- form to edit org name -->
+          <div class="d-flex align-items-center">
+            <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
+            <h3 class="mb-3 mt-4">Edit <%= orgName %></h3>
+          </div>
+
+          <form action="/orgs/<%= orgId %>/update" method="POST" class="form-group pt-2">
+
+            <div class="form-group row">
+              <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
+              <div class="col-sm-9">
+                <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="My Organisaion" required>
+                <%- include('partials/_modal-edit-org') %>
+              </div>
+            </div>
+
+            <div class="d-flex button-container offset-md-3 row-sm-3">
+
+              <div class="d-flex button-row justify-content-start">
+                <button type="button" class="btn btn-primary org-update ml-2">Edit Name</button>
+              </div>
+
+            </div>
+            <!-- form to add users-->
+          </form>
+
+          <div class="d-flex align-items-center">
+            <h3 class="mb-4 mt-3">Add members to <%= orgName %></h3>
+          </div>
+
+          <form action="/orgs/<%= orgId %>" method="POST" class="form-group pt-2">
+
+            <div class="form-group row">
+              <label for="inputName" class="col-sm-3 col-form-label">Add user by email:</label>
+              <div class="col-sm-9">
+                  <input type="email" name="user_name" class="form-control" id="inputUser" placeholder="user@email.com" required>
+              </div>
+            </div>
+
+            <div class="d-flex button-container row-sm-3 justify-content-start pt-0">
+              <div class="form-check col-sm-3">
+                <input class="form-check-input" name="admin" value="true" type="checkbox" id="make-admin-check">
+                <label class="form-check-label" for="make-admin-check">
+                  Make admin?
+                </label>
+              </div>
+
+              <div class="d-flex button-row justify-content-start">
+                <button type="submit" id="org-update" class="btn btn-primary ml-2">Add user</button>
+              </div>
+
+            </div>
+
+          </form>
+        </section>
+        <!-- closes if (is_admin) tag -->
+      <% } %>
+      <div class="d-flex align-items-center">
+        <% if(!isAdmin) { %>
+        <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
+        <% } %>
+        <h3 class="mb-4 mt-3"> Members of <%= orgName %> </h3>
+      </div>
+
+      <% for (member of members) { %>
       <section class="articles-container">
         <article class="art-main orgs-main">
           <div class="art-icon org-icon">
-            <!-- <img src="<%= member.pictureURL %>" -->
-            <img src="https://i.pinimg.com/originals/25/43/8e/25438ea8bd6b720289d8a01e3da82c6f.png">
+            <% if (member.is_admin) { %>
+              <i class="bi bi-key-fill text-warning"></i>
+            <% } else{ %>
+              <i class="bi bi-person-check-fill text-info"></i>
+              <% } %>
           </div>
           <div class="orgs-body">
-            <%= member.name %>
+            <div class="col org-member-text">
+            <!-- <span>
+            User ID: <%= member.id %>
+            </span> -->
+            <span>
+            User email: <%= member.email %>
+            </span>
+            </div>
+            <!-- --- -->
+            <div class="org-admin-icon">
+              <% if (isAdmin && member.id !== userId) { %>
+                <button type="button" value="<%= member.id %> <%= member.email %> <%= orgId %>" class="btn-danger btn delete-org-user">&#128465;&#65039;</button>
+                <%- include('partials/_modal-delete-org-user') %>
+                <form action="<%= orgId %>/<%= member.id %>/update" method="POST">
+                  <button type="submit" class="btn-info btn"> <i class="bi bi-key"></i></button>
+                </form>
+              <% } %>
+            </div>
           </div>
         </article>
-
       </section>
       <% } %>
+      <% if (isAdmin) { %>
+          <button type="button" id="org-delete" class="btn btn-danger">Delete Organization</button>
+        <% } %>
     </main>
+    <%- include('partials/_scripts') %>
   </body>
 </html>

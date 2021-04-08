@@ -1,0 +1,36 @@
+nav {
+  background-color: rgba(0,0,0,1.00);
+}
+
+.nav-logout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0%;
+}
+
+.logout-button {
+  margin-top: .2em;
+}
+
+.welcome-div-large {
+  padding-left: 1em;
+  padding-top: .2em;
+  padding-right: 2em;
+  color: rgb(214, 203, 203);
+}
+
+.welcome-div-small {
+  display: none;
+  color: rgb(214, 203, 203)!important;
+}
+
+@media only screen and (max-width: 575px) {
+  .welcome-div-large {
+    display: none;
+  }
+
+  .welcome-div-small {
+    display: block;
+  }
+}

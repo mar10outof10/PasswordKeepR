@@ -1,21 +1,36 @@
 const express = require('express');
 const router  = express.Router();
 
-const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getOrgById, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg } = require('../db/queries/org-queries');
-const { isAuthenticated, isNotAuthenticated } = require('./helpers')
+const { getUserById, getUserByEmail, userEmailExists, userIdExists } = require('../db/queries/user-queries');
+const { getAllOrgs, getOrgById, getOrgByName, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser, userIsInOrg } = require('../db/queries/org-queries');
+const { isAuthenticated, isNotAuthenticated, hasOrgReadAccess } = require('./helpers');
 
 /* Show orgs dashboard
 * logged in user  -> go to /orgs
 * else            -> go to /login
 */
 router.get('/', isAuthenticated, (req, res) => {
-  getAllOrgs(req.session.user_id)
-  .then(orgs => {
-    return res.json(orgs);
-    // const templateVars = { user: req.session.user_id, orgs }
-    // return res.render('orgs', templateVars);
+  const userId = req.session.user_id;
+
+  const getOrgSummaryPromise = getOrgSummaryForUser(userId);
+  const getUserPromise = getUserById(userId);
+
+  Promise.all([getOrgSummaryPromise, getUserPromise])
+  .then(values => {
+    const orgs = values[0];
+    const email = values[1].email
+    return res.render('orgs_index', { orgs, email });
   });
+});
+
+/* New organisation form
+* logged in user  -> go to /orgs/new
+* else            -> go to /login
+*/
+router.get('/new', isAuthenticated, (req, res) => {
+  const userId = req.session.user_id;
+  getUserById(userId)
+  .then(user => res.render('orgs_new', { email: user.email, error: req.query.error }));
 });
 
 /* Add new org
@@ -25,13 +40,16 @@ router.get('/', isAuthenticated, (req, res) => {
 router.post('/', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const orgName = req.body.org_name;
-  addOrg(orgName)
-  .then(org => {
-    console.log('org', org);
-    return addUserToOrg(userId, org.id, true);
+  getOrgByName(orgName)
+  .then((orgExists) => {
+    if (orgExists) return Promise.reject('?error=orgExists');
+    return addOrg(orgName);
   })
-  .then(orgUser => {
-    return res.json(orgUser);
+  .then(org =>  addUserToOrg(userId, org.id, true))
+  .then(orgUser => res.redirect(`/orgs/${orgUser.org_id}`))
+  .catch(err => {
+    if (err === '?error=orgExists') return res.redirect('/orgs/new' + err);
+    return res.status(500).send(err);
   });
 });
 
@@ -39,35 +57,57 @@ router.post('/', isAuthenticated, (req, res) => {
 * logged in user  -> go to /orgs/:id
 * else            -> go to /login
 */
-router.get('/:id', isAuthenticated, (req, res) => {
+router.get('/:id', isAuthenticated, hasOrgReadAccess, (req, res) => {
   const orgId = req.params.id;
+  const userId = req.session.user_id;
+  const templateVars = { orgId, userId, error: req.query.error };
+
   getOrgById(orgId)
   .then(org => {
-    return res.json(org);
-    // const templateVars = { user: userIdCookie, org }
-    // return res.render('orgs', templateVars);
-  });
+    templateVars.orgName = org.name;
+    return usersInOrg(org.id);
+  })
+  .then(users => {
+    templateVars.members = users; // set of rows from org_users where org_id = org.id
+    return getUserById(userId);
+  })
+  .then(user => {
+    templateVars.email = user.email;
+    return userIsOrgAdmin(userId, orgId)
+  })
+  .then(isAdmin => {
+    templateVars.isAdmin = isAdmin;
+    return res.render('orgs_show', templateVars);
+  })
+  .catch(err => res.status(500).send(err));
 });
 
 /* Edit individual org
 * logged in user  -> edit org in Db
 * else            -> go to /login
 */
-router.post('/:id', isAuthenticated, (req, res) => {
+router.post('/:id/update', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
-  userIsOrgAdmin(userId, orgId)
-  .then(isAdmin => {
-    if (isAdmin) {
-      const orgName = req.body.org_name;
-      return editOrg(orgId, orgName);
-    }
-    return Promise.reject();
-  })
-  .then(org => {
-    return res.json(org);
-  })
-  .catch(() => res.status(401).send());
+  const newOrgName = req.body.org_name;
+  getOrgByName(newOrgName)
+    .then((orgExists) => {
+      if (orgExists && orgExists.id !== Number(orgId)) {
+        return res.redirect(`/orgs/${orgId}?error=orgExists`);
+      }
+      return userIsOrgAdmin(userId, orgId)
+    })
+    .then(isAdmin => {
+      console.log('isadmin', isAdmin);
+      if (isAdmin) {
+        return editOrg(orgId, newOrgName);
+      }
+      return Promise.reject(401);
+    })
+    .then(() => {
+      return res.redirect(`/orgs/${orgId}`);
+    })
+    .catch(status => res.status(status).send());
 });
 
 /* Delete individual org
@@ -87,7 +127,7 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
   })
   .then(deletedSuccessfully => {
     if (deletedSuccessfully) {
-      return res.send('org deleted');
+      return res.redirect('/orgs');
     }
     return Promise.reject(500);
   })
@@ -99,21 +139,41 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
 * logged in user  -> add user to org in Db
 * else            -> go to /login
 */
-router.post('/:id/:userid', isAuthenticated, (req, res) => {
+router.post('/:id', isAuthenticated, (req, res) => {
   const orgId = req.params.id;
   const makeAdmin = req.body.admin || false;
   const userId = req.session.user_id;
-  const userIdToAdd = req.params.userid;
+  const userToAdd = req.body.user_name;
+  let id;
 
-  console.log('userId', userId);
-  console.log('orgId', orgId);
-  userIsOrgAdmin(userId, orgId)
-  .then(isOrgAdmin => {
-    if (isOrgAdmin) {
-      return addUserToOrg(userIdToAdd, orgId, makeAdmin);
+  const isAdminPromise = userIsOrgAdmin(userId, orgId)
+  const userExistsPromise = userEmailExists(userToAdd);
+
+  Promise.all([isAdminPromise, userExistsPromise])
+  .then(values => {
+    const isAdmin = values[0];
+    const userExists = values[1];
+    if (!userExists) {
+      return res.redirect(`/orgs/${orgId}?error=userDNE`);
+    }
+    if (isAdmin && userExists) {
+      return getUserByEmail(userToAdd);
+    }
+    return res.status(401).send(); // if user not admin
+  })
+  .then(user => {
+    id = user.id;
+    return userIsInOrg(id, orgId)
+  })
+  .then(userInOrg => {
+    if (!userInOrg) {
+      addUserToOrg(id, orgId, makeAdmin)
+    } else {
+      return res.redirect(`/orgs/${orgId}?error=userInOrg`);
     }
   })
-  .then(orgUser => res.json(orgUser));
+  .then(() => res.redirect(`/orgs/${orgId}`))
+  .catch(() => res.status(401).send());
 });
 
 // Remove user from org
@@ -132,8 +192,7 @@ router.post('/:id/:userid/delete', isAuthenticated, (req, res) => {
   })
   .then(deletedSuccessfully => {
     if (deletedSuccessfully) {
-      // unsure how we are rendering the orgs/:id page
-      return res.render('org', { orgId });
+      return res.redirect(`/orgs/${orgId}`);
     } else {
       return res.status(500).send('Error deleting user from org');
     }
@@ -141,4 +200,33 @@ router.post('/:id/:userid/delete', isAuthenticated, (req, res) => {
   .catch(err => res.json(err));
 });
 
+/* Update user status in organization
+* Logged in user is admin   -> updates target user's credentials within organisation
+*                              Currently only admin status is modifiable
+* else                      -> go to /login if not logged in, go to /orgs if logged in
+*/
+router.post('/:id/:userid/update', isAuthenticated, (req, res) => {
+  const userId = req.session.user_id
+  const userIdToModify = req.params.userid;
+  const orgId = req.params.id;
+  const admin = req.body.admin;
+
+  userIsOrgAdmin(userId, orgId)
+  .then(isAdmin => {
+    if (isAdmin) {
+      return userIsOrgAdmin(userIdToModify, orgId)
+      return updateUserInOrg(userIdToModify, orgId, admin);
+    }
+    return Promise.reject(401);
+  })
+  .then((userIsAdmin) => {
+    if (userIsAdmin) {
+      return updateUserInOrg(userIdToModify, orgId, false);
+    } else {
+      return updateUserInOrg(userIdToModify, orgId, true);
+    }
+  })
+  .then(() => res.redirect(`/orgs/${orgId}`))
+  .catch(status => res.status(status).send());
+})
 module.exports = router;

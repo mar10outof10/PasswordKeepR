@@ -62,4 +62,32 @@ const deleteUser = function(userId) {
     .then(res => res.rowCount === 1);
 };
 
-module.exports = { getUserById, getUserByEmail, addUser, deleteUser };
+/**
+ * Queries if user exists using an email
+ *
+ * @param {String} email         Email of the user to be looked up
+ * @return {Promise<boolean>}    A promise that resolves to true if deletion was successful, else false.
+ */
+const userEmailExists = function(email) {
+  return db.query(`
+  SELECT email FROM users
+  WHERE email = $1;
+  `, [email])
+  .then(res => res.rows[0] ? true : false);
+}
+
+/**
+ * Queries if user exists using an id
+ *
+ * @param {String} email         Id of the user to be looked up
+ * @return {Promise<boolean>}    A promise that resolves to true if deletion was successful, else false.
+ */
+const userIdExists = function(id) {
+  return db.query(`
+  SELECT id FROM users
+  WHERE id = $1;
+  `, [id])
+  .then(res => res.rows[0] ? true : false);
+}
+
+module.exports = { getUserById, getUserByEmail, addUser, deleteUser, userEmailExists, userIdExists };
