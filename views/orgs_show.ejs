@@ -48,7 +48,7 @@
             <div class="form-group row">
               <label for="inputName" class="col-sm-3 col-form-label">Organisation Name:</label>
               <div class="col-sm-9">
-                <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="Org Name" required>
+                <input type="text" name="org_name" value="<%= orgName%>" class="form-control" id="inputName" placeholder="My Organisaion" required>
                 <%- include('partials/_modal-edit-org') %>
               </div>
             </div>
@@ -121,11 +121,8 @@
             </div>
             <div class="org-admin-icon">
               <% if (isAdmin && member.id !== userId) { %>
-                <form action="<%= orgId %>/<%= member.id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete user <%= member.email %> from <%= orgName %>?')">
-                  <button type="submit" class="btn-danger btn">&#128465;&#65039;</button>
-                </form>
-              <% } %>
-              <% if (isAdmin && member.id !== userId) { %>
+                <button type="button" value="<%= member.id %> <%= member.email %> <%= orgId %>" class="btn-danger btn delete-org-user">&#128465;&#65039;</button>
+                <%- include('partials/_modal-delete-org-user') %>
                 <form action="<%= orgId %>/<%= member.id %>/update" method="POST">
                   <button type="submit" class="btn-info btn"> <i class="bi bi-key"></i></button>
                 </form>
