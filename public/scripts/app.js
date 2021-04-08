@@ -33,7 +33,14 @@ $(() => {
     $('.length-input').focus();
   })
 
-  // Cancel password modal
+  // Generate generate password delete modal
+  $('#delete-password').on('click', function () {
+    $('.modal-bg').css('display', 'block');
+    $('.modal-pw-content').css('display', 'block');
+    $('.length-input').focus();
+  })
+
+  // Cancel modal
   $('.modal-cancel').on('click', function () {
     $('.modal-bg').css('display', 'none');
     $('.modal-content').css('display', 'none');
