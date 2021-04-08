@@ -60,8 +60,7 @@ router.post('/', isAuthenticated, (req, res) => {
 router.get('/:id', isAuthenticated, hasOrgReadAccess, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
-  const templateVars = { orgId, userId };
-  templateVars.error = req.query.error;
+  const templateVars = { orgId, userId, error: req.query.error };
 
   getOrgById(orgId)
   .then(org => {
