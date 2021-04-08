@@ -7,7 +7,7 @@
 
   <body>
     <div class="modal-bg"></div>
-    <%- include('partials/_modal-delete-org-user') %>
+
     <%- include('partials/_modal-delete-org') %>
     <%- include('partials/_header') %>
 
@@ -124,6 +124,7 @@
             <div class="org-admin-icon">
               <% if (isAdmin && member.id !== userId) { %>
                   <button type="button" id="delete-org-user" class="btn-danger btn">&#128465;&#65039;</button>
+                  <%- include('partials/_modal-delete-org-user') %>
               <% } %>
               <% if (isAdmin && member.id !== userId) { %>
                 <form action="<%= orgId %>/<%= member.id %>/update" method="POST">

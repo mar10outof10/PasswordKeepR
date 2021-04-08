@@ -4,12 +4,6 @@
       <span>Are you sure you want to remove this user?</span>
     </div>
 
-    <!-- <div class="d-flex button-row justify-content-start">
-      <form action="/orgs/<%= orgId %>/update" method="POST" class="form-group pt-2">
-        <button type="submit" id="org-update" class="btn btn-primary">Edit Name</button>
-        <button type="button" class="modal-cancel btn btn-secondary ml-1">Cancel</button>
-      </form>
-    </div> -->
     <form action="<%= orgId %>/<%= member.id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete user <%= member.email %> from <%= orgName %>?')">
       <button type="submit" class="btn-danger btn">Delete user</button>
       <button type="button" class="modal-cancel btn btn-secondary ml-1">Cancel</button>
