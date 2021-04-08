@@ -31,6 +31,10 @@ const hasPasswordWriteAccess = (req, res, next) => {
 
   getPasswordById(passwordId)
   .then(password => {
+    if (!password) {
+      // password doesn't exist -> error
+      return res.status(500).send();
+    }
     if (password.user_id === userId) {
       // user owns password -> proceed
       return next();
