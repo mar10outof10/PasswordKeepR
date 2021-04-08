@@ -147,7 +147,7 @@ align-items: center;
 
 .org-member-text {
   display: flex;
-  width: 90%;
+  width: 60%;
   justify-content: flex-start;
   margin-left: 1em;
 
@@ -157,7 +157,8 @@ align-items: center;
   display: flex;
   width: 10%;
   font-size: 2em;
-  justify-content: center;
+  justify-content: space-evenly;
+  flex-grow: 0.2;
 }
 
 .no-border {
