@@ -1,7 +1,14 @@
 .container {
-  #orgs-show-options {
-    display: none;
+
+  .expand-collapse {
+    margin-top: 1em;
+    border-radius: 20;
   }
+
+  #orgs-show-options {
+    display: none
+  }
+
   .button-container {
     padding-top: .5em;
     display: flex;
