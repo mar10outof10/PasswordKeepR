@@ -73,7 +73,7 @@ router.post('/', isAuthenticated, hasOrgWriteAccess, (req, res) => {
 
   addPassword(passwordObj)
   .then(() => res.redirect('/passwords'))
-  .catch(() => res.status(401).send());
+  .catch(err => res.status(500).send(err));
 });
 
 
@@ -89,7 +89,7 @@ router.post('/:id', isAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess, 
 
   editPassword(passwordId, passwordObj)
   .then(() => res.redirect('/passwords'))
-  .catch(() => res.status(401).send());
+  .catch(err => res.status(500).send(err));
 });
 
 /* Delete individual password
@@ -98,22 +98,15 @@ router.post('/:id', isAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess, 
 */
 router.post('/:id/delete', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
-  getPasswordById(passwordId)
-  .then(passwordObj => {
-    const userIdCookie = req.session.user_id;
-    if (passwordObj.user_id === userIdCookie) {
-      return deletePassword(passwordId)
-    }
-    return Promise.reject(500);
-  })
-  .then(rowCount => {
-    res.redirect('/passwords');
-  })
-  .catch(err => {
-    res.json(err);
-  })
+  deletePassword(passwordId)
+  .then(() => res.redirect('/passwords'))
+  .catch(err => res.status(500).send(err))
 });
 
+/* Password dashboard, filtered by a search query applied to password labels and URLs
+* logged in user  -> Delete password from Db
+* else            -> go to /login
+*/
 router.get('/search/:query', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
   const searchQuery = req.params.query.trim();
@@ -122,14 +115,8 @@ router.get('/search/:query', isAuthenticated, (req, res) => {
   const userPromise = getUserById(userId);
 
   Promise.all([passwordsPromise, userPromise])
-  .then(values => {
-    console.log('passwords', values[0])
-    return res.render('passwords_index', { passwords: values[0], email: values[1].email, searchQuery });
-  })
-  .catch(err => {
-    return res.json(err);
-  });
+  .then(values => res.render('passwords_index', { passwords: values[0], email: values[1].email, searchQuery }))
+  .catch(err => res.status(500).send(err));
 });
-
 
 module.exports = router;
