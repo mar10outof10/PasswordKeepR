@@ -144,6 +144,7 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
     if (isAdmin) {
       return deleteOrg(orgId);
     }
+    console.log('you suck')
     return Promise.reject(401);
   })
   .then(deletedSuccessfully => {

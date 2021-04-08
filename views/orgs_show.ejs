@@ -9,10 +9,29 @@
     <%- include('partials/_modal-warning') %>
     <%- include('partials/_header') %>
     <main class="container">
-
+      <% if (locals.error === 'userDNE') {%>
+        <div class="alert alert-danger" role="alert">
+          User does not exist
+        </div>
+      <% }%>
+      <% if (locals.error === 'userInOrg') {%>
+        <div class="alert alert-danger" role="alert">
+          User is already in <%= orgName %>
+        </div>
+      <% }%>
+      <% if (locals.error === 'idNotInt') {%>
+        <div class="alert alert-danger" role="alert">
+          Only numbers allowed in field when searching by id
+        </div>
+      <% }%>
+      <% if (locals.error === 'orgExists') {%>
+        <div class="alert alert-danger" role="alert">
+          Organisation already exists in database
+        </div>
+      <% } %>
       <% if (isAdmin) { %>
         <div id="orgs-show-options-header" class="col-sm-12 d-flex justify-content-center">
-          <button type="button" value="down" class="expand-collapse centre col-sm-4 btn-info">Expand/Collapse form options</button>
+          <button type="button" value="up" class="expand-collapse centre col-sm-4 btn-info">Expand/Collapse form options</button>
         </div>
         <section id="orgs-show-options">
           <!-- form to edit org name -->
@@ -20,12 +39,6 @@
             <a class="pr-3 text-dark" href="/orgs"><i class="bi bi-arrow-return-left bi-5x" style="font-size: 2rem"></i></a>
             <h3 class="mb-3 mt-4">Edit <%= orgName %></h3>
           </div>
-          <% if (locals.error === 'orgExists') {%>
-            <div class="alert alert-danger" role="alert">
-              Organisation already exists in database
-            </div>
-          <% } %>
-
 
           <form action="/orgs/<%= orgId %>/update" method="POST" class="form-group pt-2">
 
@@ -47,7 +60,7 @@
             </div>
             <div class="d-flex button-row justify-content-start">
               <button type="button" id="org-update" class="btn btn-primary">Edit Name</button>
-
+              </div>
             </div>
             <!-- form to add users-->
           </form>
@@ -55,21 +68,6 @@
           <div class="d-flex align-items-center">
             <h3 class="mb-4 mt-3">Add members to <%= orgName %></h3>
           </div>
-          <% if (locals.error === 'userDNE') {%>
-            <div class="alert alert-danger" role="alert">
-              User does not exist
-            </div>
-          <% }%>
-          <% if (locals.error === 'userInOrg') {%>
-            <div class="alert alert-danger" role="alert">
-              User is already in <%= orgName %>
-            </div>
-          <% }%>
-          <% if (locals.error === 'idNotInt') {%>
-            <div class="alert alert-danger" role="alert">
-              Only numbers allowed in field when searching by id
-            </div>
-          <% }%>
           <form action="/orgs/<%= orgId %>" method="POST" class="justify-content-center">
 
             <div class="form-group row">
@@ -150,8 +148,8 @@
         </article>
       </section>
       <% } %>
-      <% if (member.is_admin) { %>
-        <form action="/orgs/<%= org.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= org.name %>?');">
+      <% if (isAdmin) { %>
+        <form action="/orgs/<%= member.org_id %>/delete" method="POST" onsubmit="return confirm('Do you really want to delete the organisation <%= member.name %>?');">
           <button type="button" class="btn btn-danger modal-call">DELETE ORG</button>
         </form>
         <% } %>
