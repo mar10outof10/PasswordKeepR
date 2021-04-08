@@ -1,37 +1,51 @@
 .orgs-main {
-  height: 4em;
+  height: 100%;
 }
 
 .orgs-footer {
  display: flex;
  justify-content: space-between;
  align-items: center;
+}
+
+
+.orgs-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 80%;
+
+  span {
+    padding: .5em;
+  }
+}
+
+.orgs-interactions .bi {
+  font-size: xx-large;
+  padding-right: 1em;
+}
+
+@media only screen and (max-width: 767px) {
+
+  .orgs-footer {
+    flex-direction: column;
+  }
 
   .orgs-info {
     display: flex;
+    flex-direction: row;
+  }
+
+  .orgs-body {
     flex-direction: column;
-    justify-content: space-evenly;
-    width: 80%;
-
-    span {
-      padding: .5em;
-    }
   }
 
-  .orgs-interactions .bi {
-    font-size: xx-large;
-    padding-right: 1em;
+  .org-admin-icon {
+    width: 60%
   }
 
-  @media only screen and (max-width: 767px) {
-
-    .orgs-footer {
-      flex-direction: column;
-    }
-
-    .orgs-info {
-      display: flex;
-      flex-direction: row;
-    }
+  .org-member-text {
+    width: unset;
   }
 }
+
