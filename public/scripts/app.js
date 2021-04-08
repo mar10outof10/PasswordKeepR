@@ -69,15 +69,6 @@ $(() => {
     }
   });
 
-  // Confirm update of org parameters on checkbox
-  $('#org-update-check').on('click', function () {
-    if (this.checked) {
-      $('#org-update').attr('type', 'submit');
-    } else {
-      $('#org-update').attr('type', 'button');
-    }
-  });
-
    // changes chevron on add new password button gold on hover
    $(".new-pw-button").on("mouseover", function() {
     $('#add-button').removeClass('text-white');
