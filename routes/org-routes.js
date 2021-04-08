@@ -3,8 +3,7 @@ const router  = express.Router();
 
 const { getUserById, getUserByEmail, userEmailExists, userIdExists } = require('../db/queries/user-queries');
 const { getAllOrgs, getOrgById, getOrgByName, addUserToOrg, addOrg, userIsOrgAdmin, editOrg, deleteOrg, deleteUserFromOrg, usersInOrg, numberUsersInOrg, userOrgJoinDate, updateUserInOrg, getOrgSummaryForUser, userIsInOrg } = require('../db/queries/org-queries');
-const { isAuthenticated, isNotAuthenticated } = require('./helpers');
-const { reset } = require('nodemon');
+const { isAuthenticated, isNotAuthenticated, hasOrgReadAccess } = require('./helpers');
 
 /* Show orgs dashboard
 * logged in user  -> go to /orgs
@@ -15,6 +14,7 @@ router.get('/', isAuthenticated, (req, res) => {
 
   const getOrgSummaryPromise = getOrgSummaryForUser(userId);
   const getUserPromise = getUserById(userId);
+
   Promise.all([getOrgSummaryPromise, getUserPromise])
   .then(values => {
     const orgs = values[0];
@@ -29,16 +29,8 @@ router.get('/', isAuthenticated, (req, res) => {
 */
 router.get('/new', isAuthenticated, (req, res) => {
   const userId = req.session.user_id;
-  const templateVars = {};
-  // checks if query param for error exists
-  if (req.query.error) {
-    templateVars.error = req.query.error;
-  }
   getUserById(userId)
-  .then(user => {
-    templateVars.email = user.email;
-    return res.render('orgs_new', templateVars);
-  });
+  .then(user => res.render('orgs_new', { email: user.email, error: req.query.error }));
 });
 
 /* Add new org
@@ -50,40 +42,28 @@ router.post('/', isAuthenticated, (req, res) => {
   const orgName = req.body.org_name;
   getOrgByName(orgName)
   .then((orgExists) => {
-    if (orgExists) {
-      return res.redirect(`/orgs/new?error=orgExists`);
-    }
-    return addOrg(orgName)
+    if (orgExists) return Promise.reject('?error=orgExists');
+    return addOrg(orgName);
   })
-  .then(org => {
-    console.log('org', org);
-    return addUserToOrg(userId, org.id, true);
-  })
-  .then(orgUser => {
-    console.log('redir to', `/orgs/${orgUser.org_id}`)
-    return res.redirect(`/orgs/${orgUser.org_id}`);
-  })
-  .catch(err => console.error(err));
+  .then(org =>  addUserToOrg(userId, org.id, true))
+  .then(orgUser => res.redirect(`/orgs/${orgUser.org_id}`))
+  .catch(err => {
+    if (err === '?error=orgExists') return res.redirect('/orgs/new' + err);
+    return res.status(500).send(err);
+  });
 });
 
 /* Show individual org
 * logged in user  -> go to /orgs/:id
 * else            -> go to /login
 */
-router.get('/:id', isAuthenticated, (req, res) => {
+router.get('/:id', isAuthenticated, hasOrgReadAccess, (req, res) => {
   const orgId = req.params.id;
   const userId = req.session.user_id;
   const templateVars = { orgId, userId };
-  console.log(templateVars);
-  // checks if query param for error exists
-  if (req.query.error) {
-    templateVars.error = req.query.error;
-  }
-  userIsInOrg(userId, orgId)
-  .then(isMember => {
-    if(!isMember) { return Promise.reject(401); }
-  })
-  .then(() => getOrgById(orgId))
+  templateVars.error = req.query.error;
+
+  getOrgById(orgId)
   .then(org => {
     templateVars.orgName = org.name;
     return usersInOrg(org.id);
@@ -100,7 +80,7 @@ router.get('/:id', isAuthenticated, (req, res) => {
     templateVars.isAdmin = isAdmin;
     return res.render('orgs_show', templateVars);
   })
-  .catch(status => res.status(status).send());
+  .catch(err => res.status(500).send(err));
 });
 
 /* Edit individual org
@@ -144,7 +124,6 @@ router.post('/:id/delete', isAuthenticated, (req, res) => {
     if (isAdmin) {
       return deleteOrg(orgId);
     }
-    console.log('you suck')
     return Promise.reject(401);
   })
   .then(deletedSuccessfully => {

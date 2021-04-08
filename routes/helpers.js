@@ -1,4 +1,4 @@
-const { getAllOrgs, userIsOrgAdmin } = require('../db/queries/org-queries');
+const { getAllOrgs, userIsOrgAdmin, userIsInOrg } = require('../db/queries/org-queries');
 const { getPasswordById } = require('../db/queries/password-queries');
 
 
@@ -53,6 +53,21 @@ const hasPasswordWriteAccess = (req, res, next) => {
 };
 
 /**
+ * Verifies a user has permission to view a given org.
+ * Proceeds if user is org member/admin. Rejects otherwise.
+ */
+const hasOrgReadAccess = (req, res, next) => {
+  const orgId = req.params.id;
+  const userId = req.session.user_id;
+
+  userIsInOrg(userId, orgId)
+  .then(isMember => {
+    if (isMember) return next();
+    return res.status(401).send();
+  });
+};
+
+/**
  * Verifies a user has permission to save/edit on a given org.
  * Proceeds if user is org admin, or org is blank. Rejects otherwise.
  */
@@ -75,7 +90,8 @@ const hasOrgWriteAccess = (req, res, next) => {
   }
 };
 
-module.exports = { isAuthenticated, isNotAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess };
+
+module.exports = { isAuthenticated, isNotAuthenticated, hasPasswordWriteAccess, hasOrgReadAccess, hasOrgWriteAccess };
 
 // const hasPasswordReadAccess = (req, res, next) => {
 //   const passwordId = req.params.id;
