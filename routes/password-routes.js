@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
-const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess, verifyOrgAdminThenDo } = require('./helpers');
+const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess, validateOrg } = require('./helpers');
 const { getUserById } = require('../db/queries/user-queries');
 const { getAllOrgs, getAllOrgsWhereAdmin, userIsOrgAdmin } = require('../db/queries/org-queries');
 
@@ -37,8 +37,7 @@ router.get('/new', isAuthenticated, (req, res) => {
 
   Promise.all([getUserPromise, getOrgsPromise])
   .then(values => {
-    const user = values[0];
-    const orgs = values[1];
+    const [user, orgs] = values;
     return res.render('passwords_new', { email: user.email, orgs });
   });
 });
@@ -51,16 +50,13 @@ router.get('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const passwordId = req.params.id;
   const userId = req.session.user_id;
 
-  const getPasswordPromise = getPasswordById(passwordId);
   const getUserPromise = getUserById(userId);
   const getOrgsPromise = getAllOrgsWhereAdmin(userId);
+  const getPasswordPromise = getPasswordById(passwordId);
 
   Promise.all([getPasswordPromise, getUserPromise, getOrgsPromise])
   .then(values => {
-    const password = values[0];
-    const user = values[1];
-    const orgs = values[2];
-
+    const [password, user, orgs] = values;
     return res.render('passwords_show', { password, email: user.email, orgs });
   });
 });
@@ -73,9 +69,10 @@ router.get('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
 router.post('/', isAuthenticated, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
-  const newPassObj = { label, url, username, password, category, orgId, userId }
+  const passwordObj = { label, url, username, password, category, orgId, userId }
 
-  verifyOrgAdminThenDo([userId, orgId], addPassword, [newPassObj])
+  validateOrg(userId, orgId)
+  .then(() => addPassword(passwordObj))
   .then(() => res.redirect('/passwords'))
   .catch(() => res.status(401).send());
 });
@@ -89,9 +86,10 @@ router.post('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
   const passwordId = req.params.id;
-  const editPassObj = { label, url, username, password, category, userId, orgId };
+  const passwordObj = { label, url, username, password, category, userId, orgId };
 
-  verifyOrgAdminThenDo([userId, orgId], editPassword, [passwordId, editPassObj])
+  validateOrg(userId, orgId)
+  .then(() => editPassword(passwordId, passwordObj))
   .then(() => res.redirect('/passwords'))
   .catch(() => res.status(401).send());
 });
