@@ -2,9 +2,9 @@ const express = require('express');
 const router  = express.Router();
 
 const { getAllPasswords, getAllPasswordsSearch, getPasswordById, addPassword, editPassword, deletePassword } = require('../db/queries/password-queries');
-const { isAuthenticated, hasPasswordReadAccess, hasPasswordWriteAccess, validateOrg } = require('./helpers');
+const { isAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess } = require('./helpers');
+const { getAllOrgsWhereAdmin } = require('../db/queries/org-queries');
 const { getUserById } = require('../db/queries/user-queries');
-const { getAllOrgs, getAllOrgsWhereAdmin, userIsOrgAdmin } = require('../db/queries/org-queries');
 
 
 
@@ -66,13 +66,12 @@ router.get('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
 * logged in user  -> add new password to Db
 * else            -> go to /login
 */
-router.post('/', isAuthenticated, (req, res) => {
+router.post('/', isAuthenticated, hasOrgWriteAccess, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
   const passwordObj = { label, url, username, password, category, orgId, userId }
 
-  validateOrg(userId, orgId)
-  .then(() => addPassword(passwordObj))
+  addPassword(passwordObj)
   .then(() => res.redirect('/passwords'))
   .catch(() => res.status(401).send());
 });
@@ -82,14 +81,13 @@ router.post('/', isAuthenticated, (req, res) => {
 * logged in user  -> edit inidivual password in Db
 * else            -> go to /login
 */
-router.post('/:id', isAuthenticated, hasPasswordWriteAccess, (req, res) => {
+router.post('/:id', isAuthenticated, hasPasswordWriteAccess, hasOrgWriteAccess, (req, res) => {
   const { label, url, username, password, category, orgId } = req.body;
   const userId = req.session.user_id;
   const passwordId = req.params.id;
   const passwordObj = { label, url, username, password, category, userId, orgId };
 
-  validateOrg(userId, orgId)
-  .then(() => editPassword(passwordId, passwordObj))
+  editPassword(passwordId, passwordObj)
   .then(() => res.redirect('/passwords'))
   .catch(() => res.status(401).send());
 });
@@ -130,7 +128,6 @@ router.get('/search/:query', isAuthenticated, (req, res) => {
   })
   .catch(err => {
     return res.json(err);
-    // return res.redirect('/login', { errorMsg: "error retreiving user passwords" });
   });
 });
 
