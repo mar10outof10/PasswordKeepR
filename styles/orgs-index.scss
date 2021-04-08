@@ -6,9 +6,22 @@
   display: flex;
   justify-content: center;
   width: 4em;
+
   .bi {
     font-size: 2em;
     text-shadow: 2px 1.5px 3px #000000;
+  }
+}
+
+.orgs-header {
+  width: 100%;
+  position: relative;
+
+  .bi {
+    position: absolute;
+    font-size: x-large;
+    text-shadow: 2px 1.5px 3px #000000;
+    right: 1.8em;
   }
 }
 
