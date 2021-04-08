@@ -189,6 +189,10 @@ align-items: center;
   margin: 0.5em;
 }
 
+.art-icon.org-icon > img {
+  margin: 1em;
+}
+
 @media only screen and (max-width: 767px) {
 
   .art-body {
